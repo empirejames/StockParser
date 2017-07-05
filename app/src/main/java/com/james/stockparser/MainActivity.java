@@ -67,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
         searchView.setQueryHint("股票代號/名稱");
         searchEditText.setTextColor(getResources().getColor(R.color.colorWhite));
         searchEditText.setHintTextColor(getResources().getColor(R.color.gray));
+
+        //aaaa
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
