@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "260903246311",
+    "firebase_url": "https://stockmaster-bf56c.firebaseio.com",
+    "project_id": "stockmaster-bf56c",
+    "storage_bucket": "stockmaster-bf56c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:260903246311:android:f22f9aedd322451c",
+        "android_client_info": {
+          "package_name": "com.james.stockparser"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "260903246311-io3sdo78284k9j1c9gm8f5thmr09v75b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.james.stockparser",
+            "certificate_hash": "ff5a25a354a97852f5a0de8b4d7d7dc8a5e01fdb"
+          }
+        },
+        {
+          "client_id": "260903246311-0b2ak8scqval9lmaur58qli2pa9pevql.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAfgvR-v4EnVDcwNxaBcBbrOV6GW0t1yko"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "260903246311-0b2ak8scqval9lmaur58qli2pa9pevql.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

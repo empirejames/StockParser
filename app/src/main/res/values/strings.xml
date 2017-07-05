@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">權息大師</string>
+    <string name="edit">Edit</string>
+    <string name="taixiday">填息平均日小於 :</string>
+    <string name="taixipercent">填息機率大於 :</string>
+    <string name="hintPercent">0 ~ 5 (星星數)</string>
+    <string name="hintDay">0 ~ 100 (天數)</string>
+    <string name="stockInfo">股票代號/名稱</string>
+</resources>

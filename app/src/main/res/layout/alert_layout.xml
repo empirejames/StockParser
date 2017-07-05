@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:id="@+id/relative_layout"
+        android:layout_width="match_parent"
+        android:visibility="visible"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/infoSection"
+        android:orientation="vertical"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp">
+    <TextView
+        android:id="@+id/alert_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:layout_marginLeft="10dp"
+        android:text="@string/taixipercent" />
+    <EditText
+        android:id="@+id/alert_edit_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_below="@id/alert_text_view"
+        android:hint="@string/hintPercent" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/relative_layout1"
+        android:layout_width="match_parent"
+        android:visibility="visible"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/infoSection"
+        android:orientation="vertical"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp">
+        <TextView
+            android:id="@+id/alert_text_view1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:layout_marginLeft="10dp"
+            android:text="@string/taixiday" />
+        <EditText
+            android:id="@+id/alert_edit_view1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_below="@id/alert_text_view1"
+            android:hint="@string/hintDay" />
+    </RelativeLayout>
+</LinearLayout>

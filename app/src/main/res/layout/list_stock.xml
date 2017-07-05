@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp">
+
+    <LinearLayout
+        android:id="@+id/infoSection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/relative_layout_title"
+            android:layout_width="match_parent"
+            android:visibility="visible"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/infoSection"
+            android:orientation="vertical"
+            android:paddingRight="10dp"
+            >
+
+            <TextView
+                android:id="@+id/stock_Number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:text="2318"
+                android:textColor="@android:color/holo_red_light"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/stock_Name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="70dp"
+                android:layout_alignLeft="@+id/stock_Number"
+                android:text="HonHan"
+                android:textColor="@android:color/holo_blue_dark"
+                android:textSize="20sp" />
+            <TextView
+                android:id="@+id/stock_good"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="170dp"
+                android:layout_alignLeft="@+id/stock_Number"
+                android:text="填息機率"
+                android:textColor="@android:color/holo_purple"
+                android:textSize="20sp" />
+
+            <RatingBar
+                android:id="@+id/RatingBar01"
+                style="?android:attr/ratingBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="3dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:numStars="5"
+                android:progressBackgroundTint="@android:color/darker_gray"
+                android:progressTint="@android:color/holo_orange_light"
+                android:rating="3.5"></RatingBar>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/relative_layout"
+            android:layout_width="match_parent"
+            android:visibility="visible"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/infoSection"
+            android:textColor="@android:color/background_dark"
+            android:orientation="vertical"
+            android:paddingLeft="10dp">
+
+            <TextView
+                android:id="@+id/release"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/tianxiCountName"
+                android:layout_marginLeft="100dp"
+                android:textColor="@android:color/background_dark"
+                android:textSize="15sp"
+                android:text="發放次數 : " />
+
+            <TextView
+                android:id="@+id/releaseName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/release"
+                android:layout_marginLeft="70dp"
+                android:textColor="@android:color/background_dark"
+                android:text="5"
+                android:textSize="15sp" />
+            <TextView
+                android:id="@+id/tianxiCount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/background_dark"
+                android:text="填息次數 :"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/tianxiCountName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/tianxiCount"
+                android:layout_marginLeft="70dp"
+                android:textColor="@android:color/background_dark"
+                android:text="10"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/taixiaverage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tianxiCount"
+                android:textColor="@android:color/background_dark"
+                android:text="填息平均日:"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/taixiaverageName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tianxiCount"
+                android:layout_alignLeft="@+id/taixiaverage"
+                android:layout_marginLeft="80dp"
+                android:textColor="@android:color/background_dark"
+                android:text="5"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/thisyear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tianxiCount"
+                android:textColor="@android:color/background_dark"
+                android:layout_alignLeft="@+id/taixiaverageName"
+                android:layout_marginLeft="90dp"
+                android:textSize="15sp"
+                android:text="除息日 : " />
+            <TextView
+                android:id="@+id/thisyearName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/background_dark"
+                android:layout_below="@+id/tianxiCount"
+                android:layout_alignLeft="@+id/thisyear"
+                android:layout_marginLeft="60dp"
+                android:text="2017/06/27"
+                android:textSize="15sp" />
+        </RelativeLayout>
+    </LinearLayout>
+</RelativeLayout>
