@@ -14,6 +14,6 @@
     </style>
     <style name="Base.Widget.AppCompat.SearchView" parent="android:Widget">
         <item name="searchIcon">@drawable/ic_search_white_48dp</item>
-        <item name="closeIcon">@drawable/ic_keyboard_arrow_left_white_48dp</item>
+        <item name="closeIcon">@drawable/ic_delete_white_48dp</item>
     </style>
 </resources>

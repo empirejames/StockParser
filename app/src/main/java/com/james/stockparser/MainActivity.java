@@ -387,39 +387,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
-    public void show(final View v, int height) {
-        v.setVisibility(View.VISIBLE);
-        ValueAnimator animator = ValueAnimator.ofInt(0, height);
-        animator.setDuration(200);
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                int value = (Integer) animation.getAnimatedValue();
-                v.setVisibility(View.VISIBLE);
-                v.getLayoutParams().height = value;
-                v.setLayoutParams(v.getLayoutParams());
-            }
-        });
-        animator.start();
-    }
 
-    public void dismiss(final View v, int height) {
-
-        ValueAnimator animator = ValueAnimator.ofInt(height, 0);
-        animator.setDuration(200);
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                int value = (Integer) animation.getAnimatedValue();
-                if (value == 0) {
-                    v.setVisibility(View.GONE);
-                }
-                v.getLayoutParams().height = value;
-                v.setLayoutParams(v.getLayoutParams());
-            }
-        });
-        animator.start();
-    }
 
 
 }
