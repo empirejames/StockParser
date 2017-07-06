@@ -6,4 +6,6 @@
     <string name="hintPercent">0 ~ 5 (星星數)</string>
     <string name="hintDay">0 ~ 100 (天數)</string>
     <string name="stockInfo">股票代號/名稱</string>
+    <string name="facebook_app_id">1434008156667910</string>
+    <string name="fb_login_protocol_scheme">fb1434008156667910</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.james.stockparser.Fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -25,8 +26,8 @@ public class DummyFragment extends Fragment {
 
     public DummyFragment() {
     }
-
-    public DummyFragment(String title) {
+    @SuppressLint("ValidFragment")
+    public DummyFragment (String title) {
         this.title = title;//Setting tab title
     }
 

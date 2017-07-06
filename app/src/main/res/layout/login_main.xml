@@ -5,42 +5,68 @@
     android:orientation="vertical"
     android:padding="30dp">
 
-    <EditText
-        android:id="@+id/username"
+    <RelativeLayout
+        android:id="@+id/relative_layout_safe"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="170dp"
-        android:drawableLeft="@mipmap/account"
-        android:drawablePadding="5dp"
-        android:ems="10"
-        android:hint="Email 帳號"
-        android:inputType="textEmailAddress"
-        android:paddingLeft="0dp"
-        android:textColor="#FFF"
-        android:textColorHint="#999" />
+        android:layout_below="@+id/infoSection"
+        android:layout_weight="2"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:paddingTop="30dp"
+        android:textColor="@android:color/background_dark"
+        android:visibility="visible"></RelativeLayout>
 
-    <EditText
-        android:id="@+id/password"
+    <RelativeLayout
+        android:id="@+id/relative_layout_account"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:drawableLeft="@mipmap/lock"
-        android:drawablePadding="5dp"
-        android:ems="10"
-        android:hint="密碼"
-        android:inputType="textPassword"
-        android:paddingLeft="0dp"
-        android:textColor="#FFF"
-        android:textColorHint="#999" />
+        android:layout_below="@+id/infoSection"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:paddingTop="30dp"
+        android:textColor="@android:color/background_dark"
+        android:visibility="visible">
+
+        <EditText
+            android:id="@+id/username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@mipmap/account"
+            android:drawablePadding="5dp"
+            android:ems="10"
+            android:hint="Email 帳號"
+            android:inputType="textEmailAddress"
+            android:paddingLeft="0dp"
+            android:textColor="#FFF"
+            android:textColorHint="#999" />
+
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/username"
+            android:layout_marginTop="10dp"
+            android:drawableLeft="@mipmap/lock"
+            android:drawablePadding="5dp"
+            android:ems="10"
+            android:hint="密碼"
+            android:inputType="textPassword"
+            android:paddingLeft="0dp"
+            android:textColor="#FFF"
+            android:textColorHint="#999" />
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/relative_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/infoSection"
+        android:layout_weight="1"
         android:orientation="horizontal"
-        android:paddingTop="30dp"
         android:paddingLeft="10dp"
+        android:paddingTop="10dp"
         android:textColor="@android:color/background_dark"
         android:visibility="visible">
 
@@ -52,50 +78,66 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/selector_xml_btn_yellow"
             android:text="登入" />
+
         <Button
             android:id="@+id/button_anonymously"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/button_email"
             android:layout_marginTop="10dp"
-            android:text="訪客登入"
-            android:background="@drawable/selector_xml_btn_yellow" />
+            android:background="@drawable/selector_xml_btn_yellow"
+            android:text="訪客登入" />
 
         <Button
             android:id="@+id/button_other"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/button_anonymously"
-            android:text="其他方式登入"
+            android:layout_marginTop="10dp"
             android:background="@drawable/selector_xml_btn_yellow"
-            android:layout_marginTop="10dp" />
+            android:text="其他方式登入" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/button_other"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="40dp"
+            android:text="忘記密碼 ?"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#FFF" />
     </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relative_layout_GoogleFacebook"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/infoSection"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
+        android:textColor="@android:color/background_dark"
+        android:visibility="gone">
+
         <com.google.android.gms.common.SignInButton
             android:id="@+id/button_google"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:visibility="gone" />
-        <Button
+            android:textSize="20dp"
+            android:layout_marginTop="10dp" />
+        <com.facebook.login.widget.LoginButton
             android:id="@+id/button_facebook"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
-            android:layout_below="@id/button_google"
-            android:background="@drawable/selector_xml_btn_yellow"
-            android:visibility="gone"
-            android:text="SignIn FaceBook" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="40dp"
-        android:text="忘記密碼 ?"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="#FFF" />
+            android:layout_below="@+id/button_google"
+            android:textSize="18dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp" />
+    </RelativeLayout>
 
 </LinearLayout>
 
