@@ -237,10 +237,6 @@ public class MainActivity extends AppCompatActivity {
         editor.putString(Constants.NOW_DAY, "100");
     }
 
-    public void showProgressDialog() {
-        mProgressDialog = ProgressDialog.show(this, "連線至伺服器", "取得資料中...請稍候", true);
-    }
-
     public void CSVRead() {
         CSVReader reader = null;
         try {
@@ -348,19 +344,16 @@ public class MainActivity extends AppCompatActivity {
                                 myDataset.add(new StockItem(stockNumber, stockName, tianxiCount, releaseCount, tianxiPercent, tianxiDay, thisYear));
                             }
                         }
-                        runOnUiThread(new Runnable() {
-                            public void run() {
-                            }
-                        });
                     }
                     adapter = new MyAdapter(getApplicationContext(), myDataset);
                     listV.setAdapter(adapter);
-                    mProgressDialog.dismiss();
+                    if (mProgressDialog!=null){
+                        mProgressDialog.dismiss();
+                    }
                 }
-
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-                    mProgressDialog.dismiss();
+                    //mProgressDialog.dismiss();
                 }
             });
             return null;
