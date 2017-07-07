@@ -1,6 +1,5 @@
 package com.james.stockparser;
 
-import android.animation.ValueAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,7 +13,6 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -52,7 +50,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private EditText passEditText;
     GoogleApiClient mGoogleApiClient;
     Button loginEmail, loginAnonymously, loginOther;
-    TextView textView2;
+    TextView tvForgetPass;
     SignInButton loginGoogle;
     LoginButton loginFaceBook;
     String TAG = LoginActivity.class.getSimpleName();
@@ -65,7 +63,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_main);
-        textView2 = (TextView) findViewById(R.id.textView2);
+        tvForgetPass = (TextView) findViewById(R.id.tv_forgotPass);
         loginOther = (Button) findViewById(R.id.button_other);
         loginOther.setOnClickListener(this);
         loginAnonymously = (Button) findViewById(R.id.button_anonymously);
@@ -78,6 +76,13 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         loginFaceBook = (LoginButton) findViewById(R.id.button_facebook);
         loginFaceBook.setReadPermissions("email","public_profile");
         mCallbackManager  = CallbackManager.Factory.create();
+        tvForgetPass.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginActivity.this, ResetPasswordActivity.class));
+            }
+        });
         loginFaceBook.registerCallback(mCallbackManager , new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
@@ -310,10 +315,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         } else if (i == R.id.button_other) {
             if (relativeLy.getVisibility() == View.VISIBLE) {
                 relativeLy.setVisibility(View.GONE);
-                textView2.setVisibility(View.VISIBLE);
+                tvForgetPass.setVisibility(View.VISIBLE);
             } else {
                 relativeLy.setVisibility(View.VISIBLE);
-                textView2.setVisibility(View.GONE);
+                tvForgetPass.setVisibility(View.GONE);
             }
         }
     }
