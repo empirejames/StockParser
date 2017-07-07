@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     String stockInfoName, stockInfoNumber, stockInfoEPS;
     DatabaseReference ref;
     ProgressDialog mProgressDialog;
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -75,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
                 searchView.clearFocus();
                 return true;
             }
+
             @Override
             public boolean onQueryTextChange(String s) {
                 myDataFilter.clear();
@@ -127,11 +129,11 @@ public class MainActivity extends AppCompatActivity {
                     stocknumber = myDataset.get(position).getStockNumber();
                 }
                 //Log.e(TAG, stocknumber + " " + stockName);
-                for (int i =0; i<myEPS.size();i++){
+                for (int i = 0; i < myEPS.size(); i++) {
                     //Log.e(TAG,myEPS.get(i).getStockNumber() );
                     //Log.e(TAG,"..0 " + stocknumber );
-                    if(myEPS.get(i).getStockNumber().equals(stocknumber)){
-                        Log.e(TAG, stocknumber + " " + stockName + " " +myEPS.get(i).getStockEPS() );
+                    if (myEPS.get(i).getStockNumber().equals(stocknumber)) {
+                        Log.e(TAG, stocknumber + " " + stockName + " " + myEPS.get(i).getStockEPS());
                         Intent in = new Intent(getApplicationContext(), FragmentMain.class);
                         in.putExtra("stockNumber", stocknumber);
                         in.putExtra("stockName", stockName);
@@ -312,6 +314,11 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    mProgressDialog = ProgressDialog.show(MainActivity.this, "連線至伺服器", "取得資料中...請稍候", true);
+                }
+            });
         }
 
         @Override
@@ -324,15 +331,15 @@ public class MainActivity extends AppCompatActivity {
 
                     for (final DataSnapshot dsp : dataSnapshot.getChildren()) {
 
-                        if (dsp.getKey().equals("EPS")){
+                        if (dsp.getKey().equals("EPS")) {
                             for (DataSnapshot eps : dsp.getChildren()) {
                                 //Log.e(TAG, "--" +single.getKey());
                                 stockInfoName = eps.child("stockName").getValue().toString();
                                 stockInfoNumber = eps.child("stockNumber").getValue().toString();
                                 stockInfoEPS = eps.child("stockEPS").getValue().toString();
-                                myEPS.add(new StockEPS(stockInfoNumber,stockInfoName,stockInfoEPS));
+                                myEPS.add(new StockEPS(stockInfoNumber, stockInfoName, stockInfoEPS));
                             }
-                        }else if (dsp.getKey().equals("stocks")){
+                        } else if (dsp.getKey().equals("stocks")) {
                             for (DataSnapshot stock : dsp.getChildren()) {
                                 releaseCount = stock.child("releaseCount").getValue().toString();
                                 stockName = stock.child("stockName").getValue().toString();
@@ -347,13 +354,15 @@ public class MainActivity extends AppCompatActivity {
                     }
                     adapter = new MyAdapter(getApplicationContext(), myDataset);
                     listV.setAdapter(adapter);
-                    if (mProgressDialog!=null){
+                    if (mProgressDialog != null) {
                         mProgressDialog.dismiss();
                     }
                 }
+
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
                     //mProgressDialog.dismiss();
+                    Log.e(TAG, "onCancelled...");
                 }
             });
             return null;
@@ -362,11 +371,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            runOnUiThread(new Runnable() {
-                public void run() {
-                    mProgressDialog = ProgressDialog.show(MainActivity.this, "連線至伺服器", "取得資料中...請稍候", true);
-                }
-            });
         }
 
         @Override
@@ -380,7 +384,6 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
-
 
 
 }
