@@ -1,6 +1,5 @@
 package com.james.stockparser;
 
-import android.animation.ValueAnimator;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.DialogInterface;
@@ -21,7 +20,6 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -55,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     String stockInfoName, stockInfoNumber, stockInfoEPS;
     DatabaseReference ref;
     ProgressDialog mProgressDialog;
+    boolean mDisPlayFav = false;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -150,12 +149,15 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onMenuItemClick(MenuItem menuItem) {
             String msg = "";
+            LayoutInflater inflater = LayoutInflater.from(MainActivity.this);
+            final View v = inflater.inflate(R.layout.alert_layout, null);
             switch (menuItem.getItemId()) {
                 case R.id.action_search:
                     break;
+                case R.id.my_favorite:
+                    multipleDelete(mDisPlayFav);
+                    break;
                 case R.id.action_filter:
-                    LayoutInflater inflater = LayoutInflater.from(MainActivity.this);
-                    final View v = inflater.inflate(R.layout.alert_layout, null);
                     new AlertDialog.Builder(MainActivity.this)
                             .setTitle("條件式搜尋")
                             .setView(v)
@@ -179,6 +181,16 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
     };
+
+    public void multipleDelete(boolean isMultipleDelete) {
+        if (isMultipleDelete){
+            adapter.showCheckBox(false);
+            mDisPlayFav = false;
+        } else{
+            adapter.showCheckBox(true);
+            mDisPlayFav = true;
+        }
+    }
 
     public ArrayList<StockItem> filterResult(String input, boolean hasPattern, String taixiPercent, String taixiAvgday) {
         ArrayList<StockItem> item = new ArrayList<StockItem>();

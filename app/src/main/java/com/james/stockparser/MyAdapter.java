@@ -5,10 +5,13 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
@@ -25,6 +28,9 @@ public class MyAdapter extends BaseAdapter implements Filterable {
     private ArrayList<StockItem> mListItems;
     private LayoutInflater inflater;
     Context context;
+    private boolean deleteContext;
+    String TAG = MyAdapter.class.getSimpleName();
+    ArrayList<String> myFavorite = new ArrayList<String>();
 
     public MyAdapter(Context context, ArrayList<StockItem> itemList) {
         this.context = context;
@@ -49,9 +55,15 @@ public class MyAdapter extends BaseAdapter implements Filterable {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         float transTianx  = 0;
-        View row = inflater.inflate(R.layout.list_stock, parent, false);
-        StockItem item = mListItems.get(position);
-        TextView stockNumber = (TextView) row.findViewById(R.id.stock_Number);
+        final View row = inflater.inflate(R.layout.list_stock, parent, false);
+        final StockItem item = mListItems.get(position);
+        CheckBox cb = (CheckBox) row.findViewById(R.id.checkbox);
+        if(deleteContext){
+            cb.setVisibility(View.VISIBLE);
+        }else{
+            cb.setVisibility(View.GONE);
+        }
+        final TextView stockNumber = (TextView) row.findViewById(R.id.stock_Number);
         stockNumber.setText(item.getStockNumber());
 
         TextView stockName = (TextView) row.findViewById(R.id.stock_Name);
@@ -79,8 +91,17 @@ public class MyAdapter extends BaseAdapter implements Filterable {
         } else {
             thisYear.setText(item.getThisYear());
         }
-
-
+        cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                String sn = stockNumber.getText().toString();
+                if(isChecked){
+                    myFavorite.add(sn);
+                } else{
+                    myFavorite.remove(sn);
+                }
+            }
+        });
         return row;
     }
 
@@ -88,5 +109,13 @@ public class MyAdapter extends BaseAdapter implements Filterable {
     public Filter getFilter() {
 
         return null;
+    }
+    public void showCheckBox(boolean show){
+        if(show){
+            deleteContext = true;
+        }else{
+            deleteContext = false;
+        }
+        notifyDataSetChanged();
     }
 }
