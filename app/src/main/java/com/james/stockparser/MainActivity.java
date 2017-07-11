@@ -102,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        isVistor();
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         listV = (ListView) findViewById(R.id.list_view);
@@ -115,10 +116,7 @@ public class MainActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-        //CSVRead();
-        //showProgressDialog();
         new GetData().execute();
-        //new SpeedTestTask().execute();
         listV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -148,6 +146,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    public boolean isVistor(){
+        Bundle bundle = getIntent().getExtras();
+        if(bundle.getString("isVistor")!= null) {
+            String vistor  = bundle.getString("isVistor");
+            Log.e(TAG,vistor + " " );
+            if (vistor.toString().equals("Y")){
+                return true;
+            }else{
+                return false;
+            }
+        }else{
+            return false;
+        }
+    }
+
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -387,6 +401,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     adapter = new MyAdapter(getApplicationContext(), myDataset);
                     listV.setAdapter(adapter);
+                    multipleDelete(isVistor());
                     if (mProgressDialog != null) {
                         mProgressDialog.dismiss();
                     }

@@ -158,6 +158,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
                 Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                i.putExtra("isVistor","N");
                 startActivity(i);
             } else {
             }
@@ -193,6 +194,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             Toast.makeText(LoginActivity.this, "訪客身分登入成功",
                                     Toast.LENGTH_SHORT).show();
                             Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                            i.putExtra("isVistor","Y");
                             startActivity(i);
                         } else {
                             Log.w(TAG, "signInAnonymously:failure", task.getException());
@@ -231,6 +233,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                 }
                             } else {
                                 Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                                i.putExtra("isVistor","N");
                                 startActivity(i);
                             }
                         }
@@ -323,21 +326,20 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         }
     }
     private void handleFacebookAccessToken(AccessToken token) {
-        Log.d(TAG, "handleFacebookAccessToken:" + token);
-
+        Log.e(TAG, "handleFacebookAccessToken:" + token);
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithCredential:success");
+                            Log.e(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                            i.putExtra("isVistor","N");
                             startActivity(i);
                         } else {
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
+                            Log.e(TAG, "signInWithCredential:failure", task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
