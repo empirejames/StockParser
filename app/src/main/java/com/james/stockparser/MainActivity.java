@@ -28,6 +28,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.james.stockparser.Fragment.FragmentMain;
+import com.james.stockparser.Unit.User;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -36,10 +37,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import au.com.bytecode.opencsv.CSVReader;
-import fr.bmartel.speedtest.SpeedTestReport;
-import fr.bmartel.speedtest.SpeedTestSocket;
-import fr.bmartel.speedtest.inter.ISpeedTestListener;
-import fr.bmartel.speedtest.model.SpeedTestError;
 
 public class MainActivity extends AppCompatActivity {
     String TAG = MainActivity.class.getSimpleName();
