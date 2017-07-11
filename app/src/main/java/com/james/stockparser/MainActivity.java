@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
     DatabaseReference ref;
     ProgressDialog mProgressDialog;
     boolean mDisPlayFav = false;
+    Bundle bundle;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -69,15 +70,12 @@ public class MainActivity extends AppCompatActivity {
         searchView.setQueryHint("股票代號/名稱");
         searchEditText.setTextColor(getResources().getColor(R.color.colorWhite));
         searchEditText.setHintTextColor(getResources().getColor(R.color.gray));
-
-        //aaaa
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
                 searchView.clearFocus();
                 return true;
             }
-
             @Override
             public boolean onQueryTextChange(String s) {
                 myDataFilter.clear();
@@ -102,7 +100,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        isVistor();
+        bundle = getIntent().getExtras();
+        writeNewUserIfNeeded();
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         listV = (ListView) findViewById(R.id.list_view);
@@ -148,7 +147,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public boolean isVistor(){
-        Bundle bundle = getIntent().getExtras();
         if(bundle.getString("isVistor")!= null) {
             String vistor  = bundle.getString("isVistor");
             Log.e(TAG,vistor + " " );
@@ -275,10 +273,6 @@ public class MainActivity extends AppCompatActivity {
         return item;
     }
 
-    public void readFirebase() {
-
-    }
-
     public void settingSet() {
         SharedPreferences.Editor editor = getSharedPreferences(Constants.TANXI_PERCENT, MODE_PRIVATE).edit();
         editor.putString(Constants.TANXI_PERCENT, "0");
@@ -308,52 +302,24 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public class SpeedTestTask extends AsyncTask<Void, Void, String> {
-        float ssss = 0;
-
-        @Override
-        protected String doInBackground(Void... params) {
-
-            SpeedTestSocket speedTestSocket = new SpeedTestSocket();
-
-            // add a listener to wait for speedtest completion and progress
-            speedTestSocket.addSpeedTestListener(new ISpeedTestListener() {
-
-                @Override
-                public void onCompletion(SpeedTestReport report) {
-                    ssss = Float.valueOf(report.getTransferRateBit().toString());
-                    ssss = ssss / 8 / 1024;// Byte
-
-                    // called when download/upload is finished
-                    //Log.v("speedtest", "[COMPLETED] rate in octet/s : " + report.getTransferRateOctet());
-                    Log.v("speedtest", "[COMPLETED] rate in kb/s   : " + ssss);
-
-
+    private void writeNewUserIfNeeded() {
+        ref = FirebaseDatabase.getInstance().getReference();
+        String userId  = bundle.getString("uid");
+        final String username  = bundle.getString("name");
+        final String email  = bundle.getString("email");
+        final DatabaseReference usersRef = ref.child("users").child(userId);
+        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists()){
+                    usersRef.setValue(new User(username, email));
                 }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-                @Override
-                public void onError(SpeedTestError speedTestError, String errorMessage) {
-                    // called when a download/upload error occur
-                }
-
-                @Override
-                public void onProgress(float percent, SpeedTestReport report) {
-                    // called to notify download/upload progress
-                    Log.v("speedtest", "[PROGRESS] progress : " + percent + "%");
-                    //Log.v("speedtest", "[PROGRESS] rate in octet/s : " + report.getTransferRateOctet());
-                    // Log.v("speedtest", "[PROGRESS] rate in bit/s   : " + report.getTransferRateBit());
-                }
-
-                @Override
-                public void onInterruption() {
-                    // triggered when forceStopTask is called
-                }
-            });
-
-            speedTestSocket.startDownload("http://eurodev.myluxhome.com/speedtest/zero.data");
-
-            return null;
-        }
+            }
+        });
     }
 
 

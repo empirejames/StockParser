@@ -157,9 +157,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
-                Intent i = new Intent(LoginActivity.this, MainActivity.class);
-                i.putExtra("isVistor","N");
-                startActivity(i);
             } else {
             }
         }else{
@@ -173,7 +170,14 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        FirebaseUser user = mAuth.getCurrentUser();
                         Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
+                        Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                        i.putExtra("isVistor","N");
+                        i.putExtra("name",user.getDisplayName());
+                        i.putExtra("uid",user.getUid());
+                        i.putExtra("email",user.getEmail());
+                        startActivity(i);
                         if (!task.isSuccessful()) {
                             Log.w(TAG, "signInWithCredential", task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
@@ -222,6 +226,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
+                            FirebaseUser user = mAuth.getCurrentUser();
                             if (!task.isSuccessful()) {
                                 Log.e(TAG, task.getException().toString());
                                 if (task.getException().toString().contains("The email address is already in use by another account.")) {
@@ -232,8 +237,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                     register(email, password);
                                 }
                             } else {
+
                                 Intent i = new Intent(LoginActivity.this, MainActivity.class);
                                 i.putExtra("isVistor","N");
+                                i.putExtra("name",user.getDisplayName());
+                                i.putExtra("uid",user.getUid());
+                                i.putExtra("email",user.getEmail());
                                 startActivity(i);
                             }
                         }
@@ -335,8 +344,13 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         if (task.isSuccessful()) {
                             Log.e(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+
+                            //Log.e(TAG, "User profile : " +user.getUid() + " :: " + user.getEmail() + " :: "+ user.getDisplayName() );
                             Intent i = new Intent(LoginActivity.this, MainActivity.class);
                             i.putExtra("isVistor","N");
+                            i.putExtra("name",user.getDisplayName());
+                            i.putExtra("uid",user.getUid());
+                            i.putExtra("email",user.getEmail());
                             startActivity(i);
                         } else {
                             Log.e(TAG, "signInWithCredential:failure", task.getException());

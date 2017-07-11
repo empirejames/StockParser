@@ -96,8 +96,10 @@ public class MyAdapter extends BaseAdapter implements Filterable {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 String sn = stockNumber.getText().toString();
                 if(isChecked){
+                    Log.e(TAG, " ADD : " + sn);
                     myFavorite.add(sn);
                 } else{
+                    Log.e(TAG, " Remove : " + sn);
                     myFavorite.remove(sn);
                 }
             }
