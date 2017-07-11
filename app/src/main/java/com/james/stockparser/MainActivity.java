@@ -29,12 +29,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.james.stockparser.Fragment.FragmentMain;
 import com.james.stockparser.Unit.User;
+import com.james.stockparser.dataBase.TinyDB;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import au.com.bytecode.opencsv.CSVReader;
 
@@ -54,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
     ProgressDialog mProgressDialog;
     boolean mDisPlayFav = false;
     Bundle bundle;
+    TinyDB tinydb ;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -97,8 +100,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        tinydb = new TinyDB(getApplicationContext());
         bundle = getIntent().getExtras();
-        writeNewUserIfNeeded();
+        if (!isVistor()){
+            writeNewUserIfNeeded();
+        }
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         listV = (ListView) findViewById(R.id.list_view);
@@ -185,7 +191,8 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.action_search:
                     break;
                 case R.id.my_favorite:
-                    multipleDelete(mDisPlayFav);
+                    //multipleDelete(mDisPlayFav);
+                    Log.e(TAG, "getFavorite" + adapter.getFavorite());
                     break;
                 case R.id.action_filter:
                     new AlertDialog.Builder(MainActivity.this)
@@ -298,6 +305,27 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+    private void saveUserData(final ArrayList favorite){
+        ref = FirebaseDatabase.getInstance().getReference();
+        String userId  = bundle.getString("uid");
+        final String username  = bundle.getString("name");
+        final String email  = bundle.getString("email");
+        final DatabaseReference usersRef = ref.child("users").child(userId);
+        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()&&favorite.size()!=0){
+                    usersRef.setValue(new User(username, email,favorite));
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
 
     private void writeNewUserIfNeeded() {
         ref = FirebaseDatabase.getInstance().getReference();

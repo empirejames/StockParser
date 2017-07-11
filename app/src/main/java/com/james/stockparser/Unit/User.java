@@ -1,5 +1,7 @@
 package com.james.stockparser.Unit;
 
+import java.util.ArrayList;
+
 /**
  * Created by 101716 on 2017/7/11.
  */
@@ -9,7 +11,13 @@ public class User {
     private String name;
     private String email;
     private String UID;
+    private ArrayList <String>favorite = new ArrayList(){};
 
+    public User(String name, String email, ArrayList favorite) {
+        this.name = name;
+        this.email = email;
+        this.favorite = favorite;
+    }
     public User(String name, String email) {
         this.name = name;
         this.email = email;

@@ -1,6 +1,7 @@
 package com.james.stockparser;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -18,6 +19,8 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.james.stockparser.dataBase.TinyDB;
+
 import java.util.ArrayList;
 
 /**
@@ -31,11 +34,16 @@ public class MyAdapter extends BaseAdapter implements Filterable {
     private boolean deleteContext;
     String TAG = MyAdapter.class.getSimpleName();
     ArrayList<String> myFavorite = new ArrayList<String>();
+    TinyDB tinydb;
 
+    public MyAdapter(Context context){
+        this.context = context;
+    }
     public MyAdapter(Context context, ArrayList<StockItem> itemList) {
         this.context = context;
         mListItems = itemList;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        tinydb = new TinyDB(context);
     }
     @Override
     public int getCount() {
@@ -57,7 +65,7 @@ public class MyAdapter extends BaseAdapter implements Filterable {
         float transTianx  = 0;
         final View row = inflater.inflate(R.layout.list_stock, parent, false);
         final StockItem item = mListItems.get(position);
-        CheckBox cb = (CheckBox) row.findViewById(R.id.checkbox);
+        final CheckBox cb = (CheckBox) row.findViewById(R.id.checkbox);
         if(deleteContext){
             cb.setVisibility(View.VISIBLE);
         }else{
@@ -95,15 +103,17 @@ public class MyAdapter extends BaseAdapter implements Filterable {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 String sn = stockNumber.getText().toString();
-                if(isChecked){
+                if(isChecked && !myFavorite.contains(sn)){
                     Log.e(TAG, " ADD : " + sn);
                     myFavorite.add(sn);
-                } else{
+                } else if(!isChecked && myFavorite.contains(sn)){
                     Log.e(TAG, " Remove : " + sn);
                     myFavorite.remove(sn);
                 }
             }
         });
+        tinydb.putListString("myFav" ,myFavorite );
+        cb.setChecked(myFavorite.contains(item.getStockNumber()));
         return row;
     }
 
@@ -119,5 +129,9 @@ public class MyAdapter extends BaseAdapter implements Filterable {
             deleteContext = false;
         }
         notifyDataSetChanged();
+    }
+    public ArrayList<String> getFavorite(){
+        Log.e(TAG, "Size : " + myFavorite.size());
+        return myFavorite;
     }
 }
