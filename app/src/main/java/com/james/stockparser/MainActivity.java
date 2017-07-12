@@ -13,6 +13,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,10 +22,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.Toast;
 
+import com.bumptech.glide.load.engine.Resource;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -96,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
         searchView.setIconifiedByDefault(false);
         searchView.setQueryHint("股票代號/名稱");
         searchEditText.setTextColor(getResources().getColor(R.color.colorWhite));
-        searchEditText.setHintTextColor(getResources().getColor(R.color.gray));
+        searchEditText.setHintTextColor(getResources().getColor(R.color.colorGray));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -161,10 +166,7 @@ public class MainActivity extends AppCompatActivity {
                     stockName = myDataset.get(position).getStockName();
                     stocknumber = myDataset.get(position).getStockNumber();
                 }
-                //Log.e(TAG, stocknumber + " " + stockName);
                 for (int i = 0; i < myEPS.size(); i++) {
-                    //Log.e(TAG,myEPS.get(i).getStockNumber() );
-                    //Log.e(TAG,"..0 " + stocknumber );
                     if (myEPS.get(i).getStockNumber().equals(stocknumber)) {
                         Log.e(TAG, stocknumber + " " + stockName + " " + myEPS.get(i).getStockEPS());
                         Intent in = new Intent(getApplicationContext(), FragmentMain.class);
@@ -241,6 +243,27 @@ public class MainActivity extends AppCompatActivity {
 
     };
 
+    public void showDialog(){
+        AlertDialog.Builder optionDialog = new AlertDialog.Builder(this);
+        FrameLayout frameLayout = new FrameLayout (optionDialog.getContext());
+        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        optionDialog.setView(frameLayout);
+        AlertDialog alert = optionDialog.create();
+        View  myView = inflater.inflate (R.layout.my_dialog, frameLayout);
+        SwitchCompat mySwitch = (SwitchCompat) myView.findViewById(R.id.day);
+        mySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    Log.e(TAG,"GGGGGG");
+                }else{
+                    Log.e(TAG,"EEEEEE");
+                }
+            }
+        });
+        alert.show();
+    }
+
     private Toolbar.OnMenuItemClickListener onMenuItemClick = new Toolbar.OnMenuItemClickListener() {
         @Override
         public boolean onMenuItemClick(MenuItem menuItem) {
@@ -268,20 +291,21 @@ public class MainActivity extends AppCompatActivity {
                     }
                     break;
                 case R.id.action_filter:
-                    new AlertDialog.Builder(MainActivity.this)
-                            .setTitle("條件式搜尋")
-                            .setView(v)
-                            .setPositiveButton("確定", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    EditText editTextPercent = (EditText) (v.findViewById(R.id.alert_edit_view));
-                                    EditText editTextDay = (EditText) (v.findViewById(R.id.alert_edit_view1));
-                                    myDataFilter = filterResult("null", true, editTextPercent.getText().toString(), editTextDay.getText().toString());
-
-                                    //Toast.makeText(getApplicationContext(), "你的id是" +editText.getText().toString(), Toast.LENGTH_SHORT).show();
-                                }
-                            })
-                            .show();
+                    showDialog();
+//                    new AlertDialog.Builder(MainActivity.this)
+//                            .setTitle("條件式搜尋")
+//                            .setView(v)
+//                            .setPositiveButton("確定", new DialogInterface.OnClickListener() {
+//                                @Override
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                    EditText editTextPercent = (EditText) (v.findViewById(R.id.alert_edit_view));
+//                                    EditText editTextDay = (EditText) (v.findViewById(R.id.alert_edit_view1));
+//                                    myDataFilter = filterResult("null", true, editTextPercent.getText().toString(), editTextDay.getText().toString());
+//
+//                                    //Toast.makeText(getApplicationContext(), "你的id是" +editText.getText().toString(), Toast.LENGTH_SHORT).show();
+//                                }
+//                            })
+//                            .show();
                     break;
             }
 

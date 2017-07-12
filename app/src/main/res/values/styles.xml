@@ -16,4 +16,8 @@
         <item name="searchIcon">@drawable/ic_search_white_48dp</item>
         <item name="closeIcon">@drawable/ic_delete_white_48dp</item>
     </style>
+    <style name="SwitchCompatStyle" >
+        <item name="thumbTint">@color/selector_switch_btn</item>
+        <item name="trackTint">@color/selector_switch_btn</item>
+    </style>
 </resources>

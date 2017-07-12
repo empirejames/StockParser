@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:weightSum="1">
+    <RelativeLayout
+        android:id="@+id/relative_layoutTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:textColor="@color/colorWhite"
+        android:background="@color/colorPrimaryLight"
+        android:visibility="visible"
+        android:layout_weight="0.1">
+
+        <TextView
+            android:id="@+id/title_dialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="30dp"
+            android:textColor="@color/colorWhite"
+            android:text="篩選"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+        </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relative_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/relative_layoutTitle"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_weight="0.15"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:textColor="@android:color/background_dark"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/ratingbarText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="15dp"
+            android:text="AAAAAAAA"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <RatingBar
+            android:id="@+id/RatingBar"
+            style="?android:attr/ratingBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/switchStatus0"
+            android:layout_alignEnd="@+id/day"
+            android:layout_alignRight="@+id/day"
+            android:numStars="5"
+            android:progressBackgroundTint="@android:color/darker_gray"
+            android:progressTint="@android:color/holo_orange_light"
+            android:rating="3.5"></RatingBar>
+
+        <TextView
+            android:id="@+id/switchStatus0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_below="@+id/ratingbarText"
+            android:layout_marginTop="15dp"
+            android:text="AAAAAAAA"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/switchStatus0"
+            android:layout_below="@+id/RatingBar"
+            android:layout_marginEnd="36dp"
+            android:layout_marginRight="36dp"
+            android:checked="false"
+            android:scaleX="1.5"
+            android:scaleY="1.5"
+            app:switchMinWidth="50dp" />
+
+        <TextView
+            android:id="@+id/switchStatus1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/day"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="15dp"
+            android:text="BBBBBBB"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/day1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/switchStatus1"
+            android:layout_alignLeft="@+id/day"
+            android:layout_alignStart="@+id/day"
+            android:checked="false"
+            android:scaleX="1.5"
+            android:scaleY="1.5"
+            android:showText="false"
+            app:switchMinWidth="50dp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relative_layout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:textColor="@android:color/background_dark"
+        android:background="@color/colorPrimaryLight"
+        android:layout_weight="0.1"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/title_dialog1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="30dp"
+            android:textColor="@color/colorWhite"
+            android:text="進階篩選"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relative_layout3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="22dp"
+        android:layout_weight="0.25"
+        android:layout_marginBottom="30dp"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:textColor="@android:color/background_dark"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/switchStatus3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="AAAAAAAA"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/day2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="30dp"
+            android:layout_marginRight="30dp"
+            android:checked="true"
+            android:showText="false" />
+    </RelativeLayout>
+
+</LinearLayout>
