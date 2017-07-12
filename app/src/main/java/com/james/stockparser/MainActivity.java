@@ -198,7 +198,6 @@ public class MainActivity extends AppCompatActivity {
     public boolean isVistor() {
         if (bundle.getString("isVistor") != null) {
             String vistor = bundle.getString("isVistor");
-            Log.e(TAG, vistor + " is vistor ?? ");
             if (vistor.toString().equals("Y")) {
                 return true;
             } else {
@@ -224,11 +223,15 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 case R.id.navigation_dashboard:
                     PageNumber = 1;
-                    invalidateOptionsMenu();//update toolbar
-                    Log.e(TAG, tinydb.getListString("myFav") + "");
-                    //saveUserData(adapter.getFavorite());  //Upload Server
-                    //writeFav();
-                    myFavovResult(compareNewData(favList, adapter.getFavorite(), true)); //summary main item
+                    if (isVistor()){
+                        alertDialog("訪客身分無法使用我的最愛功能");
+                    }else{
+                        invalidateOptionsMenu();//update toolbar
+                        Log.e(TAG, tinydb.getListString("myFav") + "");
+                        //saveUserData(adapter.getFavorite());  //Upload Server
+                        //writeFav();
+                        myFavovResult(compareNewData(favList, adapter.getFavorite(), true)); //summary main item
+                    }
                     return true;
                 case R.id.navigation_notifications:
                     return true;
@@ -449,6 +452,13 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+    private void alertDialog(String message) {
+        new AlertDialog.Builder(MainActivity.this)
+                .setTitle("系統提示")
+                .setMessage(message)
+                .setPositiveButton("確認", null)
+                .show();
     }
 
     public void multipleDelete(boolean isMultipleDelete) {
