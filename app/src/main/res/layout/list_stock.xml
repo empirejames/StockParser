@@ -163,8 +163,18 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="10dp"
-                android:button="@drawable/checkbox_customer"
+                android:button="@drawable/checkbox_favorite"
                 android:visibility="visible">
+            </CheckBox>
+            <CheckBox
+                android:id="@+id/checkbox_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:button="@drawable/checkbox_delete"
+                android:visibility="gone">
             </CheckBox>
         </RelativeLayout>
 

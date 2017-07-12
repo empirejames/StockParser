@@ -3,21 +3,35 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_search"
-        android:title="Search"
-        app:actionViewClass="android.support.v7.widget.SearchView"
-        app:showAsAction="ifRoom|collapseActionView"
         android:icon="@drawable/ic_search_white_48dp"
         android:iconifiedByDefault="false"
+        android:orderInCategory="100"
         android:queryHint="請輸入代號或名稱"
-        />
-    <item android:id="@+id/my_favorite"
-        android:icon="@drawable/ic_add_white_24dp"
-        android:title="Favorite"
-        android:orderInCategory="100"
-        app:showAsAction="ifRoom|collapseActionView"/>
-    <item android:id="@+id/action_filter"
-        android:icon="@drawable/ic_setting_white_48dp"
-        android:title="Filter"
-        android:orderInCategory="100"
-        app:showAsAction="ifRoom|collapseActionView"/>
+        android:title="搜尋"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="ifRoom|collapseActionView" />
+    <item
+        android:id="@+id/action_favorite"
+        android:icon="@mipmap/ic_action_heart"
+        android:orderInCategory="200"
+        android:title="我的最愛"
+        app:showAsAction="ifRoom|collapseActionView" />
+    <item
+        android:id="@+id/action_update"
+        android:icon="@mipmap/ic_action_save"
+        android:orderInCategory="300"
+        android:title="上傳"
+        app:showAsAction="ifRoom|collapseActionView" />
+    <item
+        android:id="@+id/action_trash"
+        android:icon="@mipmap/ic_action_trash"
+        android:orderInCategory="400"
+        android:title="刪除"
+        app:showAsAction="ifRoom|collapseActionView" />
+    <item
+        android:id="@+id/action_filter"
+        android:icon="@mipmap/ic_action_filter"
+        android:orderInCategory="500"
+        android:title="篩選"
+        app:showAsAction="ifRoom|collapseActionView" />
 </menu>

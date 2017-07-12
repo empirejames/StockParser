@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AlertDialog;
@@ -16,12 +17,14 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -37,6 +40,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Set;
 
 import au.com.bytecode.opencsv.CSVReader;
 
@@ -47,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<StockItem> myDataset = new ArrayList<StockItem>();
     ArrayList<StockEPS> myEPS = new ArrayList<StockEPS>();
     ArrayList<StockItem> myDataFilter = new ArrayList<StockItem>();
+    ArrayList<StockItem> myFavorite = new ArrayList<StockItem>();
+    ArrayList<String> favList = new ArrayList<String>();
     private String[] nextLine;
     private Toolbar mToolbar;
     SearchView searchView;
@@ -54,13 +60,34 @@ public class MainActivity extends AppCompatActivity {
     String stockInfoName, stockInfoNumber, stockInfoEPS;
     DatabaseReference ref;
     ProgressDialog mProgressDialog;
-    boolean mDisPlayFav = false;
     Bundle bundle;
-    TinyDB tinydb ;
+    TinyDB tinydb;
+    SharedPreferences prefs;
+    String userId;
+    boolean isVistor;
+    boolean disPlayFav;
+    boolean mDisPlayFav = false;
+    boolean selectAll = false;
+    int PageNumber = 0;
+    private Menu menuItem;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        this.menuItem = menu;
+        if (isVistor()) {
+            menu.getItem(1).setVisible(false);
+            menu.getItem(2).setVisible(false);
+        }
+        if (PageNumber == 0) {
+            menu.getItem(2).setVisible(false);
+            menu.getItem(3).setVisible(false);
+        } else if (PageNumber == 1) {
+            menu.getItem(0).setVisible(false);
+            menu.getItem(1).setVisible(false);
+            menu.getItem(4).setVisible(false);
+        }
         SearchManager searchManager = (SearchManager) getSystemService(getApplicationContext().SEARCH_SERVICE);
         searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         EditText searchEditText = (EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
@@ -76,17 +103,18 @@ public class MainActivity extends AppCompatActivity {
                 searchView.clearFocus();
                 return true;
             }
+
             @Override
             public boolean onQueryTextChange(String s) {
                 myDataFilter.clear();
                 if (!s.equals("")) {
                     Log.e(TAG, "onQueryTextChange : " + s);
                     myDataFilter = filterResult(s, true, "0", "0");
-                    adapter = new MyAdapter(getApplicationContext(), myDataFilter);
+                    adapter = new MyAdapter(getApplicationContext(), myDataFilter, isVistor, selectAll);
                     listV.setAdapter(adapter);
                     listV.invalidateViews();
                 } else {
-                    adapter = new MyAdapter(getApplicationContext(), myDataset);
+                    adapter = new MyAdapter(getApplicationContext(), myDataset, isVistor, selectAll);
                     listV.setAdapter(adapter);
                     listV.invalidateViews();
                 }
@@ -100,9 +128,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
         tinydb = new TinyDB(getApplicationContext());
         bundle = getIntent().getExtras();
-        if (!isVistor()){
+        isVistor = isVistor();
+        if (!isVistor) {
             writeNewUserIfNeeded();
         }
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
@@ -149,16 +179,32 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public boolean isVistor(){
-        if(bundle.getString("isVistor")!= null) {
-            String vistor  = bundle.getString("isVistor");
-            Log.e(TAG,vistor + " " );
-            if (vistor.toString().equals("Y")){
+    @Override
+    public void onResume() {
+        super.onResume();
+        //readFav();
+    }
+    @Override
+    public void onStop() {
+        super.onStop();
+        saveUserData(compareNewData(favList, adapter.getToDelete(),false));
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        saveUserData(compareNewData(favList, adapter.getToDelete(),false));
+    }
+
+    public boolean isVistor() {
+        if (bundle.getString("isVistor") != null) {
+            String vistor = bundle.getString("isVistor");
+            Log.e(TAG, vistor + " is vistor ?? ");
+            if (vistor.toString().equals("Y")) {
                 return true;
-            }else{
+            } else {
                 return false;
             }
-        }else{
+        } else {
             return false;
         }
     }
@@ -170,8 +216,19 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
+                    PageNumber = 0;
+                    invalidateOptionsMenu(); //update toolbar
+                    adapter = new MyAdapter(getApplicationContext(), myDataset, true, selectAll);
+                    listV.setAdapter(adapter);
+                    listV.invalidateViews();
                     return true;
                 case R.id.navigation_dashboard:
+                    PageNumber = 1;
+                    invalidateOptionsMenu();//update toolbar
+                    Log.e(TAG, tinydb.getListString("myFav") + "");
+                    //saveUserData(adapter.getFavorite());  //Upload Server
+                    //writeFav();
+                    myFavovResult(compareNewData(favList, adapter.getFavorite(), true)); //summary main item
                     return true;
                 case R.id.navigation_notifications:
                     return true;
@@ -190,9 +247,22 @@ public class MainActivity extends AppCompatActivity {
             switch (menuItem.getItemId()) {
                 case R.id.action_search:
                     break;
-                case R.id.my_favorite:
-                    //multipleDelete(mDisPlayFav);
-                    Log.e(TAG, "getFavorite" + adapter.getFavorite());
+                case R.id.action_update:
+                    Log.e(TAG, "action_update");
+                    saveUserData(compareNewData(favList, adapter.getToDelete(),false));
+                    myFavovResult(compareNewData(favList, adapter.getToDelete(),false)); // reset List View
+                    break;
+                case R.id.action_trash:
+                    Log.e(TAG, "action_trash");
+                    multipleDelete(mDisPlayFav);
+                    break;
+                case R.id.action_favorite:
+                    Log.e(TAG, compareNewData(favList, adapter.getToDelete(), false) + "");
+                    if (PageNumber == 0) {
+                        multipleDelete(mDisPlayFav);
+                    } else {
+                        Log.e(TAG, "PAGE 11 ");
+                    }
                     break;
                 case R.id.action_filter:
                     new AlertDialog.Builder(MainActivity.this)
@@ -219,15 +289,54 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    public void multipleDelete(boolean isMultipleDelete) {
-        if (isMultipleDelete){
-            adapter.showCheckBox(false);
-            mDisPlayFav = false;
-        } else{
-            adapter.showCheckBox(true);
-            mDisPlayFav = true;
+    public ArrayList<String> compareNewData(ArrayList oldData, ArrayList newData, boolean isCombine) {
+        ArrayList<String> listWithoutDuplicateElements = new ArrayList<String>();
+        if (isCombine) {
+            oldData.addAll(newData);
+            HashSet<String> set = new HashSet<String>(oldData);
+            listWithoutDuplicateElements = new ArrayList<String>(set);
+        } else {
+            oldData.removeAll(newData);
+            listWithoutDuplicateElements.addAll(oldData);
         }
+        return listWithoutDuplicateElements;
     }
+
+    public void writeFav() {
+        SharedPreferences.Editor editor = prefs.edit();
+        Set<String> set = new HashSet<String>();
+        set.addAll(adapter.getFavorite());
+        editor.putStringSet("myFav", set);
+        Log.e(TAG, editor.putStringSet("myFavSet", set) + ":: SAVE");
+    }
+
+    public void readFav() {
+        SharedPreferences spref = getPreferences(MODE_PRIVATE);
+        spref.getStringSet("myFav", null);
+        Log.e(TAG, spref.getStringSet("myFavSet", null) + ":: LOAD");
+    }
+
+    public ArrayList<StockItem> myFavovResult(ArrayList list) {
+        ArrayList<StockItem> item = new ArrayList<StockItem>();
+        item.clear();
+        for (int i = 0; i < myDataset.size(); i++) {
+            if (list.contains(myDataset.get(i).getStockNumber())) {
+                item.add(new StockItem(myDataset.get(i).getStockNumber(),
+                        myDataset.get(i).getStockName(),
+                        myDataset.get(i).getTianxiCount(),
+                        myDataset.get(i).getReleaseCount(),
+                        myDataset.get(i).getTianxiPercent(),
+                        myDataset.get(i).getTianxiDay(),
+                        myDataset.get(i).getThisYear())
+                );
+            }
+        }
+        adapter = new MyAdapter(getApplicationContext(), item, isVistor, true);
+        listV.setAdapter(adapter);
+        listV.invalidateViews();
+        return item;
+    }
+
 
     public ArrayList<StockItem> filterResult(String input, boolean hasPattern, String taixiPercent, String taixiAvgday) {
         ArrayList<StockItem> item = new ArrayList<StockItem>();
@@ -269,19 +378,12 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             }
-            adapter = new MyAdapter(getApplicationContext(), item);
+            adapter = new MyAdapter(getApplicationContext(), item, isVistor, selectAll);
             listV.setAdapter(adapter);
             listV.invalidateViews();
             Toast.makeText(getApplicationContext(), "搜尋到 : " + item.size() + "筆", Toast.LENGTH_LONG).show();
         }
         return item;
-    }
-
-    public void settingSet() {
-        SharedPreferences.Editor editor = getSharedPreferences(Constants.TANXI_PERCENT, MODE_PRIVATE).edit();
-        editor.putString(Constants.TANXI_PERCENT, "0");
-        editor.putString(Constants.TANXI_ACGDAY, "100");
-        editor.putString(Constants.NOW_DAY, "100");
     }
 
     public void CSVRead() {
@@ -306,19 +408,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void saveUserData(final ArrayList favorite){
+    private void saveUserData(final ArrayList favorite) {
+        Log.e(TAG,"saveUserData:: " + favorite);
         ref = FirebaseDatabase.getInstance().getReference();
-        String userId  = bundle.getString("uid");
-        final String username  = bundle.getString("name");
-        final String email  = bundle.getString("email");
+        userId = bundle.getString("uid");
         final DatabaseReference usersRef = ref.child("users").child(userId);
         usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()&&favorite.size()!=0){
-                    usersRef.setValue(new User(username, email,favorite));
+                if (dataSnapshot.exists() && favorite.size() != 0) {
+                    Log.e(TAG,"dataSnapshot.exists() && favorite.size() != 0");
+                    usersRef.child("favorite").setValue(favorite);
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
@@ -329,17 +432,18 @@ public class MainActivity extends AppCompatActivity {
 
     private void writeNewUserIfNeeded() {
         ref = FirebaseDatabase.getInstance().getReference();
-        String userId  = bundle.getString("uid");
-        final String username  = bundle.getString("name");
-        final String email  = bundle.getString("email");
+        String userId = bundle.getString("uid");
+        final String username = bundle.getString("name");
+        final String email = bundle.getString("email");
         final DatabaseReference usersRef = ref.child("users").child(userId);
         usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.exists()){
+                if (!dataSnapshot.exists()) {
                     usersRef.setValue(new User(username, email));
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
@@ -347,6 +451,15 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public void multipleDelete(boolean isMultipleDelete) {
+        if (isMultipleDelete) {
+            adapter.showCheckBox(false);
+            mDisPlayFav = false;
+        } else {
+            adapter.showCheckBox(true);
+            mDisPlayFav = true;
+        }
+    }
 
     private class GetData extends AsyncTask<String, Integer, String> {
         @Override
@@ -361,14 +474,13 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... params) {
+            userId = bundle.getString("uid");
             ref = FirebaseDatabase.getInstance().getReference();
             ref.keepSynced(true);
             ref.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-
                     for (final DataSnapshot dsp : dataSnapshot.getChildren()) {
-
                         if (dsp.getKey().equals("EPS")) {
                             for (DataSnapshot eps : dsp.getChildren()) {
                                 //Log.e(TAG, "--" +single.getKey());
@@ -388,11 +500,23 @@ public class MainActivity extends AppCompatActivity {
                                 tianxiCount = stock.child("tianxiCount").getValue().toString();
                                 myDataset.add(new StockItem(stockNumber, stockName, tianxiCount, releaseCount, tianxiPercent, tianxiDay, thisYear));
                             }
+                        } else if (!isVistor() && dsp.getKey().equals("users")) {
+                            for (DataSnapshot users : dsp.getChildren()) {
+                                if (userId.equals(users.getKey())) { //the same as account
+                                    for (DataSnapshot fav : users.getChildren()) {
+                                        if (fav.getKey().equals("favorite")) {
+                                            for (DataSnapshot set : fav.getChildren()) {
+                                                Log.e(TAG, "TT :: " + set.getValue());
+                                                favList.add(set.getValue().toString());
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
-                    adapter = new MyAdapter(getApplicationContext(), myDataset);
+                    adapter = new MyAdapter(getApplicationContext(), myDataset, true, selectAll);
                     listV.setAdapter(adapter);
-                    multipleDelete(isVistor());
                     if (mProgressDialog != null) {
                         mProgressDialog.dismiss();
                     }
