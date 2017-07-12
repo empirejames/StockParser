@@ -20,12 +20,14 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -68,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
     Bundle bundle;
     TinyDB tinydb;
     SharedPreferences prefs;
+    RatingBar ratingbarStart;
     String userId;
     boolean isVistor;
     boolean disPlayFav;
@@ -133,8 +136,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-        tinydb = new TinyDB(getApplicationContext());
         bundle = getIntent().getExtras();
         isVistor = isVistor();
         if (!isVistor) {
@@ -186,15 +187,17 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         //readFav();
     }
+
     @Override
     public void onStop() {
         super.onStop();
-        saveUserData(compareNewData(favList, adapter.getToDelete(),false));
+        saveUserData(compareNewData(favList, adapter.getToDelete(), false));
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
-        saveUserData(compareNewData(favList, adapter.getToDelete(),false));
+        saveUserData(compareNewData(favList, adapter.getToDelete(), false));
     }
 
     public boolean isVistor() {
@@ -225,9 +228,9 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 case R.id.navigation_dashboard:
                     PageNumber = 1;
-                    if (isVistor()){
+                    if (isVistor()) {
                         alertDialog("訪客身分無法使用我的最愛功能");
-                    }else{
+                    } else {
                         invalidateOptionsMenu();//update toolbar
                         Log.e(TAG, tinydb.getListString("myFav") + "");
                         //saveUserData(adapter.getFavorite());  //Upload Server
@@ -243,21 +246,31 @@ public class MainActivity extends AppCompatActivity {
 
     };
 
-    public void showDialog(){
+    public void showDialog() {
         AlertDialog.Builder optionDialog = new AlertDialog.Builder(this);
-        FrameLayout frameLayout = new FrameLayout (optionDialog.getContext());
+        FrameLayout frameLayout = new FrameLayout(optionDialog.getContext());
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         optionDialog.setView(frameLayout);
         AlertDialog alert = optionDialog.create();
-        View  myView = inflater.inflate (R.layout.my_dialog, frameLayout);
+        View myView = inflater.inflate(R.layout.my_dialog, frameLayout);
+        ratingbarStart = (RatingBar) myView.findViewById(R.id.ratingBarSelect);
+        ratingbarStart.setRating(4);
+        ratingbarStart.setEnabled(true);
+        ratingbarStart.setClickable(true);
+        ratingbarStart.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                Log.e(TAG, "GET rating " + rating);
+            }
+        });
         SwitchCompat mySwitch = (SwitchCompat) myView.findViewById(R.id.day);
         mySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked){
-                    Log.e(TAG,"GGGGGG");
-                }else{
-                    Log.e(TAG,"EEEEEE");
+                if (isChecked) {
+                    Log.e(TAG, "GGGGGG");
+                } else {
+                    Log.e(TAG, "EEEEEE");
                 }
             }
         });
@@ -275,8 +288,8 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.action_update:
                     Log.e(TAG, "action_update");
-                    saveUserData(compareNewData(favList, adapter.getToDelete(),false));
-                    myFavovResult(compareNewData(favList, adapter.getToDelete(),false)); // reset List View
+                    saveUserData(compareNewData(favList, adapter.getToDelete(), false));
+                    myFavovResult(compareNewData(favList, adapter.getToDelete(), false)); // reset List View
                     break;
                 case R.id.action_trash:
                     Log.e(TAG, "action_trash");
@@ -436,7 +449,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void saveUserData(final ArrayList favorite) {
-        Log.e(TAG,"saveUserData:: " + favorite);
+        Log.e(TAG, "saveUserData:: " + favorite);
         ref = FirebaseDatabase.getInstance().getReference();
         userId = bundle.getString("uid");
         final DatabaseReference usersRef = ref.child("users").child(userId);
@@ -444,7 +457,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists() && favorite.size() != 0) {
-                    Log.e(TAG,"dataSnapshot.exists() && favorite.size() != 0");
+                    Log.e(TAG, "dataSnapshot.exists() && favorite.size() != 0");
                     usersRef.child("favorite").setValue(favorite);
                 }
             }
@@ -477,6 +490,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
     private void alertDialog(String message) {
         new AlertDialog.Builder(MainActivity.this)
                 .setTitle("系統提示")

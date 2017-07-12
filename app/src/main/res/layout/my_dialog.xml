@@ -31,11 +31,10 @@
     <RelativeLayout
         android:id="@+id/relative_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="224dp"
         android:layout_below="@+id/relative_layoutTitle"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
-        android:layout_weight="0.15"
         android:orientation="vertical"
         android:paddingLeft="10dp"
         android:textColor="@android:color/background_dark"
@@ -48,22 +47,24 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="46dp"
             android:text="AAAAAAAA"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <RatingBar
-            android:id="@+id/RatingBar"
+            android:id="@+id/ratingBarSelect"
+            android:scaleX="2"
+            android:scaleY="2"
             style="?android:attr/ratingBarStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/switchStatus0"
-            android:layout_alignEnd="@+id/day"
-            android:layout_alignRight="@+id/day"
+            android:isIndicator="true"
             android:numStars="5"
             android:progressBackgroundTint="@android:color/darker_gray"
             android:progressTint="@android:color/holo_orange_light"
-            android:rating="3.5"></RatingBar>
+            android:layout_alignBottom="@+id/ratingbarText"
+            android:layout_alignRight="@+id/day"
+            android:layout_alignEnd="@+id/day"></RatingBar>
 
         <TextView
             android:id="@+id/switchStatus0"
@@ -71,9 +72,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_below="@+id/ratingbarText"
-            android:layout_marginTop="15dp"
+            android:layout_centerVertical="true"
             android:text="AAAAAAAA"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -96,13 +95,12 @@
             android:id="@+id/switchStatus1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="BBBBBBB"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_below="@+id/day"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/day"
-            android:layout_marginBottom="15dp"
-            android:layout_marginTop="15dp"
-            android:text="BBBBBBB"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:layout_marginTop="30dp" />
 
         <android.support.v7.widget.SwitchCompat
             android:id="@+id/day1"
