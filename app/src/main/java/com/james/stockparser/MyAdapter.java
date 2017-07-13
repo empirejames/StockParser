@@ -79,7 +79,7 @@ public class MyAdapter extends BaseAdapter implements Filterable {
         final CheckBox cbDel = (CheckBox) row.findViewById(R.id.checkbox_delete);
         if (!isVistor) {
             cb.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             cb.setVisibility(View.GONE);
             cbDel.setVisibility(View.GONE);
         }
@@ -87,15 +87,15 @@ public class MyAdapter extends BaseAdapter implements Filterable {
             cb.setVisibility(View.GONE);
             //cbDel.setVisibility(View.VISIBLE);
         }
-        if(deleteContext){
-            if (!page2){
+        if (deleteContext) {
+            if (!page2) {
                 cb.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 cbDel.setVisibility(View.VISIBLE);
             }
-            if (page2 && deleteContext){
+            if (page2 && deleteContext) {
                 cbDel.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 cbDel.setVisibility(View.GONE);
             }
         }
@@ -117,8 +117,8 @@ public class MyAdapter extends BaseAdapter implements Filterable {
         TextView releaseCount = (TextView) row.findViewById(R.id.releaseName);
         releaseCount.setText(item.getReleaseCount());
 
-
         TextView tianxiDay = (TextView) row.findViewById(R.id.taixiaverageName);
+        tianxiDay.setText(item.getTianxiDay());
 
         TextView thisYear = (TextView) row.findViewById(R.id.thisyearName);
         if (item.getThisYear().equals("")) {
@@ -143,11 +143,11 @@ public class MyAdapter extends BaseAdapter implements Filterable {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 String sn = stockNumber.getText().toString();
-                if (isChecked ){
+                if (isChecked) {
                     Log.e(TAG, " Remove : " + sn);
                     toDelete.add(sn);
                     convertView.invalidate();
-                   // myFavorite.remove(sn);
+                    // myFavorite.remove(sn);
                 }
             }
         });
@@ -164,13 +164,15 @@ public class MyAdapter extends BaseAdapter implements Filterable {
     public ArrayList<String> getFavorite() {
         return myFavorite;
     }
+
     public ArrayList<String> getToDelete() {
         return toDelete;
     }
-    public void showCheckBox(boolean show){
-        if(show){
+
+    public void showCheckBox(boolean show) {
+        if (show) {
             deleteContext = true;
-        }else{
+        } else {
             deleteContext = false;
         }
         notifyDataSetChanged();

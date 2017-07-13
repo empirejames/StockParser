@@ -275,7 +275,8 @@ public class MainActivity extends AppCompatActivity {
         avgNumAdapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, avgList);
         countNumber.setAdapter(countNumAdapter);
         avgNumber.setAdapter(avgNumAdapter);
-
+        countNumber.setSelection(10); //sharepreffence
+        avgNumber.setSelection(2);//sharepreffence
 
         countNumber.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
