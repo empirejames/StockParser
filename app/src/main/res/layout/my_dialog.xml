@@ -33,8 +33,8 @@
         android:layout_width="match_parent"
         android:layout_height="224dp"
         android:layout_below="@+id/relative_layoutTitle"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
         android:orientation="vertical"
         android:paddingLeft="10dp"
         android:textColor="@android:color/background_dark"
@@ -48,23 +48,23 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_marginTop="46dp"
-            android:text="AAAAAAAA"
+            android:text="填息機率"
             android:textAppearance="?android:attr/textAppearanceMedium" />
-
         <RatingBar
             android:id="@+id/ratingBarSelect"
-            android:scaleX="2"
-            android:scaleY="2"
-            style="?android:attr/ratingBarStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:isIndicator="true"
+            android:rating="3"
+            android:stepSize="0.5"
             android:numStars="5"
+            android:scaleX="0.7"
+            android:scaleY="0.7"
             android:progressBackgroundTint="@android:color/darker_gray"
             android:progressTint="@android:color/holo_orange_light"
-            android:layout_alignBottom="@+id/ratingbarText"
-            android:layout_alignRight="@+id/day"
-            android:layout_alignEnd="@+id/day"></RatingBar>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="14dp"
+            android:layout_above="@+id/switchStatus0"
+            android:layout_toRightOf="@+id/ratingbarText"
+            android:layout_toEndOf="@+id/ratingbarText" />
 
         <TextView
             android:id="@+id/switchStatus0"
@@ -73,7 +73,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:text="AAAAAAAA"
+            android:text="發放次數高"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <android.support.v7.widget.SwitchCompat
@@ -83,7 +83,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_alignTop="@+id/switchStatus0"
-            android:layout_below="@+id/RatingBar"
+            android:layout_below="@+id/ratingBarSelect"
             android:layout_marginEnd="36dp"
             android:layout_marginRight="36dp"
             android:checked="false"
@@ -95,7 +95,7 @@
             android:id="@+id/switchStatus1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="BBBBBBB"
+            android:text="填息平均日少"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_below="@+id/day"
             android:layout_alignParentLeft="true"
@@ -157,7 +157,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:text="AAAAAAAA"
+            android:text="尚未開放"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <android.support.v7.widget.SwitchCompat

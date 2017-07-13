@@ -2,11 +2,9 @@ package com.james.stockparser;
 
 import android.app.ProgressDialog;
 import android.app.SearchManager;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AlertDialog;
@@ -20,7 +18,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
@@ -28,10 +25,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.RatingBar;
-import android.widget.Switch;
 import android.widget.Toast;
-
-import com.bumptech.glide.load.engine.Resource;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -40,7 +34,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.james.stockparser.Fragment.FragmentMain;
 import com.james.stockparser.Unit.User;
 import com.james.stockparser.dataBase.TinyDB;
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -73,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
     RatingBar ratingbarStart;
     String userId;
     boolean isVistor;
-    boolean disPlayFav;
     boolean mDisPlayFav = false;
     boolean selectAll = false;
     int PageNumber = 0;
@@ -191,13 +183,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStop() {
         super.onStop();
-        saveUserData(compareNewData(favList, adapter.getToDelete(), false));
+        if (!isVistor()) {
+            saveUserData(compareNewData(favList, adapter.getToDelete(), false));
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        saveUserData(compareNewData(favList, adapter.getToDelete(), false));
+        if (!isVistor()){
+            saveUserData(compareNewData(favList, adapter.getToDelete(), false));
+        }
     }
 
     public boolean isVistor() {
