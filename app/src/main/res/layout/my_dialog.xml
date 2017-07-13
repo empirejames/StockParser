@@ -27,7 +27,8 @@
             android:textColor="@color/colorWhite"
             android:text="篩選"
             android:textAppearance="?android:attr/textAppearanceMedium" />
-        </RelativeLayout>
+
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/relative_layout"
@@ -38,6 +39,24 @@
         android:paddingLeft="10dp"
         android:textColor="@android:color/background_dark"
         android:visibility="visible">
+
+        <Spinner
+            android:id="@+id/spinner_avgNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="42dp"
+            android:layout_marginStart="42dp"
+            android:layout_alignTop="@+id/switchAvgDay"
+            android:layout_toRightOf="@+id/switchAvgDay"
+            android:layout_toEndOf="@+id/switchAvgDay" />
+
+        <Spinner
+            android:id="@+id/spinner_countNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/switchAvgDay"
+            android:layout_alignLeft="@+id/spinner_avgNumber"
+            android:layout_alignStart="@+id/spinner_avgNumber" />
 
         <TextView
             android:id="@+id/ratingbarText"

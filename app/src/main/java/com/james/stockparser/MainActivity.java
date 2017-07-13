@@ -20,12 +20,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.RatingBar;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -56,6 +58,10 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<StockItem> myDataFilter = new ArrayList<StockItem>();
     ArrayList<StockItem> myFavorite = new ArrayList<StockItem>();
     ArrayList<String> favList = new ArrayList<String>();
+    ArrayAdapter<String> countNumAdapter;
+    ArrayAdapter<String> avgNumAdapter;
+    String[] countList = {"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16"};
+    String[] avgList = {"10","20","30","40"};
     private String[] nextLine;
     private Toolbar mToolbar;
     SearchView searchView;
@@ -68,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences prefs;
     RatingBar ratingbarStart;
     Button btnDiglog;
+    Spinner countNumber, avgNumber;
     String userId;
     boolean isVistor;
     boolean mDisPlayFav = false;
@@ -77,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
     Boolean countHigh = false;
     Boolean avgLow = false;
     float percentTaixi;
+    String countSelectNumber, avgSelectNumber;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -117,11 +125,11 @@ public class MainActivity extends AppCompatActivity {
                 if (!s.equals("")) {
                     Log.e(TAG, "onQueryTextChange : " + s);
                     myDataFilter = filterResult(s, true, 0);
-                    adapter = new MyAdapter(getApplicationContext(), myDataFilter, isVistor, selectAll);
+                    adapter = new MyAdapter(getApplicationContext(), myDataFilter, true, selectAll);
                     listV.setAdapter(adapter);
                     listV.invalidateViews();
                 } else {
-                    adapter = new MyAdapter(getApplicationContext(), myDataset, isVistor, selectAll);
+                    adapter = new MyAdapter(getApplicationContext(), myDataset, true, selectAll);
                     listV.setAdapter(adapter);
                     listV.invalidateViews();
                 }
@@ -235,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
                         alertDialog("訪客身分無法使用我的最愛功能");
                     } else {
                         invalidateOptionsMenu();//update toolbar
-                        Log.e(TAG, tinydb.getListString("myFav") + "");
+                        //Log.e(TAG, tinydb.getListString("myFav") + "");
                         //saveUserData(adapter.getFavorite());  //Upload Server
                         //writeFav();
                         myFavovResult(compareNewData(favList, adapter.getFavorite(), true)); //summary main item
@@ -261,6 +269,36 @@ public class MainActivity extends AppCompatActivity {
         ratingbarStart.setRating(4);
         ratingbarStart.setEnabled(true);
         ratingbarStart.setClickable(true);
+        countNumber = (Spinner) myView.findViewById(R.id.spinner_countNumber);
+        avgNumber = (Spinner) myView.findViewById(R.id.spinner_avgNumber);
+        countNumAdapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, countList);
+        avgNumAdapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, avgList);
+        countNumber.setAdapter(countNumAdapter);
+        avgNumber.setAdapter(avgNumAdapter);
+
+
+        countNumber.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                countSelectNumber = countList[position];
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        avgNumber.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                avgSelectNumber = avgList[position];
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
         ratingbarStart.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
@@ -296,7 +334,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.e(TAG, "Btn_countHigh = " + countHigh);
                 Log.e(TAG, "Btn_percent :: " + percentTaixi);
                 myDataFilter = filterResult("null", true, percentTaixi);
-
                 alert.dismiss();
             }
         });
@@ -381,7 +418,6 @@ public class MainActivity extends AppCompatActivity {
         spref.getStringSet("myFav", null);
         Log.e(TAG, spref.getStringSet("myFavSet", null) + ":: LOAD");
     }
-
     public ArrayList<StockItem> myFavovResult(ArrayList list) {
         ArrayList<StockItem> item = new ArrayList<StockItem>();
         item.clear();
@@ -402,7 +438,6 @@ public class MainActivity extends AppCompatActivity {
         listV.invalidateViews();
         return item;
     }
-
 
     public ArrayList<StockItem> filterResult(String input, boolean hasPattern, float taixiPercent) {
         ArrayList<StockItem> item = new ArrayList<StockItem>();
@@ -426,6 +461,8 @@ public class MainActivity extends AppCompatActivity {
             float taixiAvgdayTOint = Float.parseFloat("0.8");
             float count;
             float avgdayCount;
+            int avgthread;
+            int countthread;
             if (taixiPercent > 0) {
                 taixiAvgdayTOint = taixiPercent;
             }
@@ -433,9 +470,11 @@ public class MainActivity extends AppCompatActivity {
                 percent = Float.parseFloat(myDataset.get(i).getTianxiPercent());
                 count = Float.parseFloat(myDataset.get(i).getTianxiCount());
                 avgdayCount = Float.parseFloat(myDataset.get(i).getTianxiDay());
+                countthread = Integer.parseInt(countSelectNumber);
+                avgthread = Integer.parseInt(avgSelectNumber);
                 if (countHigh) {
                     if (avgLow) {
-                        if (percent >= taixiAvgdayTOint - 0.1 && percent <= taixiAvgdayTOint + 0.1 && count > 10 && avgdayCount < 30) {
+                        if (percent >= taixiAvgdayTOint - 0.1 && percent <= taixiAvgdayTOint + 0.1 && count > countthread && avgdayCount < avgthread) {
                             item.add(new StockItem(myDataset.get(i).getStockNumber(),
                                     myDataset.get(i).getStockName(),
                                     myDataset.get(i).getTianxiCount(),
@@ -446,7 +485,7 @@ public class MainActivity extends AppCompatActivity {
                             );
                         }
                     } else {
-                        if (percent >= taixiAvgdayTOint - 0.1 && percent <= taixiAvgdayTOint + 0.1 && count > 5) {
+                        if (percent >= taixiAvgdayTOint - 0.1 && percent <= taixiAvgdayTOint + 0.1 && count > countthread) {
                             item.add(new StockItem(myDataset.get(i).getStockNumber(),
                                     myDataset.get(i).getStockName(),
                                     myDataset.get(i).getTianxiCount(),
@@ -459,7 +498,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 } else {
                     if (avgLow) {
-                        if (percent >= taixiAvgdayTOint - 0.1 && percent <= taixiAvgdayTOint + 0.1 && avgdayCount < 30) {
+                        if (percent >= taixiAvgdayTOint - 0.1 && percent <= taixiAvgdayTOint + 0.1 && avgdayCount < avgthread) {
                             item.add(new StockItem(myDataset.get(i).getStockNumber(),
                                     myDataset.get(i).getStockName(),
                                     myDataset.get(i).getTianxiCount(),
@@ -488,9 +527,9 @@ public class MainActivity extends AppCompatActivity {
             listV.invalidateViews();
             avgLow = false;
             countHigh = false;
-            if (item.size()>0){
+            if (item.size() > 0) {
                 Toast.makeText(getApplicationContext(), "搜尋到 : " + item.size() + "筆", Toast.LENGTH_LONG).show();
-            }else{
+            } else {
                 Toast.makeText(getApplicationContext(), "搜索不到資料! 請更改一下篩選條件", Toast.LENGTH_LONG).show();
             }
 
