@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:text="填息機率"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_above="@+id/switchStatus0"
+            android:layout_above="@+id/switchCount"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:textSize="20dp"
@@ -65,7 +65,7 @@
             android:layout_toRightOf="@+id/ratingbarText" />
 
         <TextView
-            android:id="@+id/switchStatus0"
+            android:id="@+id/switchCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="發放次數高"
@@ -76,12 +76,12 @@
             android:layout_alignParentStart="true" />
 
         <android.support.v7.widget.SwitchCompat
-            android:id="@+id/day"
+            android:id="@+id/switchCountBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/switchStatus0"
+            android:layout_alignTop="@+id/switchCount"
             android:layout_below="@+id/ratingBarSelect"
             android:layout_marginEnd="36dp"
             android:layout_marginRight="36dp"
@@ -91,24 +91,24 @@
             app:switchMinWidth="50dp" />
 
         <TextView
-            android:id="@+id/switchStatus1"
+            android:id="@+id/switchAvgDay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="填息平均日少"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_below="@+id/day"
+            android:layout_below="@+id/switchCountBtn"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:textSize="20dp"
             android:layout_marginTop="20dp" />
 
         <android.support.v7.widget.SwitchCompat
-            android:id="@+id/day1"
+            android:id="@+id/switchAvgDayBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/switchStatus1"
-            android:layout_alignLeft="@+id/day"
-            android:layout_alignStart="@+id/day"
+            android:layout_alignBottom="@+id/switchAvgDay"
+            android:layout_alignLeft="@+id/switchCountBtn"
+            android:layout_alignStart="@+id/switchCountBtn"
             android:checked="false"
             android:scaleX="1.5"
             android:scaleY="1.5"
@@ -180,7 +180,7 @@
     </RelativeLayout>
 
     <Button
-        android:id="@+id/ButtonSubmit"
+        android:id="@+id/dialog_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"

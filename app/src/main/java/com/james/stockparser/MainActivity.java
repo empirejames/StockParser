@@ -20,12 +20,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.Toast;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,6 +36,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.james.stockparser.Fragment.FragmentMain;
 import com.james.stockparser.Unit.User;
 import com.james.stockparser.dataBase.TinyDB;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -64,12 +67,16 @@ public class MainActivity extends AppCompatActivity {
     TinyDB tinydb;
     SharedPreferences prefs;
     RatingBar ratingbarStart;
+    Button btnDiglog;
     String userId;
     boolean isVistor;
     boolean mDisPlayFav = false;
     boolean selectAll = false;
     int PageNumber = 0;
     private Menu menuItem;
+    Boolean countHigh = false;
+    Boolean avgLow = false;
+    float percentTaixi;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -109,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
                 myDataFilter.clear();
                 if (!s.equals("")) {
                     Log.e(TAG, "onQueryTextChange : " + s);
-                    myDataFilter = filterResult(s, true, "0", "0");
+                    myDataFilter = filterResult(s, true, 0);
                     adapter = new MyAdapter(getApplicationContext(), myDataFilter, isVistor, selectAll);
                     listV.setAdapter(adapter);
                     listV.invalidateViews();
@@ -191,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (!isVistor()){
+        if (!isVistor()) {
             saveUserData(compareNewData(favList, adapter.getToDelete(), false));
         }
     }
@@ -247,8 +254,9 @@ public class MainActivity extends AppCompatActivity {
         FrameLayout frameLayout = new FrameLayout(optionDialog.getContext());
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         optionDialog.setView(frameLayout);
-        AlertDialog alert = optionDialog.create();
+        final AlertDialog alert = optionDialog.create();
         View myView = inflater.inflate(R.layout.my_dialog, frameLayout);
+        btnDiglog = (Button) myView.findViewById(R.id.dialog_btn);
         ratingbarStart = (RatingBar) myView.findViewById(R.id.ratingBarSelect);
         ratingbarStart.setRating(4);
         ratingbarStart.setEnabled(true);
@@ -256,18 +264,40 @@ public class MainActivity extends AppCompatActivity {
         ratingbarStart.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                Log.e(TAG, "GET rating " + rating);
+                percentTaixi = rating / 5;
             }
         });
-        SwitchCompat mySwitch = (SwitchCompat) myView.findViewById(R.id.day);
-        mySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        SwitchCompat swCount = (SwitchCompat) myView.findViewById(R.id.switchCountBtn);
+        SwitchCompat swAvgDay = (SwitchCompat) myView.findViewById(R.id.switchAvgDayBtn);
+        swCount.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    Log.e(TAG, "GGGGGG");
+                    countHigh = true;
                 } else {
-                    Log.e(TAG, "EEEEEE");
+                    countHigh = false;
                 }
+            }
+        });
+        swAvgDay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    avgLow = true;
+                } else {
+                    avgLow = false;
+                }
+            }
+        });
+        btnDiglog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e(TAG, "Btn_avgLow = " + avgLow);
+                Log.e(TAG, "Btn_countHigh = " + countHigh);
+                Log.e(TAG, "Btn_percent :: " + percentTaixi);
+                myDataFilter = filterResult("null", true, percentTaixi);
+
+                alert.dismiss();
             }
         });
         alert.show();
@@ -374,7 +404,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public ArrayList<StockItem> filterResult(String input, boolean hasPattern, String taixiPercent, String taixiAvgday) {
+    public ArrayList<StockItem> filterResult(String input, boolean hasPattern, float taixiPercent) {
         ArrayList<StockItem> item = new ArrayList<StockItem>();
         item.clear();
         float percent = 0;
@@ -393,31 +423,77 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         } else {
-            if (taixiPercent.equals("") || taixiAvgday.equals("")) {
-                Toast.makeText(getApplicationContext(), "條件不得為空", Toast.LENGTH_SHORT).show();
-            } else {
-                float taixiPercentTOint = Float.parseFloat(taixiPercent) / 5;
-                float taixiAvgdayTOint = Float.parseFloat(taixiAvgday);
-                String s = searchView.getQuery().toString();
-                for (int i = 0; i < myDataset.size(); i++) {
-                    percent = Float.parseFloat(myDataset.get(i).getTianxiPercent());
-                    avgDay = Float.parseFloat(myDataset.get(i).getTianxiDay());
-                    if (percent >= taixiPercentTOint && avgDay < taixiAvgdayTOint) {
-                        item.add(new StockItem(myDataset.get(i).getStockNumber(),
-                                myDataset.get(i).getStockName(),
-                                myDataset.get(i).getTianxiCount(),
-                                myDataset.get(i).getReleaseCount(),
-                                myDataset.get(i).getTianxiPercent(),
-                                myDataset.get(i).getTianxiDay(),
-                                myDataset.get(i).getThisYear())
-                        );
+            float taixiAvgdayTOint = Float.parseFloat("0.8");
+            float count;
+            float avgdayCount;
+            if (taixiPercent > 0) {
+                taixiAvgdayTOint = taixiPercent;
+            }
+            for (int i = 0; i < myDataset.size(); i++) {
+                percent = Float.parseFloat(myDataset.get(i).getTianxiPercent());
+                count = Float.parseFloat(myDataset.get(i).getTianxiCount());
+                avgdayCount = Float.parseFloat(myDataset.get(i).getTianxiDay());
+                if (countHigh) {
+                    if (avgLow) {
+                        if (percent >= taixiAvgdayTOint - 0.1 && percent <= taixiAvgdayTOint + 0.1 && count > 10 && avgdayCount < 30) {
+                            item.add(new StockItem(myDataset.get(i).getStockNumber(),
+                                    myDataset.get(i).getStockName(),
+                                    myDataset.get(i).getTianxiCount(),
+                                    myDataset.get(i).getReleaseCount(),
+                                    myDataset.get(i).getTianxiPercent(),
+                                    myDataset.get(i).getTianxiDay(),
+                                    myDataset.get(i).getThisYear())
+                            );
+                        }
+                    } else {
+                        if (percent >= taixiAvgdayTOint - 0.1 && percent <= taixiAvgdayTOint + 0.1 && count > 5) {
+                            item.add(new StockItem(myDataset.get(i).getStockNumber(),
+                                    myDataset.get(i).getStockName(),
+                                    myDataset.get(i).getTianxiCount(),
+                                    myDataset.get(i).getReleaseCount(),
+                                    myDataset.get(i).getTianxiPercent(),
+                                    myDataset.get(i).getTianxiDay(),
+                                    myDataset.get(i).getThisYear())
+                            );
+                        }
+                    }
+                } else {
+                    if (avgLow) {
+                        if (percent >= taixiAvgdayTOint - 0.1 && percent <= taixiAvgdayTOint + 0.1 && avgdayCount < 30) {
+                            item.add(new StockItem(myDataset.get(i).getStockNumber(),
+                                    myDataset.get(i).getStockName(),
+                                    myDataset.get(i).getTianxiCount(),
+                                    myDataset.get(i).getReleaseCount(),
+                                    myDataset.get(i).getTianxiPercent(),
+                                    myDataset.get(i).getTianxiDay(),
+                                    myDataset.get(i).getThisYear())
+                            );
+                        }
+                    } else {
+                        if (percent >= taixiAvgdayTOint - 0.1 && percent <= taixiAvgdayTOint + 0.1) {
+                            item.add(new StockItem(myDataset.get(i).getStockNumber(),
+                                    myDataset.get(i).getStockName(),
+                                    myDataset.get(i).getTianxiCount(),
+                                    myDataset.get(i).getReleaseCount(),
+                                    myDataset.get(i).getTianxiPercent(),
+                                    myDataset.get(i).getTianxiDay(),
+                                    myDataset.get(i).getThisYear())
+                            );
+                        }
                     }
                 }
             }
             adapter = new MyAdapter(getApplicationContext(), item, isVistor, selectAll);
             listV.setAdapter(adapter);
             listV.invalidateViews();
-            Toast.makeText(getApplicationContext(), "搜尋到 : " + item.size() + "筆", Toast.LENGTH_LONG).show();
+            avgLow = false;
+            countHigh = false;
+            if (item.size()>0){
+                Toast.makeText(getApplicationContext(), "搜尋到 : " + item.size() + "筆", Toast.LENGTH_LONG).show();
+            }else{
+                Toast.makeText(getApplicationContext(), "搜索不到資料! 請更改一下篩選條件", Toast.LENGTH_LONG).show();
+            }
+
         }
         return item;
     }
