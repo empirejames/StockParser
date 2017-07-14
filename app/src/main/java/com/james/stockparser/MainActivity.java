@@ -33,11 +33,15 @@ import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.james.stockparser.Fragment.FragmentAbout;
 import com.james.stockparser.Fragment.FragmentMain;
 import com.james.stockparser.Unit.User;
 import com.james.stockparser.dataBase.TinyDB;
@@ -63,8 +67,8 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> favList = new ArrayList<String>();
     ArrayAdapter<String> countNumAdapter;
     ArrayAdapter<String> avgNumAdapter;
-    String[] countList = {"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16"};
-    String[] avgList = {"10","20","30","40"};
+    String[] countList = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16"};
+    String[] avgList = {"10", "20", "30", "40"};
     private String[] nextLine;
     private Toolbar mToolbar;
     SearchView searchView;
@@ -91,7 +95,8 @@ public class MainActivity extends AppCompatActivity {
     boolean scrollFlag;
     BottomNavigationView navigation;
     Animation mShowAction;
-    Animation mHiddenAction ;
+    Animation mHiddenAction;
+    InterstitialAd interstitial;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -152,6 +157,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mShowAction = AnimationUtils.loadAnimation(this, R.anim.alpha_in);
         mHiddenAction = AnimationUtils.loadAnimation(this, R.anim.alpha_out);
+//        AdView mAdView = (AdView) findViewById(R.id.adView);
+//        AdRequest adRequest = new AdRequest.Builder().build();
+//        mAdView.loadAd(adRequest);
+
+//            interstitial = new InterstitialAd(this);
+//            interstitial.setAdUnitId(MY_AD_UNIT_ID);
+//            // Begin loading your interstitial.
+//            interstitial.loadAd(adRequest);
         bundle = getIntent().getExtras();
         isVistor = isVistor();
         if (!isVistor) {
@@ -187,10 +200,10 @@ public class MainActivity extends AppCompatActivity {
                 for (int i = 0; i < myEPS.size(); i++) {
                     if (myEPS.get(i).getStockNumber().equals(stocknumber)) {
                         Log.e(TAG, stocknumber + " " + stockName + " " + myEPS.get(i).getStockEPS());
-                        Intent in = new Intent(getApplicationContext(), FragmentMain.class);
-                        in.putExtra("stockNumber", stocknumber);
-                        in.putExtra("stockName", stockName);
-                        startActivity(in);
+//                        Intent in = new Intent(getApplicationContext(), FragmentMain.class);
+//                        in.putExtra("stockNumber", stocknumber);
+//                        in.putExtra("stockName", stockName);
+//                        startActivity(in);
                     }
                 }
                 StockInfoParser stockinfo = new StockInfoParser();
@@ -288,6 +301,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                     return true;
                 case R.id.navigation_notifications:
+                    Intent i = new Intent(MainActivity.this, FragmentAbout.class);
+                    startActivity(i);
                     return true;
             }
             return false;
@@ -321,6 +336,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 countSelectNumber = countList[position];
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
@@ -331,6 +347,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 avgSelectNumber = avgList[position];
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
@@ -408,20 +425,6 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.action_filter:
                     showDialog();
-//                    new AlertDialog.Builder(MainActivity.this)
-//                            .setTitle("條件式搜尋")
-//                            .setView(v)
-//                            .setPositiveButton("確定", new DialogInterface.OnClickListener() {
-//                                @Override
-//                                public void onClick(DialogInterface dialog, int which) {
-//                                    EditText editTextPercent = (EditText) (v.findViewById(R.id.alert_edit_view));
-//                                    EditText editTextDay = (EditText) (v.findViewById(R.id.alert_edit_view1));
-//                                    myDataFilter = filterResult("null", true, editTextPercent.getText().toString(), editTextDay.getText().toString());
-//
-//                                    //Toast.makeText(getApplicationContext(), "你的id是" +editText.getText().toString(), Toast.LENGTH_SHORT).show();
-//                                }
-//                            })
-//                            .show();
                     break;
             }
 
@@ -458,6 +461,7 @@ public class MainActivity extends AppCompatActivity {
         spref.getStringSet("myFav", null);
         Log.e(TAG, spref.getStringSet("myFavSet", null) + ":: LOAD");
     }
+
     public ArrayList<StockItem> myFavovResult(ArrayList list) {
         ArrayList<StockItem> item = new ArrayList<StockItem>();
         item.clear();
