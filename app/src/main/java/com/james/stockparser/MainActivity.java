@@ -19,6 +19,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -85,6 +88,10 @@ public class MainActivity extends AppCompatActivity {
     Boolean avgLow = false;
     float percentTaixi;
     String countSelectNumber, avgSelectNumber;
+    boolean scrollFlag;
+    BottomNavigationView navigation;
+    Animation mShowAction;
+    Animation mHiddenAction ;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -143,13 +150,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mShowAction = AnimationUtils.loadAnimation(this, R.anim.alpha_in);
+        mHiddenAction = AnimationUtils.loadAnimation(this, R.anim.alpha_out);
         bundle = getIntent().getExtras();
         isVistor = isVistor();
         if (!isVistor) {
             writeNewUserIfNeeded();
         }
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
         listV = (ListView) findViewById(R.id.list_view);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
@@ -185,6 +195,34 @@ public class MainActivity extends AppCompatActivity {
                 }
                 StockInfoParser stockinfo = new StockInfoParser();
                 //stockinfo.start(stocknumber);
+            }
+        });
+
+        listV.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                switch (scrollState) {
+                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:// rolling stop
+                        if (listV.getFirstVisiblePosition() == 0) {   // if Go top
+                            navigation.setVisibility(View.VISIBLE);
+                            navigation.startAnimation(mShowAction);
+                        }
+                        break;
+                    case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:// Touch rolling
+                        scrollFlag = true;
+                        navigation.setVisibility(View.GONE);
+                        break;
+                    case AbsListView.OnScrollListener.SCROLL_STATE_FLING: //stating rolling
+                        navigation.setVisibility(View.GONE);
+                        scrollFlag = true;
+                        break;
+                }
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
             }
         });
     }
@@ -349,6 +387,7 @@ public class MainActivity extends AppCompatActivity {
             final View v = inflater.inflate(R.layout.alert_layout, null);
             switch (menuItem.getItemId()) {
                 case R.id.action_search:
+                    navigation.setVisibility(View.GONE);
                     break;
                 case R.id.action_update:
                     Log.e(TAG, "action_update");

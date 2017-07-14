@@ -44,14 +44,11 @@
             android:id="@+id/spinner_avgNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="42dp"
-            android:layout_marginStart="42dp"
             android:textColor="@color/colorBlack"
             android:textSize="20dp"
-            android:layout_toRightOf="@+id/switchAvgDay"
-            android:layout_toEndOf="@+id/switchAvgDay"
-            android:layout_alignTop="@+id/switchAvgDayBtn"
-            android:layout_alignBottom="@+id/switchAvgDay" />
+            android:layout_alignTop="@+id/switchAvgDay"
+            android:layout_alignLeft="@+id/spinner_countNumber"
+            android:layout_alignStart="@+id/spinner_countNumber" />
 
         <Spinner
             android:id="@+id/spinner_countNumber"
@@ -59,10 +56,11 @@
             android:layout_height="wrap_content"
             android:textColor="@color/colorBlack"
             android:textSize="20dp"
+            android:layout_marginLeft="13dp"
+            android:layout_marginStart="13dp"
             android:layout_below="@+id/ratingBarSelect"
-            android:layout_alignLeft="@+id/spinner_avgNumber"
-            android:layout_alignStart="@+id/spinner_avgNumber"
-            android:layout_above="@+id/switchAvgDay" />
+            android:layout_toRightOf="@+id/switchAvgDay"
+            android:layout_toEndOf="@+id/switchAvgDay" />
 
         <TextView
             android:id="@+id/ratingbarText"
