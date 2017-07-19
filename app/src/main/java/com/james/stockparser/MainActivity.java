@@ -157,9 +157,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mShowAction = AnimationUtils.loadAnimation(this, R.anim.alpha_in);
         mHiddenAction = AnimationUtils.loadAnimation(this, R.anim.alpha_out);
-        AdView mAdView = (AdView) findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
+//        AdView mAdView = (AdView) findViewById(R.id.adView);
+//        AdRequest adRequest = new AdRequest.Builder().build();
+//        mAdView.loadAd(adRequest);
 
 //            interstitial = new InterstitialAd(this);
 //            interstitial.setAdUnitId(MY_AD_UNIT_ID);

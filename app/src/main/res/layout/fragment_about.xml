@@ -116,7 +116,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:drawableLeft="@mipmap/ic_action_emo_laugh"
-                    android:text="回饋問題" />
+                    android:text="贊助我們" />
             </LinearLayout>
 
         </LinearLayout>

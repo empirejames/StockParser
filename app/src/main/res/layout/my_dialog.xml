@@ -85,7 +85,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="26dp"
             android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/ratingbarText" />
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
 
         <TextView
             android:id="@+id/switchCount"
