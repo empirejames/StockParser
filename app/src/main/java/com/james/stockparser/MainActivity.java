@@ -42,7 +42,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.james.stockparser.Fragment.FragmentAbout;
-import com.james.stockparser.Fragment.FragmentMain;
 import com.james.stockparser.Unit.User;
 import com.james.stockparser.dataBase.TinyDB;
 
@@ -97,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
     Animation mShowAction;
     Animation mHiddenAction;
     InterstitialAd interstitial;
+    //IabHelper mHelper;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -157,9 +157,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mShowAction = AnimationUtils.loadAnimation(this, R.anim.alpha_in);
         mHiddenAction = AnimationUtils.loadAnimation(this, R.anim.alpha_out);
-//        AdView mAdView = (AdView) findViewById(R.id.adView);
-//        AdRequest adRequest = new AdRequest.Builder().build();
-//        mAdView.loadAd(adRequest);
+        AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
 //            interstitial = new InterstitialAd(this);
 //            interstitial.setAdUnitId(MY_AD_UNIT_ID);
