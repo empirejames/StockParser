@@ -6,6 +6,10 @@
         android:icon="@drawable/ic_home_black_24dp"
         android:title="首頁" />
     <item
+        android:id="@+id/navigation_nearly"
+        android:icon="@mipmap/ic_action_emo_laugh"
+        android:title="即將除權" />
+    <item
         android:id="@+id/navigation_dashboard"
         android:icon="@mipmap/ic_action_like"
         android:title="我的最愛" />

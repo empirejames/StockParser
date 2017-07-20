@@ -37,7 +37,7 @@
             android:background="?attr/colorPrimary"
             app:itemTextColor="@color/colorWhite"
             app:itemIconTint="@color/colorWhite"
-            app:menu="@menu/navigation" />
+            app:menu="@menu/navigation_bottom" />
         <com.google.android.gms.ads.AdView
             android:id="@+id/adView"
             android:layout_width="wrap_content"
