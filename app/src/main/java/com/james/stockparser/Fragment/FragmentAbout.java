@@ -11,6 +11,7 @@ import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.james.stockparser.R;
@@ -18,6 +19,7 @@ import com.james.stockparser.util.IabHelper;
 import com.james.stockparser.util.IabResult;
 import com.james.stockparser.util.Inventory;
 import com.james.stockparser.util.Purchase;
+import com.james.stockparser.util.upNewData;
 
 public class FragmentAbout extends AppCompatActivity {
     private static Toolbar mToolbar;
@@ -27,17 +29,19 @@ public class FragmentAbout extends AppCompatActivity {
     TextView tvContener;
     Button btn_evalution, btn_attention, btn_share, btn_feedback;
     IabHelper mHelper;
+    ImageView iv_aboutLog;
     boolean mIsPremium = false;
     static final int RC_REQUEST = 10001;
     static final String SKU_PREMIUM = "master_power";
     static final String base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtnB5b/JRahdkri2hQI5U2poHfioefrhZA5cgd7Znuddj4DIPuVSgLm33oTTGVanIRsfi5lomgVvOltNDSnSu6gcfHcG4qRjK3CLNLlwSCUXeOBt/OotXkghufRgYY8JAq+8iz4e4/RV/rba3z778u/B973q/XUQPVBmNifGBVqHIgkHLPlcZE80kQpxXALjKFF4EiCDv1PDKrTU4fhJzEt5mGHVv6qUYppj9TVHH4a5XhANH0DSHPHCvJeXHEC8tHmzE1NNHDuxjKdfVsKhTBxAEXK2wWnLi/uTaNREGfojCEu8YW5flcA3Dn4sH4DNNRaQyLbXUzowsqmH0DW7yOwIDAQAB";
-
+//about_logo
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_about);
         mHelper = new IabHelper(this, base64EncodedPublicKey);
         mHelper.enableDebugLogging(true);
+        iv_aboutLog = (ImageView) findViewById(R.id.about_logo);
         mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
             public void onIabSetupFinished(IabResult result) {
                 Log.d(TAG, "Setup finished.");
@@ -83,6 +87,13 @@ public class FragmentAbout extends AppCompatActivity {
             public void onClick(View v) {
                 String payload = "";
                 mHelper.launchPurchaseFlow(FragmentAbout.this, SKU_PREMIUM, RC_REQUEST, mPurchaseFinishedListener, payload);
+            }
+        });
+        iv_aboutLog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(FragmentAbout.this,upNewData.class);
+                startActivity(i);
             }
         });
     }
