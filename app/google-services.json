@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "260903246311-kqnjghu1ukdubs7vaqug20ru4dukstfv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.james.stockparser",
+            "certificate_hash": "6e36da85026a4d79058a43c5869e4d921df53ed9"
+          }
+        },
+        {
           "client_id": "260903246311-io3sdo78284k9j1c9gm8f5thmr09v75b.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

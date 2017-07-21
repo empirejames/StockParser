@@ -48,7 +48,7 @@
                     android:layout_marginTop="15dp"
                     android:layout_toEndOf="@+id/about_logo"
                     android:layout_toRightOf="@+id/about_logo"
-                    android:text="APP Version 1.0010.01" />
+                    android:text="APP Version 1.0020.01" />
 
                 <ImageView
                     android:id="@+id/about_logo"

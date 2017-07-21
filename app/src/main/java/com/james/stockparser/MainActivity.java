@@ -51,7 +51,10 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -160,9 +163,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mShowAction = AnimationUtils.loadAnimation(this, R.anim.alpha_in);
         mHiddenAction = AnimationUtils.loadAnimation(this, R.anim.alpha_out);
-//        AdView mAdView = (AdView) findViewById(R.id.adView);
-//        AdRequest adRequest = new AdRequest.Builder().build();
-//        mAdView.loadAd(adRequest);
+        AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
 //            interstitial = new InterstitialAd(this);
 //            interstitial.setAdUnitId(MY_AD_UNIT_ID);
@@ -209,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
 //                        startActivity(in);
                     }
                 }
-                StockInfoParser stockinfo = new StockInfoParser();
+                //StockInfoParser stockinfo = new StockInfoParser();
                 //stockinfo.start(stocknumber);
             }
         });
@@ -284,6 +287,12 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
+
+                case R.id.navigation_nearly:
+                    PageNumber = 0;
+                    invalidateOptionsMenu(); //update toolbar
+                    nearly_Taixi();
+                    return true;
                 case R.id.navigation_home:
                     PageNumber = 0;
                     invalidateOptionsMenu(); //update toolbar
@@ -297,9 +306,6 @@ public class MainActivity extends AppCompatActivity {
                         alertDialog("訪客身分無法使用我的最愛功能");
                     } else {
                         invalidateOptionsMenu();//update toolbar
-                        //Log.e(TAG, tinydb.getListString("myFav") + "");
-                        //saveUserData(adapter.getFavorite());  //Upload Server
-                        //writeFav();
                         myFavovResult(compareNewData(favList, adapter.getFavorite(), true)); //summary main item
                     }
                     return true;
@@ -465,6 +471,45 @@ public class MainActivity extends AppCompatActivity {
         Log.e(TAG, spref.getStringSet("myFavSet", null) + ":: LOAD");
     }
 
+    public ArrayList<StockItem> nearly_Taixi() {
+        ArrayList<StockItem> item = new ArrayList<StockItem>();
+        item.clear();
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+        for (int i = 0; i < myDataset.size(); i++) {
+            //long day=(beginDate.getTime()-endDate.getTime())/(24*60*60*1000);
+            //Log.e(TAG,"day..." + day);
+            try {
+                if (!myDataset.get(i).getThisYear().toString().equals("")){
+                    //Log.e(TAG, "today" + getDate() + " - stockDay : " + myDataset.get(i).getThisYear().toString());
+                    Date beginDate = format.parse(getDate());
+                    Date endDate = format.parse(myDataset.get(i).getThisYear().toString());
+                    long day = (endDate.getTime() - beginDate.getTime()) / (24 * 60 * 60 * 1000);
+                    //Log.e(TAG, "day: " + day);
+                    if (day>0 && day<=15){
+                        //Log.e(TAG, "today" + getDate() + " - stockDay : " + myDataset.get(i).getThisYear().toString());
+                        item.add(new StockItem(myDataset.get(i).getStockNumber(),
+                                myDataset.get(i).getStockName(),
+                                myDataset.get(i).getTianxiCount(),
+                                myDataset.get(i).getReleaseCount(),
+                                myDataset.get(i).getTianxiPercent(),
+                                myDataset.get(i).getTianxiDay(),
+                                myDataset.get(i).getThisYear())
+                        );
+
+                    }
+
+                }
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        adapter = new MyAdapter(getApplicationContext(), item, isVistor, true);
+        listV.setAdapter(adapter);
+        listV.invalidateViews();
+        return item;
+    }
+
     public ArrayList<StockItem> myFavovResult(ArrayList list) {
         ArrayList<StockItem> item = new ArrayList<StockItem>();
         item.clear();
@@ -582,6 +627,12 @@ public class MainActivity extends AppCompatActivity {
 
         }
         return item;
+    }
+
+    public String getDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        String date = sdf.format(new java.util.Date());
+        return date;
     }
 
     public void CSVRead() {

@@ -92,8 +92,8 @@ public class FragmentAbout extends AppCompatActivity {
         iv_aboutLog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(FragmentAbout.this,upNewData.class);
-                startActivity(i);
+                //Intent i = new Intent(FragmentAbout.this,upNewData.class);
+                //startActivity(i);
             }
         });
     }
