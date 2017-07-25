@@ -34,7 +34,8 @@ public class FragmentAbout extends AppCompatActivity {
     static final int RC_REQUEST = 10001;
     static final String SKU_PREMIUM = "master_power";
     static final String base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtnB5b/JRahdkri2hQI5U2poHfioefrhZA5cgd7Znuddj4DIPuVSgLm33oTTGVanIRsfi5lomgVvOltNDSnSu6gcfHcG4qRjK3CLNLlwSCUXeOBt/OotXkghufRgYY8JAq+8iz4e4/RV/rba3z778u/B973q/XUQPVBmNifGBVqHIgkHLPlcZE80kQpxXALjKFF4EiCDv1PDKrTU4fhJzEt5mGHVv6qUYppj9TVHH4a5XhANH0DSHPHCvJeXHEC8tHmzE1NNHDuxjKdfVsKhTBxAEXK2wWnLi/uTaNREGfojCEu8YW5flcA3Dn4sH4DNNRaQyLbXUzowsqmH0DW7yOwIDAQAB";
-//about_logo
+
+    //about_logo
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,13 +45,13 @@ public class FragmentAbout extends AppCompatActivity {
         iv_aboutLog = (ImageView) findViewById(R.id.about_logo);
         mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
             public void onIabSetupFinished(IabResult result) {
-                Log.d(TAG, "Setup finished.");
+                Log.e(TAG, "Setup finished.");
                 if (!result.isSuccess()) {
                     Log.e(TAG, "Problem setting up in-app billing: " + result);
                     return;
                 }
                 if (mHelper == null) return;
-                Log.d(TAG, "Setup successful. Querying inventory.");
+                Log.e(TAG, "Setup successful. Querying inventory.");
                 mHelper.queryInventoryAsync(mGotInventoryListener);
             }
         });
@@ -92,10 +93,23 @@ public class FragmentAbout extends AppCompatActivity {
         iv_aboutLog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Intent i = new Intent(FragmentAbout.this,upNewData.class);
-                //startActivity(i);
+                Intent i = new Intent(FragmentAbout.this,upNewData.class);
+                startActivity(i);
             }
         });
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mHelper != null) mHelper.dispose();
+        mHelper = null;
+    }
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mHelper != null) mHelper.dispose();
+        mHelper = null;
     }
 
     IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener = new IabHelper.OnIabPurchaseFinishedListener() {
@@ -103,7 +117,7 @@ public class FragmentAbout extends AppCompatActivity {
             Log.e(TAG, "Purchase finished: " + result + ", purchase: " + purchase);
             if (mHelper == null) return;
             if (purchase.getSku().equals(SKU_PREMIUM)) {
-                Log.d(TAG, "Update Super User");
+                Log.e(TAG, "Update Super User");
                 //alert("Thank you for upgrading to premium!");
                 //mIsPremium = true;
                 //updateUi();
@@ -119,12 +133,12 @@ public class FragmentAbout extends AppCompatActivity {
                 Log.e(TAG, "Failed to query inventory: " + result);
                 return;
             }
-            Log.d(TAG, "Query inventory was successful.");
+            Log.e(TAG, "Query inventory was successful.");
             // Do we have the premium upgrade?
             Purchase premiumPurchase = inventory.getPurchase(SKU_PREMIUM);
             mIsPremium = (premiumPurchase != null && verifyDeveloperPayload(premiumPurchase));
-            Log.d(TAG, "User is " + (mIsPremium ? "PREMIUM" : "NOT PREMIUM"));
-            Log.d(TAG, "Initial inventory query finished; enabling main UI.");
+            Log.e(TAG, "User is " + (mIsPremium ? "PREMIUM" : "NOT PREMIUM"));
+            Log.e(TAG, "Initial inventory query finished; enabling main UI.");
         }
     };
 

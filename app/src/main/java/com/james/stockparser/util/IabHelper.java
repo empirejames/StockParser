@@ -40,6 +40,7 @@ public class IabHelper {
     // Is debug logging enabled?
     boolean mDebugLog = false;
     String mDebugTag = "IabHelper";
+    String TAG = IabHelper.class.getSimpleName();
 
     // Is setup done?
     boolean mSetupDone = false;
@@ -184,7 +185,7 @@ public class IabHelper {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 if (mDisposed) return;
-                logDebug("Billing service connected.");
+
                 mService = IInAppBillingService.Stub.asInterface(service);
                 String packageName = mContext.getPackageName();
                 try {
@@ -222,9 +223,9 @@ public class IabHelper {
                     e.printStackTrace();
                     return;
                 }
-
                 if (listener != null) {
                     listener.onIabSetupFinished(new IabResult(BILLING_RESPONSE_RESULT_OK, "Setup successful."));
+
                 }
             }
         };
@@ -344,7 +345,9 @@ public class IabHelper {
             IabResult r = new IabResult(IABHELPER_SUBSCRIPTIONS_NOT_AVAILABLE,
                     "Subscriptions are not available.");
             flagEndAsync();
-            if (listener != null) listener.onIabPurchaseFinished(r, null);
+            if (listener != null){
+                listener.onIabPurchaseFinished(r, null);
+            }
             return;
         }
 
@@ -423,12 +426,6 @@ public class IabHelper {
         String dataSignature = data.getStringExtra(RESPONSE_INAPP_SIGNATURE);
 
         if (resultCode == Activity.RESULT_OK && responseCode == BILLING_RESPONSE_RESULT_OK) {
-            logDebug("Successful resultcode from purchase activity.");
-            logDebug("Purchase data: " + purchaseData);
-            logDebug("Data signature: " + dataSignature);
-            logDebug("Extras: " + data.getExtras());
-            logDebug("Expected item type: " + mPurchasingItemType);
-
             if (purchaseData == null || dataSignature == null) {
                 logError("BUG: either purchaseData or dataSignature is null.");
                 logDebug("Extras: " + data.getExtras().toString());
@@ -460,7 +457,8 @@ public class IabHelper {
             }
 
             if (mPurchaseListener != null) {
-                mPurchaseListener.onIabPurchaseFinished(new IabResult(BILLING_RESPONSE_RESULT_OK, "Success"), purchase);
+
+               mPurchaseListener.onIabPurchaseFinished(new IabResult(BILLING_RESPONSE_RESULT_OK, "Success"), purchase);
             }
         }
         else if (resultCode == Activity.RESULT_OK) {
@@ -497,6 +495,7 @@ public class IabHelper {
             Inventory inv = new Inventory();
             int r = queryPurchases(inv, ITEM_TYPE_INAPP);
             if (r != BILLING_RESPONSE_RESULT_OK) {
+                Log.e(TAG,"Error refreshing inventory (querying owned items)");
                 throw new IabException(r, "Error refreshing inventory (querying owned items).");
             }
 
@@ -593,10 +592,34 @@ public class IabHelper {
         queryInventoryAsync(true, null, listener);
     }
 
+
     public void queryInventoryAsync(boolean querySkuDetails, QueryInventoryFinishedListener listener) {
         queryInventoryAsync(querySkuDetails, null, listener);
     }
+    IabHelper.QueryInventoryFinishedListener mGotInventoryListener = new IabHelper.QueryInventoryFinishedListener() {
+        public void onQueryInventoryFinished(IabResult result, Inventory inventory) {
+            Log.d(TAG, "..... Initial inventory query finished; enabling main UI.");
+        }
+    };
+    IabHelper.OnConsumeFinishedListener onConsumeFinishedListener = new IabHelper.OnConsumeFinishedListener(){
+        public void onConsumeFinished(Purchase purchase, IabResult result) {
+            if (result.isSuccess()){
+                Log.e(TAG,"BuyIn finish");
+            }else{
+                Log.e(TAG,"BuyIn fail");
+            }
+        }
+    };
+    IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishListener = new IabHelper.OnIabPurchaseFinishedListener(){
+        @Override
+        public void onIabPurchaseFinished(IabResult result, Purchase info) {
+            if (result.isFailure()){
 
+            }else if (info.getSku().equals("master_power")){
+                Log.e(TAG,"Buning .... now");
+            }
+        }
+    };
 
     /**
      * Consumes a given in-app product. Consuming can only be done on an item
@@ -769,6 +792,7 @@ public class IabHelper {
                 operation + ") because another async operation(" + mAsyncOperation + ") is in progress.");
         mAsyncOperation = operation;
         mAsyncInProgress = true;
+        Log.e(TAG,"Starting async operation: " + operation);
         logDebug("Starting async operation: " + operation);
     }
 

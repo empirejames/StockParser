@@ -7,7 +7,7 @@
         android:title="首頁" />
     <item
         android:id="@+id/navigation_nearly"
-        android:icon="@mipmap/ic_action_emo_laugh"
+        android:icon="@mipmap/ic_action_line_chart"
         android:title="即將除權" />
     <item
         android:id="@+id/navigation_dashboard"

@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -37,6 +39,7 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.james.stockparser.dataBase.TinyDB;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -53,16 +56,21 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     TextView tvForgetPass;
     SignInButton loginGoogle;
     LoginButton loginFaceBook;
+    CheckBox chkRemeber;
+    boolean remeberMe ;
     String TAG = LoginActivity.class.getSimpleName();
     RelativeLayout relativeLy;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private static final int RC_SIGN_IN = 9001;
     CallbackManager mCallbackManager ;
+    TinyDB tinydb;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_main);
+        tinydb = new TinyDB(LoginActivity.this);
+        chkRemeber = (CheckBox) findViewById(R.id.chkRemeber);
         tvForgetPass = (TextView) findViewById(R.id.tv_forgotPass);
         loginOther = (Button) findViewById(R.id.button_other);
         loginOther.setOnClickListener(this);
@@ -100,6 +108,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         });
         emailEditText = (EditText) findViewById(R.id.username);
         passEditText = (EditText) findViewById(R.id.password);
+
+        if (tinydb.getString("account")!=""){
+            emailEditText.setText(tinydb.getString("account"));
+            passEditText.setText(tinydb.getString("password"));
+            chkRemeber.setChecked(true);
+        }
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -120,6 +134,29 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 }
             }
         };
+        chkRemeber.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if  (chkRemeber.isChecked()){
+                    saveUserInfo(true,emailEditText.getText().toString() , passEditText.getText().toString());
+                }else{
+                    saveUserInfo(false,emailEditText.getText().toString() , passEditText.getText().toString());
+                }
+            }
+        });
+    }
+
+    public void saveUserInfo(boolean isSave, String account, String password){
+        if (isSave){
+            tinydb.putString("account", account);
+            tinydb.putString("password", password);
+            remeberMe = true;
+        }else{
+            tinydb.putString("account", "");
+            tinydb.putString("password", "");
+            remeberMe = false;
+        }
+
     }
 
     @Override

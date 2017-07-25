@@ -2,6 +2,8 @@ package com.james.stockparser;
 
 import android.app.ProgressDialog;
 import android.app.SearchManager;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -9,6 +11,7 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
+import android.support.multidex.MultiDex;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +19,7 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -164,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
         mShowAction = AnimationUtils.loadAnimation(this, R.anim.alpha_in);
         mHiddenAction = AnimationUtils.loadAnimation(this, R.anim.alpha_out);
         AdView mAdView = (AdView) findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice("8853EA0F6D13F5C9888906CE4B67300D").build();
         mAdView.loadAd(adRequest);
 
 //            interstitial = new InterstitialAd(this);
@@ -210,6 +214,8 @@ public class MainActivity extends AppCompatActivity {
 //                        in.putExtra("stockNumber", stocknumber);
 //                        in.putExtra("stockName", stockName);
 //                        startActivity(in);
+                        Toast.makeText(MainActivity.this, "歷史查詢功能近期開放....",
+                                Toast.LENGTH_SHORT).show();
                     }
                 }
                 //StockInfoParser stockinfo = new StockInfoParser();
@@ -245,7 +251,29 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("確定要離開「權息大師」嗎?")
+                .setCancelable(false)
+                .setPositiveButton("是", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        MainActivity.this.finish();
+                    }
+                })
+                .setNegativeButton("否", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
     @Override
     public void onResume() {
         super.onResume();
@@ -504,7 +532,7 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-        adapter = new MyAdapter(getApplicationContext(), item, isVistor, true);
+        adapter = new MyAdapter(getApplicationContext(), item, true,selectAll);
         listV.setAdapter(adapter);
         listV.invalidateViews();
         return item;
@@ -804,7 +832,5 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
-
-
 }
 
