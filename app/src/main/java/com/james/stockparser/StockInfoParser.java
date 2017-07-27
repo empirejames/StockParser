@@ -19,35 +19,124 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class StockInfoParser {
     String TAG = StockInfoParser.class.getSimpleName();
     String url = "http://goodinfo.tw/StockInfo/StockDividendScheduleList.asp?MARKET_CAT=%E5%85%A8%E9%83%A8&YEAR=%E5%8D%B3%E5%B0%87%E9%99%A4%E6%AC%8A%E6%81%AF&INDUSTRY_CAT=%E5%85%A8%E9%83%A8";
+    String urlForGuHi = "http://stock.wespai.com/p/5625";
+    String urlForEPS = "http://stock.wespai.com/p/7733";
+    String urlForPresent = "http://stock.wespai.com/stock";
+    String urlForGuli = "http://stock.wespai.com/tenrate#";
+
     private HandlerThread mThread;
     private Handler mThreadHandler;
-    ArrayList stock_name = new ArrayList();
-    ArrayList stock_date = new ArrayList();
-    Iterator iterator, iterator1, iteratorTR;
     DatabaseReference ref;
     ArrayList<String> stockNumberList = new ArrayList<String>();
+    ArrayList<String> historyGuHi = new ArrayList<String>();
+    ArrayList<String> historyEPS = new ArrayList<String>();
+    ArrayList<String> historyPresent = new ArrayList<String>();
+    ArrayList<String> historyGuli = new ArrayList<String>();
 
-    public void start(final String stockNumber) {
+    public void start() {
         mThread = new HandlerThread("jsoup");
         mThread.start();
         mThreadHandler = new Handler(mThread.getLooper());
         mThreadHandler.post(new Runnable() {
             @Override
             public void run() {
-                updateTaiXiDay();
-                getStockData();
-                // getCompanyInfo(stockNumber);
+                //historyGuHi = getUrlInfo(urlForGuHi);
+                //updateHistoryData("guShi");
+                //historyEPS = getUrlInfo(urlForEPS);
+                //updateHistoryData("eps");
+                //historyPresent = getUrlInfo(urlForPresent);
+                //updateHistoryData("present");
+                //historyGuli = getUrlInfo(urlForGuli);
+                //updateHistoryData("guli");
+                //getDateTaiXiDay();
+                //updateStockData();
             }
         });
 
     }
 
+    private void updateHistoryData(final String stuff) {
+        ref = FirebaseDatabase.getInstance().getReference();
+        ref.keepSynced(true);
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
 
-    private void getStockData() {
+                if (stuff.equals("guShi")){
+                    for (int i = 0; i < historyGuHi.size(); i++) {
+                        for (int j = 0; j < historyGuHi.get(i).split(" ").length; j++) {
+                            ref.child("history").child(historyGuHi.get(i).split(" ")[0]).child(stuff).child(j+"").setValue(historyGuHi.get(i).split(" ")[j]);
+                            //ref.child("history").child(i+"").child(stuff).child(j + "").setValue(historyGuHi.get(0).split(" ")[j]);
+                        }
+                    }
+                }else if(stuff.equals("eps")){
+                    for (final DataSnapshot dsp : dataSnapshot.getChildren()) {
+                        if (dsp.getKey().equals("history")){
+                            for (DataSnapshot stockNm : dsp.getChildren()) {
+                                for(int i =0; i<historyEPS.size();i++){
+                                    if (historyEPS.get(i).split(" ")[0].equals(stockNm.getKey().toString())){
+                                        //Log.e(TAG, historyEPS.get(i).split(" ")[0] +" :: " + stockNm.getKey());
+                                        for(int j=0;j<historyEPS.get(i).split(" ").length;j++){
+                                            if(historyEPS.get(i).split(" ")[j].equals("")) {
+                                                ref.child("history").child(historyEPS.get(i).split(" ")[0]).child(stuff).child(j + "").setValue(historyEPS.get(i).split(" ")[j]);
+                                            }
+                                        }
+                                    }
+                                }
+
+
+                            }
+                        }
+                    }
+                }else if (stuff.equals("present")){
+                    for (final DataSnapshot dsp : dataSnapshot.getChildren()) {
+                        if (dsp.getKey().equals("history")){
+                            for (DataSnapshot stockNm : dsp.getChildren()) {
+                                for(int i =0; i<historyPresent.size();i++){
+                                    if (historyPresent.get(i).split(" ")[0].equals(stockNm.getKey().toString())){
+                                        for(int j=0;j<historyPresent.get(i).split(" ").length;j++){
+                                            if(historyPresent.get(i).split(" ")[j].equals("")){
+                                                ref.child("history").child(historyPresent.get(i).split(" ")[0]).child(stuff).child(j+"").setValue("無發放");
+                                            }else{
+                                                ref.child("history").child(historyPresent.get(i).split(" ")[0]).child(stuff).child(j+"").setValue(historyPresent.get(i).split(" ")[j]);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }else if (stuff.equals("guli")){
+                    for (final DataSnapshot dsp : dataSnapshot.getChildren()) {
+                        if (dsp.getKey().equals("history")){
+                            for (DataSnapshot stockNm : dsp.getChildren()) {
+                                for(int i =0; i<historyGuli.size();i++){
+                                    if (historyGuli.get(i).split(" ")[0].equals(stockNm.getKey().toString())){
+                                        for(int j=0;j<historyGuli.get(i).split(" ").length;j++){
+                                            ref.child("history").child(historyGuli.get(i).split(" ")[0]).child(stuff).child(j+"").setValue(historyGuli.get(i).split(" ")[j]);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+    private void updateStockData() {
         ref = FirebaseDatabase.getInstance().getReference();
         ref.keepSynced(true);
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -56,11 +145,11 @@ public class StockInfoParser {
                 for (final DataSnapshot dsp : dataSnapshot.getChildren()) {
                     if (dsp.getKey().equals("stocks")) {
                         for (DataSnapshot stock : dsp.getChildren()) {
-                            for(int i=0 ; i<stockNumberList.size();i++){
-                               // Log.e(TAG,stockNumberList.get(i).toString() + " V.S. " + stock.child("stockNumber").getValue().toString());
-                                if (stockNumberList.get(i).toString().contains(stock.child("stockNumber").getValue().toString())){
+                            for (int i = 0; i < stockNumberList.size(); i++) {
+                                // Log.e(TAG,stockNumberList.get(i).toString() + " V.S. " + stock.child("stockNumber").getValue().toString());
+                                if (stockNumberList.get(i).toString().contains(stock.child("stockNumber").getValue().toString())) {
                                     //Log.e(TAG, "Update Date  " + stockNumberList.get(i).toString().substring(stockNumberList.get(i).toString().indexOf(":")+1,stockNumberList.get(i).toString().length()));
-                                    ref.child("stocks").child(stock.getKey()).child("thisYear").setValue(stockNumberList.get(i).toString().substring(stockNumberList.get(i).toString().indexOf(":")+1,stockNumberList.get(i).toString().length()));
+                                    ref.child("stocks").child(stock.getKey()).child("thisYear").setValue(stockNumberList.get(i).toString().substring(stockNumberList.get(i).toString().indexOf(":") + 1, stockNumberList.get(i).toString().length()));
                                 }
                             }
                         }
@@ -75,7 +164,7 @@ public class StockInfoParser {
     }
 
 
-    public ArrayList<String> updateTaiXiDay() {
+    public ArrayList<String> getDateTaiXiDay() {
         String url = "http://www.twse.com.tw/exchangeReport/TWT48U?response=html";
         String[] temp;
         String date = "";
@@ -86,11 +175,12 @@ public class StockInfoParser {
             Elements rows = table.select("tr");
             for (int i = 0; i < rows.size(); i++) {
                 temp = rows.get(i).text().split(" ");
-               // Log.e(TAG, i + " : " + transferDate(temp[0]) + " :: " + temp[1]);
-                stockNumberList.add(temp[1]+":"+transferDate(temp[0]));
-                //transferDate(temp[0]);
+                if (i % 2 == 0)
+                    Log.e(TAG, transferDate(temp[0]) + " :: " + temp[1] + ": " + temp[7]);
+                stockNumberList.add(temp[1] + ":" + transferDate(temp[0]));
+                transferDate(temp[0]);
             }
-           // Log.e(TAG, stock_name.size() + " V.S " + stock_date.size());
+            // Log.e(TAG, stock_name.size() + " V.S " + stock_date.size());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -112,45 +202,37 @@ public class StockInfoParser {
         return result;
     }
 
-
-    public String[] getCompanyInfo(String number) {
-        String te01, te02, te03;
-        String[] companyInfo = null;
-        Connection.Response response = null;
-        try {
-            while (response == null || response.statusCode() != 200) {
-                response = Jsoup.connect(url).execute();
-                //Thread.sleep(1000);
-            }
-            Document doc = response.parse();
-            Elements table = doc.getElementsByTag("table");
-            Elements title_td = doc.select("td");
-            Log.e(TAG, table.size() + "");
-            for (int i = 0; i < table.size(); i++) {
-                //Elements title_select = title.get(i).select("tr").select("td");
-                te01 = table.get(i).text();
-                String stockNumber = table.get(i).select("td").get(0).text();
-                if (stockNumber.equals(number)) {
-                    Log.e(TAG, te01);
-                }
-                //te02=title_select.get(2).text();
-                //te03=title_select.get(3).text();
-                //Log.e(TAG, te01 +" : "+ te02 + " : "+te03);
-            }
-            Elements notice = doc.getElementsByTag("tbody");
-            notice = notice.get(1).getElementsByTag("tr");
-            for (Element e : notice) {
-                String t = e.child(0).text();
-                String time = e.child(1).text();
-                //Log.e(TAG, "...." + t + time);
-            }
-            return companyInfo;
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (IndexOutOfBoundsException e) {
-            return null;
+    public boolean isNumeric(String str) {
+        Pattern pattern = Pattern.compile("[0-9]*");
+        Matcher isNum = pattern.matcher(str);
+        if (!isNum.matches()) {
+            return false;
         }
-        return null;
+        return true;
     }
 
+    public ArrayList<String> getUrlInfo(String url) {
+        ArrayList<String> temp = new ArrayList<>();
+        try {
+            Document doc = Jsoup.connect(url).get();
+            Element table = doc.select("table[id=example]").first();
+            Elements rows = table.select("tr");
+            Elements td;
+            for (int i = 0; i < rows.size(); i++) {
+                td = rows.get(i).children();
+
+                for (int j = 0; j < td.size(); j++) {
+                    if (j % 22 == 0) {
+                        if (isNumeric(td.get(j).text())) {
+                            Log.e(TAG, td.text() + " :: " + td.size());
+                            temp.add(td.text());
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return temp;
+    }
 }

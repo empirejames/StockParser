@@ -25,6 +25,6 @@ public class upNewData extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.about_main);
         stockinfo = new StockInfoParser();
-        stockinfo.start("1110");
+        stockinfo.start();
     }
 }
