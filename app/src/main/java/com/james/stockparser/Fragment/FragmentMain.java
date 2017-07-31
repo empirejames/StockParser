@@ -17,13 +17,10 @@ public class FragmentMain extends AppCompatActivity {
     private static ViewPager viewPager;
     private static TabLayout tabLayout;
     String TAG = FragmentMain.class.getSimpleName();
-    private ArrayList<String> hisEPS = new ArrayList<>();
-    private ArrayList<String> hisGuLi = new ArrayList<>();
-    private ArrayList<String> hisGuShi = new ArrayList<>();
-    private ArrayList<String> hisPresent = new ArrayList<>();
-
-
-
+    ArrayList<String> hisEPS = new ArrayList<>();
+    ArrayList<String> hisGuLi = new ArrayList<>();
+    ArrayList<String> hisGuShi = new ArrayList<>();
+    ArrayList<String> hisPresent = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +39,7 @@ public class FragmentMain extends AppCompatActivity {
             String name  = bundle.getString("stockName");
             String number  = bundle.getString("stockNumber");
             hisEPS = bundle.getStringArrayList("stockEps");
-            Log.e(TAG,hisEPS+ "");
+            Log.e(TAG,"Fragment EPS: " + hisEPS);
             hisGuLi = bundle.getStringArrayList("stockGuLi");
             hisGuShi = bundle.getStringArrayList("stockGuShi");
             hisPresent = bundle.getStringArrayList("stockPresent");
@@ -86,13 +83,9 @@ public class FragmentMain extends AppCompatActivity {
     //Setting View Pager
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        ArrayList a = new ArrayList();
-        a.add("2017");
-        a.add("2016");
-        a.add("2015");
-        adapter.addFrag(new DummyFragment(a), "歷年EPS");
-        adapter.addFrag(new DummyFragment(hisEPS), "歷年配股息發放");
-        adapter.addFrag(new DummyFragment("CCC"), "歷年配股息時間");
+        adapter.addFrag(new DummyFragment(2017,"eps",hisEPS,hisGuLi,hisGuShi,hisPresent), "歷年EPS");
+        adapter.addFrag(new DummyFragment(2017,"guli",hisEPS,hisGuLi,hisGuShi,hisPresent), "歷年配股息發放");
+        adapter.addFrag(new DummyFragment(2017,"gushi",hisEPS,hisGuLi,hisGuShi,hisPresent), "歷年配股息時間");
         viewPager.setAdapter(adapter);
     }
 }

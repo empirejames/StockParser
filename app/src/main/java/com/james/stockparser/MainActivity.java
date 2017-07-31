@@ -759,7 +759,10 @@ public class MainActivity extends AppCompatActivity {
     private class GetStockInfo extends AsyncTask<String, Integer, String> {
         @Override
         protected String doInBackground(final String... params) {
-            Log.e(TAG, params[0] + " params");
+            hstEPS.clear();
+            hstGuShi.clear();
+            hstGuLi.clear();
+            hstPresent.clear();
             ref = FirebaseDatabase.getInstance().getReference();
             ref.keepSynced(true);
             ref.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -772,7 +775,7 @@ public class MainActivity extends AppCompatActivity {
                                     for (DataSnapshot stockItem : stockNum.getChildren()) {
                                         if (stockItem.getKey().toString().equals("eps")) {
                                             hstEPS.add(stockItem.getValue().toString());
-                                            //Log.e(TAG,"eps" + stockItem.getValue() + " ...");
+                                            Log.e(TAG,"Main Eps" + stockItem.getValue() + " ...");
                                         } else if (stockItem.getKey().toString().equals("guli")) {
                                             hstGuLi.add(stockItem.getValue().toString());
                                             //Log.e(TAG,"guli" +stockItem.getValue() + " ...");
@@ -788,7 +791,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                     }
-
+                    startFragment();
                 }
 
                 @Override
@@ -799,19 +802,23 @@ public class MainActivity extends AppCompatActivity {
             return null;
         }
 
+        public void startFragment(){
+            Log.e(TAG,"startFragment EPS: " + hstEPS);
+            Intent in = new Intent(getApplicationContext(), FragmentMain.class);
+            in.putExtra("stockNumber", stockNumber);
+            in.putExtra("stockName", stockName);
+            in.putExtra("stockEps", hstEPS);
+            in.putExtra("stockGuLi", hstGuLi);
+            in.putExtra("stockGuShi", hstGuShi);
+            in.putExtra("stockPresent", hstPresent);
+            startActivity(in);
+        }
+
         @Override
         protected void onPostExecute(String a) {
             super.onPostExecute(a);
             runOnUiThread(new Runnable() {
                 public void run() {
-                    Intent in = new Intent(getApplicationContext(), FragmentMain.class);
-                    in.putExtra("stockNumber", stockNumber);
-                    in.putExtra("stockName", stockName);
-                    in.putExtra("stockEps", hstEPS);
-                    in.putExtra("stockGuLi", hstGuLi);
-                    in.putExtra("stockGuShi", hstGuShi);
-                    in.putExtra("stockPresent", hstPresent);
-                    startActivity(in);
                 }
             });
         }

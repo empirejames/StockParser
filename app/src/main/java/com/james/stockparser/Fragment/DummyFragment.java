@@ -1,11 +1,13 @@
 package com.james.stockparser.Fragment;
 
 import android.annotation.SuppressLint;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,16 +16,20 @@ import com.james.stockparser.R;
 
 import java.util.ArrayList;
 
-/**
- * Created by SONU on 16/09/15.
- */
 public class DummyFragment extends Fragment {
     private View view;
 
-    private String title;//String for tab title
+    private String title;
+    private String classcal;
+    private String TAG = DummyFragment.class.getSimpleName();
+    private int year;
+    private Resources res ;
 
     private static RecyclerView recyclerView;
-    private ArrayList a = new ArrayList();
+    private ArrayList eps = new ArrayList();
+    private ArrayList guli = new ArrayList();
+    private ArrayList gushi = new ArrayList();
+    private ArrayList present = new ArrayList();
 
     public DummyFragment() {
     }
@@ -34,8 +40,13 @@ public class DummyFragment extends Fragment {
     }
 
     @SuppressLint("ValidFragment")
-    public DummyFragment(ArrayList a) {
-        this.a = a;//Setting tab title
+    public DummyFragment(int year, String classcal, ArrayList eps, ArrayList guli, ArrayList gushi, ArrayList present) {
+        this.year = year;
+        this.classcal = classcal;
+        this.eps = eps;
+        this.guli = guli;
+        this.gushi = gushi;
+        this.present = present;
     }
 
     @Nullable
@@ -49,20 +60,49 @@ public class DummyFragment extends Fragment {
     }
 
     //Setting recycler view
-    private void setRecyclerView() {
-
+    public void setRecyclerView() {
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));//Linear Items
+        res = getResources();
+        String [] titleEPS = res.getStringArray(R.array.hisEPS);
+        String [] titleGuli = res.getStringArray(R.array.hisGuLi);
+        String [] titleGuShi = res.getStringArray(R.array.hisGuShi);
 
+
+        String[] epsResult = eps.toString().replace("[[", "").replace("]]", "").split(",");
+        String[] guliResult = guli.toString().replace("[[", "").replace("]]", "").split(",");
+        String[] gushiResult = gushi.toString().replace("[[", "").replace("]]", "").split(",");
+        String[] presentResult = present.toString().replace("[[", "").replace("]]", "").split(",");
         ArrayList<String> arrayList = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            if (title != null) {
-                arrayList.add(title + " Items " + i);
+
+        //Log.e(TAG,epsResult.length + " - " + titleEPS.length );
+        Log.e(TAG,guliResult.length + " - " + titleGuShi.length);
+        for (int i=0 ; i<guliResult.length;i++){
+            Log.e(TAG,guliResult[i]);
+        };
+        for (int i=0 ; i<titleGuShi.length;i++){
+            Log.e(TAG,titleGuShi[i]);
+        };
+
+        //Log.e(TAG,gushiResult.length + " - " + titleGuli.length);
+
+
+
+        if (classcal.equals("eps")) {
+            for (int j = 3; j < epsResult.length; j++) {
+                arrayList.add( titleEPS[j]+ " : " + epsResult[j]);
             }
-            for (int j = 0; j < a.size(); j++) {
-                arrayList.add(a.get(j) + " Items " + i);//Adding items to recycler view
+        } else if (classcal.equals("guli")) {
+            for (int j = 3; j < guliResult.length; j++) {
+                arrayList.add(titleGuShi[j] + " : " + guliResult[j]);
+
             }
+        } else if (classcal.equals("gushi")) {
+            for (int j = 3; j < gushiResult.length; j++) {
+                arrayList.add(titleGuli[j] + " : " + gushiResult[j]);
+            }
+        } else if (classcal.equals("present")) {
         }
         RecyclerView_Adapter adapter = new RecyclerView_Adapter(getActivity(), arrayList);
         recyclerView.setAdapter(adapter);// set adapter on recyclerview

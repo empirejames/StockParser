@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="hisEPS">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>2年平均EPS(元)</item>
+        <item>3年平均EPS(元) </item>
+        <item>4年平均EPS(元)</item>
+        <item>5年平均EPS(元)</item>
+        <item>6年平均EPS(元)</item>
+        <item>7年平均EPS(元)</item>
+        <item>8年平均EPS(元)</item>
+        <item>9年平均EPS(元)</item>
+        <item>(季-3)每股稅後淨利 EPS(元)</item>
+        <item>(季-2)每股稅後淨利 EPS(元)</item>
+        <item>(季-1)每股稅後淨利 EPS(元)</item>
+        <item>(季)每股稅後淨利 EPS(元)</item>
+        <item>(4季)每股稅後淨利 EPS(元)</item>
+        <item>(年)每股稅後淨利 EPS(元)</item>
+        <item>(年-1)每股稅後淨利 EPS(元)</item>
+        <item>(年-2)每股稅後淨利 EPS(元)</item>
+        <item>(年-3)每股稅後淨利 EPS(元)</item>
+    </string-array>
+    <string-array name="hisGuLi">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>(年-1)配息</item>
+        <item>(年-1)配股</item>
+        <item>(年-2)配息</item>
+        <item>(年-2)配股</item>
+        <item>(年-3)配息</item>
+        <item>(年-3)配股</item>
+        <item>(年-4)配息</item>
+        <item>(年-4)配股</item>
+        <item>(年-5)配息</item>
+        <item>(年-5)配股</item>
+        <item>(年-6)配息</item>
+        <item>(年-6)配股</item>
+        <item>(年-7)配息</item>
+        <item>(年-7)配股</item>
+        <item>(年-8)配息</item>
+        <item>(年-8)配股</item>
+        <item>(年-9)配息</item>
+        <item>(年-9)配股</item>
+    </string-array>
+    <string-array name="hisGuShi">
+        <item>代號</item>
+        <item>公司</item>
+        <item>股價</item>
+        <item>扣折抵率</item>
+        <item>10年平均股利</item>
+        <item>10年平均現金股利</item>
+        <item>6年平均股利</item>
+        <item>6年平均現金股利</item>
+        <item>3年平均股利</item>
+        <item>3年平均現金股利</item>
+        <item>10年股利次數</item>
+        <item>6年股利次數</item>
+        <item>3年股利次數</item>
+        <item>董監持股比例(%)</item>
+        <item>本益比</item>
+        <item>股價淨值比</item>
+        <item>3年平均毛利率(%)</item>
+        <item>6年平均毛利率(%)</item>
+        <item>3年平均 ROE(%)</item>
+        <item>6年平均 ROE(%)</item>
+        <item>3年平均 EPS</item>
+        <item>6年平均 EPS</item>
+    </string-array>
+</resources>
