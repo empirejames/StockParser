@@ -57,15 +57,19 @@ public class FragmentMain extends AppCompatActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());//setting current selected item over viewpager
+                DummyFragment DF = new DummyFragment();
                 switch (tab.getPosition()) {
                     case 0:
-                        Log.e("TAG","TAB1");
+                        Log.e(TAG, "TAG1");
                         break;
                     case 1:
-                        Log.e("TAG","TAB2");
+                        Log.e(TAG, "TAG2");
                         break;
                     case 2:
-                        Log.e("TAG","TAB3");
+                        Log.e(TAG, "TAG3");
+                        break;
+                    case 3:
+                        Log.e(TAG, "TAG4");
                         break;
                 }
             }
@@ -86,6 +90,7 @@ public class FragmentMain extends AppCompatActivity {
         adapter.addFrag(new DummyFragment(2017,"eps",hisEPS,hisGuLi,hisGuShi,hisPresent), "歷年EPS");
         adapter.addFrag(new DummyFragment(2017,"guli",hisEPS,hisGuLi,hisGuShi,hisPresent), "歷年配股息發放");
         adapter.addFrag(new DummyFragment(2017,"gushi",hisEPS,hisGuLi,hisGuShi,hisPresent), "歷年配股息時間");
+        adapter.addFrag(new DummyFragment(2017,"present",hisEPS,hisGuLi,hisGuShi,hisPresent), "歷年股東會禮品");
         viewPager.setAdapter(adapter);
     }
 }

@@ -30,6 +30,10 @@ public class DummyFragment extends Fragment {
     private ArrayList guli = new ArrayList();
     private ArrayList gushi = new ArrayList();
     private ArrayList present = new ArrayList();
+    String[] epsResult;
+    String[] guliResult;
+    String[] gushiResult;
+    String[] presentResult;
 
     public DummyFragment() {
     }
@@ -68,44 +72,53 @@ public class DummyFragment extends Fragment {
         String [] titleEPS = res.getStringArray(R.array.hisEPS);
         String [] titleGuli = res.getStringArray(R.array.hisGuLi);
         String [] titleGuShi = res.getStringArray(R.array.hisGuShi);
+        String [] titlePresent = res.getStringArray(R.array.hisPresent);
 
-
-        String[] epsResult = eps.toString().replace("[[", "").replace("]]", "").split(",");
-        String[] guliResult = guli.toString().replace("[[", "").replace("]]", "").split(",");
-        String[] gushiResult = gushi.toString().replace("[[", "").replace("]]", "").split(",");
-        String[] presentResult = present.toString().replace("[[", "").replace("]]", "").split(",");
+        epsResult = eps.toString().replace("[[", "").replace("]]", "").split(",");
+        guliResult = guli.toString().replace("[[", "").replace("]]", "").split(",");
+        gushiResult = gushi.toString().replace("[[", "").replace("]]", "").split(",");
+        presentResult = present.toString().replace("[[", "").replace("]]", "").split(",");
         ArrayList<String> arrayList = new ArrayList<>();
 
-        //Log.e(TAG,epsResult.length + " - " + titleEPS.length );
-        Log.e(TAG,guliResult.length + " - " + titleGuShi.length);
-        for (int i=0 ; i<guliResult.length;i++){
-            Log.e(TAG,guliResult[i]);
-        };
-        for (int i=0 ; i<titleGuShi.length;i++){
-            Log.e(TAG,titleGuShi[i]);
-        };
-
-        //Log.e(TAG,gushiResult.length + " - " + titleGuli.length);
-
-
+        for (int i =0; i<presentResult.length;i++){
+            Log.e(TAG,presentResult[i]);
+        }
 
         if (classcal.equals("eps")) {
-            for (int j = 3; j < epsResult.length; j++) {
-                arrayList.add( titleEPS[j]+ " : " + epsResult[j]);
+            if (eps.size() ==0){
+                arrayList.add("無該股票資料");
+            }else{
+                for (int j = 3; j < epsResult.length; j++) {
+                    arrayList.add( titleEPS[j]+ " : " + epsResult[j]);
+                }
             }
         } else if (classcal.equals("guli")) {
-            for (int j = 3; j < guliResult.length; j++) {
-                arrayList.add(titleGuShi[j] + " : " + guliResult[j]);
+            if (guli.size() ==0){
+                arrayList.add("無該股票資料");
+            }else {
+                for (int j = 3; j < guliResult.length; j++) {
+                    arrayList.add(titleGuShi[j] + " : " + guliResult[j]);
 
+                }
             }
         } else if (classcal.equals("gushi")) {
-            for (int j = 3; j < gushiResult.length; j++) {
-                arrayList.add(titleGuli[j] + " : " + gushiResult[j]);
+            if (gushi.size() ==0){
+                arrayList.add("無該股票資料");
+            }else {
+                for (int j = 3; j < gushiResult.length; j++) {
+                    arrayList.add(titleGuli[j] + " : " + gushiResult[j]);
+                }
             }
         } else if (classcal.equals("present")) {
+            if (present.size() ==0){
+                arrayList.add("無該股票資料");
+            }else {
+                for (int j = 3; j < presentResult.length; j++) {
+                    arrayList.add(titlePresent[j] + " : " + presentResult[j]);
+                }
+            }
         }
         RecyclerView_Adapter adapter = new RecyclerView_Adapter(getActivity(), arrayList);
-        recyclerView.setAdapter(adapter);// set adapter on recyclerview
-
+        recyclerView.setAdapter(adapter);
     }
 }
