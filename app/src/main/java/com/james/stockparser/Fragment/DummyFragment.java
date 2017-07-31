@@ -23,12 +23,19 @@ public class DummyFragment extends Fragment {
     private String title;//String for tab title
 
     private static RecyclerView recyclerView;
+    private ArrayList a = new ArrayList();
 
     public DummyFragment() {
     }
+
     @SuppressLint("ValidFragment")
-    public DummyFragment (String title) {
+    public DummyFragment(String title) {
         this.title = title;//Setting tab title
+    }
+
+    @SuppressLint("ValidFragment")
+    public DummyFragment(ArrayList a) {
+        this.a = a;//Setting tab title
     }
 
     @Nullable
@@ -40,6 +47,7 @@ public class DummyFragment extends Fragment {
         return view;
 
     }
+
     //Setting recycler view
     private void setRecyclerView() {
 
@@ -49,7 +57,12 @@ public class DummyFragment extends Fragment {
 
         ArrayList<String> arrayList = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
-            arrayList.add(title+" Items " + i);//Adding items to recycler view
+            if (title != null) {
+                arrayList.add(title + " Items " + i);
+            }
+            for (int j = 0; j < a.size(); j++) {
+                arrayList.add(a.get(j) + " Items " + i);//Adding items to recycler view
+            }
         }
         RecyclerView_Adapter adapter = new RecyclerView_Adapter(getActivity(), arrayList);
         recyclerView.setAdapter(adapter);// set adapter on recyclerview

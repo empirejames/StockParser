@@ -48,6 +48,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.james.stockparser.Fragment.FragmentAbout;
+import com.james.stockparser.Fragment.FragmentMain;
 import com.james.stockparser.Unit.User;
 import com.james.stockparser.dataBase.TinyDB;
 
@@ -70,8 +71,15 @@ public class MainActivity extends AppCompatActivity {
     public MyAdapter adapter;
     ArrayList<StockItem> myDataset = new ArrayList<StockItem>();
     ArrayList<StockEPS> myEPS = new ArrayList<StockEPS>();
+    ArrayList<String> stockNumbers = new ArrayList<String>();
     ArrayList<StockItem> myDataFilter = new ArrayList<StockItem>();
     ArrayList<StockItem> myFavorite = new ArrayList<StockItem>();
+
+    ArrayList<String> hstEPS = new ArrayList<String>();
+    ArrayList<String> hstGuLi = new ArrayList<String>();
+    ArrayList<String> hstGuShi = new ArrayList<String>();
+    ArrayList<String> hstPresent = new ArrayList<String>();
+
     ArrayList<String> favList = new ArrayList<String>();
     ArrayAdapter<String> countNumAdapter;
     ArrayAdapter<String> avgNumAdapter;
@@ -168,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
         mShowAction = AnimationUtils.loadAnimation(this, R.anim.alpha_in);
         mHiddenAction = AnimationUtils.loadAnimation(this, R.anim.alpha_out);
         AdView mAdView = (AdView) findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().addTestDevice("8853EA0F6D13F5C9888906CE4B67300D").build();
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice("F618803C89E1614E3394A55D5E7A756B").build(); //Nexus 5
         mAdView.loadAd(adRequest);
 
 //            interstitial = new InterstitialAd(this);
@@ -198,24 +206,23 @@ public class MainActivity extends AppCompatActivity {
         listV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String stockName = "";
-                String stocknumber = "";
+
                 if (!searchView.getQuery().toString().equals("")) {
                     stockName = myDataFilter.get(position).getStockName();
-                    stocknumber = myDataFilter.get(position).getStockNumber();
+                    stockNumber = myDataFilter.get(position).getStockNumber();
                 } else {
                     stockName = myDataset.get(position).getStockName();
-                    stocknumber = myDataset.get(position).getStockNumber();
+                    stockNumber = myDataset.get(position).getStockNumber();
                 }
-                for (int i = 0; i < myEPS.size(); i++) {
-                    if (myEPS.get(i).getStockNumber().equals(stocknumber)) {
-                        Log.e(TAG, stocknumber + " " + stockName + " " + myEPS.get(i).getStockEPS());
+                for (int i = 0; i < stockNumbers.size(); i++) {
+                    if (stockNumbers.get(i).equals(stockNumber)) {
+                        Log.e(TAG, "stockNumbers.size() " + stockNumbers.size() + "stockNumbers.get(i) " + stockNumbers.get(i));
+                        new GetStockInfo().execute(stockNumber);
 //                        Intent in = new Intent(getApplicationContext(), FragmentMain.class);
-//                        in.putExtra("stockNumber", stocknumber);
+//                        in.putExtra("stockNumber", stockNumbers.get(i).toString());
 //                        in.putExtra("stockName", stockName);
 //                        startActivity(in);
-                        Toast.makeText(MainActivity.this, "歷史查詢功能近期開放....",
-                                Toast.LENGTH_SHORT).show();
+                        // Toast.makeText(MainActivity.this, "歷史查詢功能近期開放....  " + stockNumbers,Toast.LENGTH_SHORT).show();
                     }
                 }
                 //StockInfoParser stockinfo = new StockInfoParser();
@@ -251,11 +258,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         MultiDex.install(this);
     }
+
     @Override
     public void onBackPressed() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -274,6 +283,7 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog alert = builder.create();
         alert.show();
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -507,13 +517,13 @@ public class MainActivity extends AppCompatActivity {
             //long day=(beginDate.getTime()-endDate.getTime())/(24*60*60*1000);
             //Log.e(TAG,"day..." + day);
             try {
-                if (!myDataset.get(i).getThisYear().toString().equals("")){
+                if (!myDataset.get(i).getThisYear().toString().equals("")) {
                     //Log.e(TAG, "today" + getDate() + " - stockDay : " + myDataset.get(i).getThisYear().toString());
                     Date beginDate = format.parse(getDate());
                     Date endDate = format.parse(myDataset.get(i).getThisYear().toString());
                     long day = (endDate.getTime() - beginDate.getTime()) / (24 * 60 * 60 * 1000);
                     //Log.e(TAG, "day: " + day);
-                    if (day>0 && day<=15){
+                    if (day > 0 && day <= 15) {
                         //Log.e(TAG, "today" + getDate() + " - stockDay : " + myDataset.get(i).getThisYear().toString());
                         item.add(new StockItem(myDataset.get(i).getStockNumber(),
                                 myDataset.get(i).getStockName(),
@@ -532,7 +542,7 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-        adapter = new MyAdapter(getApplicationContext(), item, true,selectAll);
+        adapter = new MyAdapter(getApplicationContext(), item, true, selectAll);
         listV.setAdapter(adapter);
         listV.invalidateViews();
         return item;
@@ -746,6 +756,68 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private class GetStockInfo extends AsyncTask<String, Integer, String> {
+        @Override
+        protected String doInBackground(final String... params) {
+            Log.e(TAG, params[0] + " params");
+            ref = FirebaseDatabase.getInstance().getReference();
+            ref.keepSynced(true);
+            ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (final DataSnapshot dsp : dataSnapshot.getChildren()) {
+                        if (dsp.getKey().equals("history")) {
+                            for (DataSnapshot stockNum : dsp.getChildren()) {
+                                if (stockNum.getKey().toString().equals(params[0])) {
+                                    for (DataSnapshot stockItem : stockNum.getChildren()) {
+                                        if (stockItem.getKey().toString().equals("eps")) {
+                                            hstEPS.add(stockItem.getValue().toString());
+                                            //Log.e(TAG,"eps" + stockItem.getValue() + " ...");
+                                        } else if (stockItem.getKey().toString().equals("guli")) {
+                                            hstGuLi.add(stockItem.getValue().toString());
+                                            //Log.e(TAG,"guli" +stockItem.getValue() + " ...");
+                                        } else if (stockItem.getKey().toString().equals("guShi")) {
+                                            hstGuShi.add(stockItem.getValue().toString());
+                                            //Log.e(TAG,"guShi" +stockItem.getValue() + " ...");
+                                        } else if (stockItem.getKey().toString().equals("present")) {
+                                            hstPresent.add(stockItem.getValue().toString());
+                                            //Log.e(TAG,"present" +stockItem.getValue() + " ...");
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String a) {
+            super.onPostExecute(a);
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    Intent in = new Intent(getApplicationContext(), FragmentMain.class);
+                    in.putExtra("stockNumber", stockNumber);
+                    in.putExtra("stockName", stockName);
+                    in.putExtra("stockEps", hstEPS);
+                    in.putExtra("stockGuLi", hstGuLi);
+                    in.putExtra("stockGuShi", hstGuShi);
+                    in.putExtra("stockPresent", hstPresent);
+                    startActivity(in);
+                }
+            });
+        }
+    }
+
+
     private class GetData extends AsyncTask<String, Integer, String> {
         @Override
         protected void onPreExecute() {
@@ -791,12 +863,21 @@ public class MainActivity extends AppCompatActivity {
                                     for (DataSnapshot fav : users.getChildren()) {
                                         if (fav.getKey().equals("favorite")) {
                                             for (DataSnapshot set : fav.getChildren()) {
-                                                Log.e(TAG, "TT :: " + set.getValue());
+                                                //Log.e(TAG, "TT :: " + set.getValue());
                                                 favList.add(set.getValue().toString());
                                             }
                                         }
                                     }
                                 }
+                            }
+                        } else if (dsp.getKey().equals("history")) {
+                            for (DataSnapshot stockNm : dsp.getChildren()) {
+                                stockNumbers.add(stockNm.getKey().toString());
+//                                if (stockNm.getKey().equals("3141")) {
+//                                    Log.e(TAG,"hisEps" + stockNm.child("eps").getValue().toString());
+//                                    Log.e(TAG,"hisGuli" + stockNm.child("guli").getValue().toString());
+//                                    Log.e(TAG,"hisGuShi" + stockNm.child("guShi").getValue().toString());
+//                                }
                             }
                         }
                     }

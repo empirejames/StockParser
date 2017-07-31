@@ -10,11 +10,18 @@ import android.view.View;
 
 import com.james.stockparser.R;
 
+import java.util.ArrayList;
+
 public class FragmentMain extends AppCompatActivity {
     private static Toolbar mToolbar;
     private static ViewPager viewPager;
     private static TabLayout tabLayout;
     String TAG = FragmentMain.class.getSimpleName();
+    private ArrayList<String> hisEPS = new ArrayList<>();
+    private ArrayList<String> hisGuLi = new ArrayList<>();
+    private ArrayList<String> hisGuShi = new ArrayList<>();
+    private ArrayList<String> hisPresent = new ArrayList<>();
+
 
 
     @Override
@@ -34,6 +41,11 @@ public class FragmentMain extends AppCompatActivity {
         if(bundle.getString("stockName")!= null) {
             String name  = bundle.getString("stockName");
             String number  = bundle.getString("stockNumber");
+            hisEPS = bundle.getStringArrayList("stockEps");
+            Log.e(TAG,hisEPS+ "");
+            hisGuLi = bundle.getStringArrayList("stockGuLi");
+            hisGuShi = bundle.getStringArrayList("stockGuShi");
+            hisPresent = bundle.getStringArrayList("stockPresent");
             getSupportActionBar().setTitle(number + " " + name );
             Log.e(TAG,number + " " + name );
         }
@@ -71,12 +83,15 @@ public class FragmentMain extends AppCompatActivity {
         });
     }
 
-
     //Setting View Pager
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new DummyFragment("AAA"), "歷年EPS");
-        adapter.addFrag(new DummyFragment("BBB"), "歷年配股息發放");
+        ArrayList a = new ArrayList();
+        a.add("2017");
+        a.add("2016");
+        a.add("2015");
+        adapter.addFrag(new DummyFragment(a), "歷年EPS");
+        adapter.addFrag(new DummyFragment(hisEPS), "歷年配股息發放");
         adapter.addFrag(new DummyFragment("CCC"), "歷年配股息時間");
         viewPager.setAdapter(adapter);
     }

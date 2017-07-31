@@ -3,6 +3,7 @@ package com.james.stockparser;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -46,16 +47,18 @@ public class StockInfoParser {
         mThreadHandler.post(new Runnable() {
             @Override
             public void run() {
-                //historyGuHi = getUrlInfo(urlForGuHi);
-                //updateHistoryData("guShi");
-                //historyEPS = getUrlInfo(urlForEPS);
-                //updateHistoryData("eps");
-                //historyPresent = getUrlInfo(urlForPresent);
-                //updateHistoryData("present");
-                //historyGuli = getUrlInfo(urlForGuli);
-                //updateHistoryData("guli");
-                //getDateTaiXiDay();
-                //updateStockData();
+//                historyGuHi = getUrlInfo(urlForGuHi);
+//                updateHistoryData("guShi");
+//                Log.e(TAG,"updateHistoryData");
+//                historyEPS = getUrlInfo(urlForEPS);
+//                updateHistoryData("eps");
+//                Log.e(TAG,"updateHistoryData :: EPS");
+//                historyPresent = getUrlInfo(urlForPresent);
+//                updateHistoryData("present");
+//                historyGuli = getUrlInfo(urlForGuli);
+//                updateHistoryData("guli");
+                getDateTaiXiDay();
+                updateStockData();
             }
         });
 
