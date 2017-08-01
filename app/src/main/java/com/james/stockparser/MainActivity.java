@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<StockEPS> myEPS = new ArrayList<StockEPS>();
     ArrayList<String> stockNumbers = new ArrayList<String>();
     ArrayList<StockItem> myDataFilter = new ArrayList<StockItem>();
+    ArrayList<StockItem> nearlyStock = new ArrayList<StockItem>();
     ArrayList<StockItem> myFavorite = new ArrayList<StockItem>();
 
     ArrayList<String> hstEPS = new ArrayList<String>();
@@ -113,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
     Animation mShowAction;
     Animation mHiddenAction;
     InterstitialAd interstitial;
+    String userStatus;
     //IabHelper mHelper;
 
     @Override
@@ -206,13 +208,20 @@ public class MainActivity extends AppCompatActivity {
         listV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                 if (!searchView.getQuery().toString().equals("")) {
                     stockName = myDataFilter.get(position).getStockName();
                     stockNumber = myDataFilter.get(position).getStockNumber();
-                } else {
+                    //Log.e(TAG, "stockName " + stockName + "stockNumber" + stockNumber);
+                } else if (userStatus.equals("home")){
                     stockName = myDataset.get(position).getStockName();
                     stockNumber = myDataset.get(position).getStockNumber();
+                    //Log.e(TAG, "stockName " + stockName + "stockNumber" + stockNumber);
+                }else if(userStatus.equals("nearly")){
+                    stockName = nearlyStock.get(position).getStockName();
+                    stockNumber = nearlyStock.get(position).getStockNumber();
+                }else if(userStatus.equals("favorite")){
+                    stockName = myFavorite.get(position).getStockName();
+                    stockNumber = myFavorite.get(position).getStockNumber();
                 }
                 for (int i = 0; i < stockNumbers.size(); i++) {
                     if (stockNumbers.get(i).equals(stockNumber)) {
@@ -329,11 +338,16 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_nearly:
                     PageNumber = 0;
                     invalidateOptionsMenu(); //update toolbar
-                    nearly_Taixi();
+                    userStatus = "nearly";
+                    nearlyStock = nearly_Taixi();
+                    adapter = new MyAdapter(getApplicationContext(), nearlyStock, true, selectAll);
+                    listV.setAdapter(adapter);
+                    listV.invalidateViews();
                     return true;
                 case R.id.navigation_home:
                     PageNumber = 0;
                     invalidateOptionsMenu(); //update toolbar
+                    userStatus = "home";
                     adapter = new MyAdapter(getApplicationContext(), myDataset, true, selectAll);
                     listV.setAdapter(adapter);
                     listV.invalidateViews();
@@ -344,7 +358,11 @@ public class MainActivity extends AppCompatActivity {
                         alertDialog("訪客身分無法使用我的最愛功能");
                     } else {
                         invalidateOptionsMenu();//update toolbar
-                        myFavovResult(compareNewData(favList, adapter.getFavorite(), true)); //summary main item
+                        userStatus = "favorite";
+                        myFavorite = myFavovResult(compareNewData(favList, adapter.getFavorite(), true)); //summary main item
+                        adapter = new MyAdapter(getApplicationContext(), myFavorite, isVistor, true);
+                        listV.setAdapter(adapter);
+                        listV.invalidateViews();
                     }
                     return true;
                 case R.id.navigation_notifications:
@@ -542,9 +560,6 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-        adapter = new MyAdapter(getApplicationContext(), item, true, selectAll);
-        listV.setAdapter(adapter);
-        listV.invalidateViews();
         return item;
     }
 
@@ -563,9 +578,6 @@ public class MainActivity extends AppCompatActivity {
                 );
             }
         }
-        adapter = new MyAdapter(getApplicationContext(), item, isVistor, true);
-        listV.setAdapter(adapter);
-        listV.invalidateViews();
         return item;
     }
 
