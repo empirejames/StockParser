@@ -14,6 +14,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookSdk;
+import com.facebook.share.widget.ShareDialog;
 import com.james.stockparser.R;
 import com.james.stockparser.util.IabHelper;
 import com.james.stockparser.util.IabResult;
@@ -30,6 +33,8 @@ public class FragmentAbout extends AppCompatActivity {
     Button btn_evalution, btn_attention, btn_share, btn_feedback;
     IabHelper mHelper;
     ImageView iv_aboutLog;
+    CallbackManager callbackManager;
+    ShareDialog shareDialog;
     boolean mIsPremium = false;
     static final int RC_REQUEST = 10001;
     static final String SKU_PREMIUM = "master_power";
@@ -40,6 +45,9 @@ public class FragmentAbout extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_about);
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        callbackManager = CallbackManager.Factory.create();
+        shareDialog = new ShareDialog(this);
         mHelper = new IabHelper(this, base64EncodedPublicKey);
         mHelper.enableDebugLogging(true);
         iv_aboutLog = (ImageView) findViewById(R.id.about_logo);
@@ -88,6 +96,11 @@ public class FragmentAbout extends AppCompatActivity {
             public void onClick(View v) {
                 String payload = "";
                 mHelper.launchPurchaseFlow(FragmentAbout.this, SKU_PREMIUM, RC_REQUEST, mPurchaseFinishedListener, payload);
+            }
+        });
+        btn_share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
             }
         });
         iv_aboutLog.setOnClickListener(new View.OnClickListener() {

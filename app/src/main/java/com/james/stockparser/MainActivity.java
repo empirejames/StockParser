@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
     Animation mShowAction;
     Animation mHiddenAction;
     InterstitialAd interstitial;
-    String userStatus;
+    String userStatus = "home";
     //IabHelper mHelper;
 
     @Override
