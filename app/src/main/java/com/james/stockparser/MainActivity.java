@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -177,10 +178,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mShowAction = AnimationUtils.loadAnimation(this, R.anim.alpha_in);
         mHiddenAction = AnimationUtils.loadAnimation(this, R.anim.alpha_out);
-        AdView mAdView = (AdView) findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().addTestDevice("F618803C89E1614E3394A55D5E7A756B").build(); //Nexus 5
-        mAdView.loadAd(adRequest);
-
+//        AdView mAdView = (AdView) findViewById(R.id.adView);
+//        AdRequest adRequest = new AdRequest.Builder().addTestDevice("F618803C89E1614E3394A55D5E7A756B").build(); //Nexus 5
+//        mAdView.loadAd(adRequest);
 //            interstitial = new InterstitialAd(this);
 //            interstitial.setAdUnitId(MY_AD_UNIT_ID);
 //            // Begin loading your interstitial.
@@ -204,7 +204,27 @@ public class MainActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-        new GetData().execute();
+
+        if(getAuthDay()){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("無法連接上伺服器，請重新安裝『權息大師』")
+                    .setCancelable(false)
+                    .setPositiveButton("是", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            Intent intentDL = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.james.stockparser"));
+                            startActivity(intentDL);
+                        }
+                    })
+                    .setNegativeButton("否", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            MainActivity.this.finish();
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+        }else{
+            new GetData().execute();
+        }
         listV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -677,6 +697,21 @@ public class MainActivity extends AppCompatActivity {
 
         }
         return item;
+    }
+    public boolean getAuthDay() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        String date = sdf.format(new java.util.Date());
+        try{
+            Date todayDate = sdf.parse(getDate());
+            Date endDate = sdf.parse("20170911");
+            long day = (endDate.getTime() - todayDate.getTime()) / (24 * 60 * 60 * 1000);
+            if (day<5){
+                return true;
+            }
+        }catch (Exception e){
+
+        }
+        return false;
     }
 
     public String getDate() {
