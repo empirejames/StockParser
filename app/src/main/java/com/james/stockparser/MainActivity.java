@@ -20,7 +20,6 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -116,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
     Animation mHiddenAction;
     InterstitialAd interstitial;
     String userStatus = "home";
+    AdView mAdView;
     int CountNum = 0;
     //IabHelper mHelper;
 
@@ -145,6 +145,18 @@ public class MainActivity extends AppCompatActivity {
         searchView.setQueryHint("股票代號/名稱");
         searchEditText.setTextColor(getResources().getColor(R.color.colorWhite));
         searchEditText.setHintTextColor(getResources().getColor(R.color.colorGray));
+
+        searchView.setOnQueryTextFocusChangeListener(new SearchView.OnFocusChangeListener(){
+
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                Log.e(TAG,"adapter.getFavorite()" + adapter.getFavorite());
+                if(adapter.getFavorite().size()>0){
+                    saveUserData(compareNewData(favList, adapter.getFavorite(), true));
+                }
+            }
+        });
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -179,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mShowAction = AnimationUtils.loadAnimation(this, R.anim.alpha_in);
         mHiddenAction = AnimationUtils.loadAnimation(this, R.anim.alpha_out);
-        AdView mAdView = (AdView) findViewById(R.id.adView);
+        mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().addTestDevice("F618803C89E1614E3394A55D5E7A756B").build(); //Nexus 5
         mAdView.loadAd(adRequest);
 
@@ -203,6 +215,7 @@ public class MainActivity extends AppCompatActivity {
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.e(TAG,"AAAAAAAAAAAAA");
                 onBackPressed();
             }
         });
@@ -308,7 +321,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStop() {
         super.onStop();
-        if (!isVistor()) {
+        if (!isVistor() && adapter.getToDelete()!=null) {
             saveUserData(compareNewData(favList, adapter.getToDelete(), false));
         }
     }
@@ -316,7 +329,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (!isVistor()) {
+        if (!isVistor() && adapter.getToDelete()!=null) {
             saveUserData(compareNewData(favList, adapter.getToDelete(), false));
         }
     }
@@ -474,13 +487,16 @@ public class MainActivity extends AppCompatActivity {
         public boolean onMenuItemClick(MenuItem menuItem) {
             String msg = "";
             LayoutInflater inflater = LayoutInflater.from(MainActivity.this);
+
             final View v = inflater.inflate(R.layout.alert_layout, null);
+
             switch (menuItem.getItemId()) {
                 case R.id.action_search:
                     navigation.setVisibility(View.GONE);
                     break;
                 case R.id.action_update:
                     Log.e(TAG, "action_update");
+                    Toast.makeText(MainActivity.this, "已儲存", Toast.LENGTH_SHORT).show();
                     saveUserData(compareNewData(favList, adapter.getToDelete(), false));
                     myFavovResult(compareNewData(favList, adapter.getToDelete(), false)); // reset List View
                     break;
@@ -849,7 +865,7 @@ public class MainActivity extends AppCompatActivity {
         CountNum += 1;
         if (CountNum == 20) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage("給個 5 星好評，讓我們永續經營")
+            builder.setMessage("◎ 給個 5 星好評，讓我們永續經營")
                     .setTitle("感恩您的使用")
                     .setCancelable(false)
                     .setPositiveButton("是", new DialogInterface.OnClickListener() {
