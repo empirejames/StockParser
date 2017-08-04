@@ -88,33 +88,49 @@ public class DummyFragment extends Fragment {
             if (eps.size() ==0){
                 arrayList.add("無該股票資料");
             }else{
-                for (int j = 3; j < epsResult.length; j++) {
-                    arrayList.add( titleEPS[j]+ " : " + epsResult[j]);
+                if (titleEPS.length == epsResult.length){
+                    for (int j = 3; j < epsResult.length; j++) {
+                        arrayList.add( titleEPS[j]+ " : " + epsResult[j]);
+                    }
+                }else{
+                    arrayList.add("無該股票資料");
                 }
             }
         } else if (classcal.equals("guli")) {
             if (guli.size() ==0){
                 arrayList.add("無該股票資料");
             }else {
-                for (int j = 3; j < guliResult.length; j++) {
-                    arrayList.add(titleGuShi[j] + " : " + guliResult[j]);
+                if (titleGuShi.length == guliResult.length) {
+                    for (int j = 3; j < guliResult.length; j++) {
+                        arrayList.add(titleGuShi[j] + " : " + guliResult[j]);
 
+                    }
+                }else{
+                    arrayList.add("無該股票資料");
                 }
             }
         } else if (classcal.equals("gushi")) {
             if (gushi.size() ==0){
                 arrayList.add("無該股票資料");
             }else {
-                for (int j = 3; j < gushiResult.length; j++) {
-                    arrayList.add(titleGuli[j] + " : " + gushiResult[j]);
+                if (titleGuli.length == gushiResult.length) {
+                    for (int j = 3; j < gushiResult.length; j++) {
+                        arrayList.add(titleGuli[j] + " : " + gushiResult[j]);
+                    }
+                }else{
+                    arrayList.add("無該股票資料");
                 }
             }
         } else if (classcal.equals("present")) {
             if (present.size() ==0){
                 arrayList.add("無該股票資料");
             }else {
-                for (int j = 3; j < presentResult.length; j++) {
-                    arrayList.add(titlePresent[j] + " : " + presentResult[j]);
+                if (titlePresent.length == presentResult.length) {
+                    for (int j = 3; j < presentResult.length; j++) {
+                        arrayList.add(titlePresent[j] + " : " + presentResult[j]);
+                    }
+                }else{
+                    arrayList.add("無該股票資料");
                 }
             }
         }
