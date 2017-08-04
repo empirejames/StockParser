@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -115,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
     Animation mHiddenAction;
     InterstitialAd interstitial;
     String userStatus = "home";
+    int CountNum = 0;
     //IabHelper mHelper;
 
     @Override
@@ -212,14 +214,17 @@ public class MainActivity extends AppCompatActivity {
                     stockName = myDataFilter.get(position).getStockName();
                     stockNumber = myDataFilter.get(position).getStockNumber();
                     //Log.e(TAG, "stockName " + stockName + "stockNumber" + stockNumber);
-                } else if (userStatus.equals("home")){
+                } else if (userStatus.equals("filting")) {
+                    stockName = myDataFilter.get(position).getStockName();
+                    stockNumber = myDataFilter.get(position).getStockNumber();
+                } else if (userStatus.equals("home")) {
                     stockName = myDataset.get(position).getStockName();
                     stockNumber = myDataset.get(position).getStockNumber();
                     //Log.e(TAG, "stockName " + stockName + "stockNumber" + stockNumber);
-                }else if(userStatus.equals("nearly")){
+                } else if (userStatus.equals("nearly")) {
                     stockName = nearlyStock.get(position).getStockName();
                     stockNumber = nearlyStock.get(position).getStockNumber();
-                }else if(userStatus.equals("favorite")){
+                } else if (userStatus.equals("favorite")) {
                     stockName = myFavorite.get(position).getStockName();
                     stockNumber = myFavorite.get(position).getStockNumber();
                 }
@@ -227,6 +232,7 @@ public class MainActivity extends AppCompatActivity {
                     if (stockNumbers.get(i).equals(stockNumber)) {
                         Log.e(TAG, "stockNumbers.size() " + stockNumbers.size() + "stockNumbers.get(i) " + stockNumbers.get(i));
                         new GetStockInfo().execute(stockNumber);
+                        checkUsing();
 //                        Intent in = new Intent(getApplicationContext(), FragmentMain.class);
 //                        in.putExtra("stockNumber", stockNumbers.get(i).toString());
 //                        in.putExtra("stockName", stockName);
@@ -337,6 +343,7 @@ public class MainActivity extends AppCompatActivity {
 
                 case R.id.navigation_nearly:
                     PageNumber = 0;
+                    checkUsing();
                     invalidateOptionsMenu(); //update toolbar
                     userStatus = "nearly";
                     nearlyStock = nearly_Taixi();
@@ -454,6 +461,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.e(TAG, "Btn_avgLow = " + avgLow);
                 Log.e(TAG, "Btn_countHigh = " + countHigh);
                 Log.e(TAG, "Btn_percent :: " + percentTaixi);
+                userStatus = "filting";
                 myDataFilter = filterResult("null", true, percentTaixi);
                 alert.dismiss();
             }
@@ -671,6 +679,7 @@ public class MainActivity extends AppCompatActivity {
             countHigh = false;
             if (item.size() > 0) {
                 Toast.makeText(getApplicationContext(), "搜尋到 : " + item.size() + "筆", Toast.LENGTH_LONG).show();
+                checkUsing();
             } else {
                 Toast.makeText(getApplicationContext(), "搜索不到資料! 請更改一下篩選條件", Toast.LENGTH_LONG).show();
             }
@@ -787,7 +796,7 @@ public class MainActivity extends AppCompatActivity {
                                     for (DataSnapshot stockItem : stockNum.getChildren()) {
                                         if (stockItem.getKey().toString().equals("eps")) {
                                             hstEPS.add(stockItem.getValue().toString());
-                                            Log.e(TAG,"Main Eps" + stockItem.getValue() + " ...");
+                                            Log.e(TAG, "Main Eps" + stockItem.getValue() + " ...");
                                         } else if (stockItem.getKey().toString().equals("guli")) {
                                             hstGuLi.add(stockItem.getValue().toString());
                                             //Log.e(TAG,"guli" +stockItem.getValue() + " ...");
@@ -814,8 +823,8 @@ public class MainActivity extends AppCompatActivity {
             return null;
         }
 
-        public void startFragment(){
-            Log.e(TAG,"startFragment EPS: " + hstEPS);
+        public void startFragment() {
+            Log.e(TAG, "startFragment EPS: " + hstEPS);
             Intent in = new Intent(getApplicationContext(), FragmentMain.class);
             in.putExtra("stockNumber", stockNumber);
             in.putExtra("stockName", stockName);
@@ -836,6 +845,28 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void checkUsing() {
+        CountNum += 1;
+        if (CountNum == 20) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("給個 5 星好評，讓我們永續經營")
+                    .setTitle("感恩您的使用")
+                    .setCancelable(false)
+                    .setPositiveButton("是", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            Intent intentDL = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.james.stockparser"));
+                            startActivity(intentDL);
+                        }
+                    })
+                    .setNegativeButton("否", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
+    }
 
     private class GetData extends AsyncTask<String, Integer, String> {
         @Override

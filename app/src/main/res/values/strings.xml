@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">權息大師</string>
     <string name="edit">Edit</string>
+    <string name="app_ver">APP Version 2.0010.01</string>
     <string name="taixiday">填息平均日小於 :</string>
     <string name="taixipercent">填息機率大於 :</string>
     <string name="copy_right">Copyright © 2017 StockMaster.</string>

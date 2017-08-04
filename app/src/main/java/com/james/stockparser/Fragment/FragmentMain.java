@@ -8,6 +8,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.james.stockparser.R;
 
 import java.util.ArrayList;
@@ -52,6 +54,10 @@ public class FragmentMain extends AppCompatActivity {
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);//setting tab over viewpager
 
+        AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice("F618803C89E1614E3394A55D5E7A756B").build(); //Nexus 5
+        mAdView.loadAd(adRequest);
+
         //Implementing tab selected listener over tablayout
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -73,7 +79,6 @@ public class FragmentMain extends AppCompatActivity {
                         break;
                 }
             }
-
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
             }
