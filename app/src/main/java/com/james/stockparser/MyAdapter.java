@@ -77,12 +77,8 @@ public class MyAdapter extends BaseAdapter implements Filterable {
         final StockItem item = mListItems.get(position);
         final CheckBox cb = (CheckBox) row.findViewById(R.id.checkbox);
         final CheckBox cbDel = (CheckBox) row.findViewById(R.id.checkbox_delete);
-        if (!isVistor) {
-            cb.setVisibility(View.VISIBLE);
-        } else {
-            cb.setVisibility(View.GONE);
-            cbDel.setVisibility(View.GONE);
-        }
+        cb.setVisibility(View.GONE);
+        cbDel.setVisibility(View.GONE);
         if (page2) {
             cb.setVisibility(View.GONE);
             //cbDel.setVisibility(View.VISIBLE);

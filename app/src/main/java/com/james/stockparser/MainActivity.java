@@ -56,12 +56,15 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import au.com.bytecode.opencsv.CSVReader;
 
@@ -71,10 +74,15 @@ public class MainActivity extends AppCompatActivity {
     public MyAdapter adapter;
     ArrayList<StockItem> myDataset = new ArrayList<StockItem>();
     ArrayList<StockEPS> myEPS = new ArrayList<StockEPS>();
+    ArrayList<HistoryItem> myHisEPS = new ArrayList<HistoryItem>();
     ArrayList<String> stockNumbers = new ArrayList<String>();
     ArrayList<StockItem> myDataFilter = new ArrayList<StockItem>();
     ArrayList<StockItem> nearlyStock = new ArrayList<StockItem>();
     ArrayList<StockItem> myFavorite = new ArrayList<StockItem>();
+
+
+    ArrayList a = new ArrayList();
+
 
     ArrayList<String> hstEPS = new ArrayList<String>();
     ArrayList<String> hstGuLi = new ArrayList<String>();
@@ -84,12 +92,15 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> favList = new ArrayList<String>();
     ArrayAdapter<String> countNumAdapter;
     ArrayAdapter<String> avgNumAdapter;
+    ArrayAdapter<String> epsNumberAdapter;
     String[] countList = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16"};
     String[] avgList = {"10", "20", "30", "40"};
+    String[] avgEPSList = {"0.0", "1.0", "2.0", "4.0", "6.0", "8.0", "10.0", "12.0", "14.0", "16.0", "18.0", "20.0", "22.0", "24.0"};
     private String[] nextLine;
     private Toolbar mToolbar;
     SearchView searchView;
     String releaseCount, stockName, stockNumber, thisYear, tianxiCount, tianxiDay, tianxiPercent;
+    String hisName, hisNumber, hisProduct, hisEPS;
     String stockInfoName, stockInfoNumber, stockInfoEPS;
     DatabaseReference ref;
     ProgressDialog mProgressDialog;
@@ -98,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences prefs;
     RatingBar ratingbarStart;
     Button btnDiglog;
-    Spinner countNumber, avgNumber;
+    Spinner countNumber, avgNumber, epsNumber;
     String userId;
     boolean isVistor;
     boolean mDisPlayFav = false;
@@ -107,8 +118,9 @@ public class MainActivity extends AppCompatActivity {
     private Menu menuItem;
     Boolean countHigh = false;
     Boolean avgLow = false;
+    Boolean avgEPS = false;
     float percentTaixi;
-    String countSelectNumber, avgSelectNumber;
+    String countSelectNumber, avgSelectNumber, epsSelectNumber;
     boolean scrollFlag;
     BottomNavigationView navigation;
     Animation mShowAction;
@@ -146,12 +158,12 @@ public class MainActivity extends AppCompatActivity {
         searchEditText.setTextColor(getResources().getColor(R.color.colorWhite));
         searchEditText.setHintTextColor(getResources().getColor(R.color.colorGray));
 
-        searchView.setOnQueryTextFocusChangeListener(new SearchView.OnFocusChangeListener(){
+        searchView.setOnQueryTextFocusChangeListener(new SearchView.OnFocusChangeListener() {
 
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                Log.e(TAG,"adapter.getFavorite()" + adapter.getFavorite());
-                if(adapter.getFavorite().size()>0){
+                Log.e(TAG, "adapter.getFavorite()" + adapter.getFavorite());
+                if (adapter.getFavorite().size() > 0) {
                     saveUserData(compareNewData(favList, adapter.getFavorite(), true));
                 }
             }
@@ -215,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e(TAG,"AAAAAAAAAAAAA");
+                Log.e(TAG, "AAAAAAAAAAAAA");
                 onBackPressed();
             }
         });
@@ -321,7 +333,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStop() {
         super.onStop();
-        if (!isVistor() && adapter.getToDelete()!=null) {
+        if (!isVistor() && adapter.getToDelete() != null) {
             saveUserData(compareNewData(favList, adapter.getToDelete(), false));
         }
     }
@@ -329,7 +341,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (!isVistor() && adapter.getToDelete()!=null) {
+        if (!isVistor() && adapter.getToDelete() != null) {
             saveUserData(compareNewData(favList, adapter.getToDelete(), false));
         }
     }
@@ -409,12 +421,17 @@ public class MainActivity extends AppCompatActivity {
         ratingbarStart.setClickable(true);
         countNumber = (Spinner) myView.findViewById(R.id.spinner_countNumber);
         avgNumber = (Spinner) myView.findViewById(R.id.spinner_avgNumber);
+        epsNumber = (Spinner) myView.findViewById(R.id.spinner_avgEPS);
         countNumAdapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, countList);
         avgNumAdapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, avgList);
+        epsNumberAdapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, avgEPSList);
         countNumber.setAdapter(countNumAdapter);
         avgNumber.setAdapter(avgNumAdapter);
-        countNumber.setSelection(10); //sharepreffence
-        avgNumber.setSelection(2);//sharepreffence
+        epsNumber.setAdapter(epsNumberAdapter);
+
+        countNumber.setSelection(10); //default
+        avgNumber.setSelection(2); //default
+        epsNumber.setSelection(3); //default
 
         countNumber.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -438,7 +455,17 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+        epsNumber.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                epsSelectNumber = avgEPSList[position];
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         ratingbarStart.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
@@ -448,6 +475,17 @@ public class MainActivity extends AppCompatActivity {
         });
         SwitchCompat swCount = (SwitchCompat) myView.findViewById(R.id.switchCountBtn);
         SwitchCompat swAvgDay = (SwitchCompat) myView.findViewById(R.id.switchAvgDayBtn);
+        SwitchCompat swAvgEPS = (SwitchCompat) myView.findViewById(R.id.advanceSwitch);
+        swAvgEPS.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    avgEPS = true;
+                } else {
+                    avgEPS = false;
+                }
+            }
+        });
         swCount.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -471,9 +509,9 @@ public class MainActivity extends AppCompatActivity {
         btnDiglog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e(TAG, "Btn_avgLow = " + avgLow);
-                Log.e(TAG, "Btn_countHigh = " + countHigh);
-                Log.e(TAG, "Btn_percent :: " + percentTaixi);
+//                Log.e(TAG, "Btn_avgLow = " + avgLow);
+//                Log.e(TAG, "Btn_countHigh = " + countHigh);
+//                Log.e(TAG, "Btn_percent :: " + percentTaixi);
                 userStatus = "filting";
                 myDataFilter = filterResult("null", true, percentTaixi);
                 alert.dismiss();
@@ -567,17 +605,8 @@ public class MainActivity extends AppCompatActivity {
                     //Log.e(TAG, "day: " + day);
                     if (day > 0 && day <= 15) {
                         //Log.e(TAG, "today" + getDate() + " - stockDay : " + myDataset.get(i).getThisYear().toString());
-                        item.add(new StockItem(myDataset.get(i).getStockNumber(),
-                                myDataset.get(i).getStockName(),
-                                myDataset.get(i).getTianxiCount(),
-                                myDataset.get(i).getReleaseCount(),
-                                myDataset.get(i).getTianxiPercent(),
-                                myDataset.get(i).getTianxiDay(),
-                                myDataset.get(i).getThisYear())
-                        );
-
+                        addingArrList(item, i);
                     }
-
                 }
 
             } catch (ParseException e) {
@@ -592,14 +621,7 @@ public class MainActivity extends AppCompatActivity {
         item.clear();
         for (int i = 0; i < myDataset.size(); i++) {
             if (list.contains(myDataset.get(i).getStockNumber())) {
-                item.add(new StockItem(myDataset.get(i).getStockNumber(),
-                        myDataset.get(i).getStockName(),
-                        myDataset.get(i).getTianxiCount(),
-                        myDataset.get(i).getReleaseCount(),
-                        myDataset.get(i).getTianxiPercent(),
-                        myDataset.get(i).getTianxiDay(),
-                        myDataset.get(i).getThisYear())
-                );
+                addingArrList(item, i);
             }
         }
         return item;
@@ -609,18 +631,10 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<StockItem> item = new ArrayList<StockItem>();
         item.clear();
         float percent = 0;
-        float avgDay = 0;
         if (hasPattern && !input.equals("null")) {
             for (int i = 0; i < myDataset.size(); i++) {
                 if (myDataset.get(i).getStockNumber().contains(input) || myDataset.get(i).getStockName().contains(input)) {
-                    item.add(new StockItem(myDataset.get(i).getStockNumber(),
-                            myDataset.get(i).getStockName(),
-                            myDataset.get(i).getTianxiCount(),
-                            myDataset.get(i).getReleaseCount(),
-                            myDataset.get(i).getTianxiPercent(),
-                            myDataset.get(i).getTianxiDay(),
-                            myDataset.get(i).getThisYear())
-                    );
+                    addingArrList(item, i);
                 }
             }
         } else {
@@ -629,62 +643,79 @@ public class MainActivity extends AppCompatActivity {
             float avgdayCount;
             int avgthread;
             int countthread;
+            float epsthread;
+            float hisOfEPS;
+            String sotckNumber;
             if (taixiPercent > 0) {
                 taixiAvgdayTOint = taixiPercent;
             }
             for (int i = 0; i < myDataset.size(); i++) {
+                sotckNumber = myDataset.get(i).getStockNumber();
+                //hisOfEPS = Float.valueOf(searchForHisEPS(sotckNumber));
+                Log.e(TAG, "search " + searchForHisEPS(sotckNumber));
+                hisOfEPS = Float.parseFloat(searchForHisEPS(sotckNumber));
                 percent = Float.parseFloat(myDataset.get(i).getTianxiPercent());
                 count = Float.parseFloat(myDataset.get(i).getTianxiCount());
                 avgdayCount = Float.parseFloat(myDataset.get(i).getTianxiDay());
                 countthread = Integer.parseInt(countSelectNumber);
                 avgthread = Integer.parseInt(avgSelectNumber);
+                epsthread = Float.parseFloat(epsSelectNumber);
+
                 if (countHigh) {
                     if (avgLow) {
-                        if (percent >= taixiAvgdayTOint - 0.1 && percent <= taixiAvgdayTOint + 0.1 && count > countthread && avgdayCount < avgthread) {
-                            item.add(new StockItem(myDataset.get(i).getStockNumber(),
-                                    myDataset.get(i).getStockName(),
-                                    myDataset.get(i).getTianxiCount(),
-                                    myDataset.get(i).getReleaseCount(),
-                                    myDataset.get(i).getTianxiPercent(),
-                                    myDataset.get(i).getTianxiDay(),
-                                    myDataset.get(i).getThisYear())
-                            );
+                        if (avgEPS) {
+                            //Log.e(TAG,"true | true | true");
+                            if (percent >= taixiAvgdayTOint - 0.1 && percent <= taixiAvgdayTOint + 0.1 && count > countthread && avgdayCount < avgthread && hisOfEPS < epsthread + 0.5 && hisOfEPS > epsthread + 0.5) {
+                                addingArrList(item, i);
+                            }
+                        } else {
+                            //Log.e(TAG,"true | true | false");
+                            if (percent >= taixiAvgdayTOint - 0.1 && percent <= taixiAvgdayTOint + 0.1 && count > countthread && avgdayCount < avgthread) {
+                                addingArrList(item, i);
+                            }
                         }
                     } else {
-                        if (percent >= taixiAvgdayTOint - 0.1 && percent <= taixiAvgdayTOint + 0.1 && count > countthread) {
-                            item.add(new StockItem(myDataset.get(i).getStockNumber(),
-                                    myDataset.get(i).getStockName(),
-                                    myDataset.get(i).getTianxiCount(),
-                                    myDataset.get(i).getReleaseCount(),
-                                    myDataset.get(i).getTianxiPercent(),
-                                    myDataset.get(i).getTianxiDay(),
-                                    myDataset.get(i).getThisYear())
-                            );
+                        if (avgEPS) {
+                            //Log.e(TAG,"true | false | true");
+                            if (percent >= taixiAvgdayTOint - 0.1 && percent <= taixiAvgdayTOint + 0.1 && count > countthread && hisOfEPS < epsthread + 0.5 && hisOfEPS > epsthread + 0.5) {
+                                addingArrList(item, i);
+                            }
+                        } else {
+                            //Log.e(TAG,"true | false | false");
+                            if (percent >= taixiAvgdayTOint - 0.1 && percent <= taixiAvgdayTOint + 0.1 && count > countthread) {
+                                addingArrList(item, i);
+                            }
                         }
                     }
                 } else {
                     if (avgLow) {
-                        if (percent >= taixiAvgdayTOint - 0.1 && percent <= taixiAvgdayTOint + 0.1 && avgdayCount < avgthread) {
-                            item.add(new StockItem(myDataset.get(i).getStockNumber(),
-                                    myDataset.get(i).getStockName(),
-                                    myDataset.get(i).getTianxiCount(),
-                                    myDataset.get(i).getReleaseCount(),
-                                    myDataset.get(i).getTianxiPercent(),
-                                    myDataset.get(i).getTianxiDay(),
-                                    myDataset.get(i).getThisYear())
-                            );
+                        if (avgEPS) {
+                            //Log.e(TAG,"false | true | true");
+                            if (percent >= taixiAvgdayTOint - 0.1 && percent <= taixiAvgdayTOint + 0.1 && avgdayCount < avgthread && hisOfEPS < epsthread + 0.5 && hisOfEPS > epsthread + 0.5) {
+                                addingArrList(item, i);
+                            }
+                        } else {
+                            //Log.e(TAG,"false | true | false");
+                            if (percent >= taixiAvgdayTOint - 0.1 && percent <= taixiAvgdayTOint + 0.1 && avgdayCount < avgthread) {
+                                addingArrList(item, i);
+                            }
                         }
+
                     } else {
-                        if (percent >= taixiAvgdayTOint - 0.1 && percent <= taixiAvgdayTOint + 0.1) {
-                            item.add(new StockItem(myDataset.get(i).getStockNumber(),
-                                    myDataset.get(i).getStockName(),
-                                    myDataset.get(i).getTianxiCount(),
-                                    myDataset.get(i).getReleaseCount(),
-                                    myDataset.get(i).getTianxiPercent(),
-                                    myDataset.get(i).getTianxiDay(),
-                                    myDataset.get(i).getThisYear())
-                            );
+                        if (avgEPS) {
+                            //Log.e(TAG,"false | false | true");
+                            if (percent >= taixiAvgdayTOint - 0.1 && percent <= taixiAvgdayTOint + 0.1 && hisOfEPS > epsthread) {
+                                Log.e(TAG, hisOfEPS + " >" + epsthread);
+                                addingArrList(item, i);
+                            }
+                            //Log.e(TAG, "EEEEE .. " + sotckNumber);
+                        } else {
+                            //Log.e(TAG,"false | false | false");
+                            if (percent >= taixiAvgdayTOint - 0.1 && percent <= taixiAvgdayTOint + 0.1) {
+                                addingArrList(item, i);
+                            }
                         }
+
                     }
                 }
             }
@@ -693,6 +724,7 @@ public class MainActivity extends AppCompatActivity {
             listV.invalidateViews();
             avgLow = false;
             countHigh = false;
+            avgEPS = false;
             if (item.size() > 0) {
                 Toast.makeText(getApplicationContext(), "搜尋到 : " + item.size() + "筆", Toast.LENGTH_LONG).show();
                 checkUsing();
@@ -702,6 +734,44 @@ public class MainActivity extends AppCompatActivity {
 
         }
         return item;
+    }
+
+    public String searchForHisEPS(String stockNm) {
+        String stEPS = "";
+        for (int i = 0; i < myHisEPS.size(); i++) {
+            if (myHisEPS.get(i).getHisStockNumber().equals(stockNm)) {
+                if (isNumeric(myHisEPS.get(i).getHisEPS().toString())) {
+                    stEPS = myHisEPS.get(i).getHisEPS();
+                    return stEPS;
+                } else {
+                    stEPS = "0.0";
+                }
+            } else {
+                stEPS = "0.0";
+            }
+        }
+        return stEPS;
+    }
+
+    public ArrayList<StockItem> addingArrList(ArrayList<StockItem> item, int i) {
+        item.add(new StockItem(myDataset.get(i).getStockNumber(),
+                myDataset.get(i).getStockName(),
+                myDataset.get(i).getTianxiCount(),
+                myDataset.get(i).getReleaseCount(),
+                myDataset.get(i).getTianxiPercent(),
+                myDataset.get(i).getTianxiDay(),
+                myDataset.get(i).getThisYear())
+        );
+        return item;
+    }
+
+    public boolean isNumeric(String str) {
+        try {
+            Float.parseFloat(str);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public String getDate() {
@@ -812,7 +882,7 @@ public class MainActivity extends AppCompatActivity {
                                     for (DataSnapshot stockItem : stockNum.getChildren()) {
                                         if (stockItem.getKey().toString().equals("eps")) {
                                             hstEPS.add(stockItem.getValue().toString());
-                                            Log.e(TAG, "Main Eps" + stockItem.getValue() + " ...");
+                                            //Log.e(TAG, "Main Eps" + stockItem.getValue() + " ...");
                                         } else if (stockItem.getKey().toString().equals("guli")) {
                                             hstGuLi.add(stockItem.getValue().toString());
                                             //Log.e(TAG,"guli" +stockItem.getValue() + " ...");
@@ -863,10 +933,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void checkUsing() {
         CountNum += 1;
-        if (CountNum == 20) {
+        if (CountNum == 15) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("◎ 給個 5 星好評，讓我們永續經營")
-                    .setTitle("感恩您的使用")
+                    .setTitle("感恩您的愛用")
                     .setCancelable(false)
                     .setPositiveButton("是", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
@@ -939,11 +1009,23 @@ public class MainActivity extends AppCompatActivity {
                         } else if (dsp.getKey().equals("history")) {
                             for (DataSnapshot stockNm : dsp.getChildren()) {
                                 stockNumbers.add(stockNm.getKey().toString());
-//                                if (stockNm.getKey().equals("3141")) {
-//                                    Log.e(TAG,"hisEps" + stockNm.child("eps").getValue().toString());
-//                                    Log.e(TAG,"hisGuli" + stockNm.child("guli").getValue().toString());
-//                                    Log.e(TAG,"hisGuShi" + stockNm.child("guShi").getValue().toString());
-//                                }
+                                for (DataSnapshot stockInfo : stockNm.getChildren()) {
+                                    if (stockInfo.getKey().toString().equals("eps")) {
+                                        for (DataSnapshot stockInfos : stockInfo.getChildren()) {
+                                            if (stockInfos.getKey().toString().equals("0")) {
+                                                hisNumber = stockInfos.getValue().toString();
+                                            } else if (stockInfos.getKey().toString().equals("1")) {
+                                                hisName = stockInfos.getValue().toString();
+                                            } else if (stockInfos.getKey().toString().equals("2")) {
+                                                hisProduct = stockInfos.getValue().toString();
+                                            } else if (stockInfos.getKey().toString().equals("3")) {
+                                                hisEPS = stockInfos.getValue().toString();
+                                            }
+                                        }
+                                    }
+                                }
+                                myHisEPS.add(new HistoryItem(hisNumber, hisName, hisProduct, hisEPS));
+
                             }
                         }
                     }

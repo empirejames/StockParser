@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -44,6 +45,8 @@ import com.james.stockparser.dataBase.TinyDB;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.james.stockparser.Unit.checkDoubleClick.isFastDoubleClick;
+
 /**
  * Created by 101716 on 2017/7/5.
  */
@@ -57,14 +60,15 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     SignInButton loginGoogle;
     LoginButton loginFaceBook;
     CheckBox chkRemeber;
-    boolean remeberMe ;
+    boolean remeberMe;
     String TAG = LoginActivity.class.getSimpleName();
     RelativeLayout relativeLy;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private static final int RC_SIGN_IN = 9001;
-    CallbackManager mCallbackManager ;
+    CallbackManager mCallbackManager;
     TinyDB tinydb;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,34 +86,36 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         loginGoogle.setOnClickListener(this);
         loginGoogle.setSize(SignInButton.SIZE_WIDE);
         loginFaceBook = (LoginButton) findViewById(R.id.button_facebook);
-        loginFaceBook.setReadPermissions("email","public_profile");
-        mCallbackManager  = CallbackManager.Factory.create();
-        tvForgetPass.setOnClickListener(new View.OnClickListener(){
+        loginFaceBook.setReadPermissions("email", "public_profile");
+        mCallbackManager = CallbackManager.Factory.create();
+        tvForgetPass.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(LoginActivity.this, ResetPasswordActivity.class));
             }
         });
-        loginFaceBook.registerCallback(mCallbackManager , new FacebookCallback<LoginResult>() {
+        loginFaceBook.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                Log.e(TAG,"FACEBOOK SUCCESS");
+                Log.e(TAG, "FACEBOOK SUCCESS");
                 handleFacebookAccessToken(loginResult.getAccessToken());
             }
+
             @Override
             public void onCancel() {
-                Log.e(TAG,"FACEBOOK onCancel");
+                Log.e(TAG, "FACEBOOK onCancel");
             }
+
             @Override
             public void onError(FacebookException error) {
-                Log.e(TAG,"FACEBOOK onError");
+                Log.e(TAG, "FACEBOOK onError");
             }
         });
         emailEditText = (EditText) findViewById(R.id.username);
         passEditText = (EditText) findViewById(R.id.password);
 
-        if (tinydb.getString("account")!=""){
+        if (tinydb.getString("account") != "") {
             emailEditText.setText(tinydb.getString("account"));
             passEditText.setText(tinydb.getString("password"));
             chkRemeber.setChecked(true);
@@ -137,21 +143,21 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         chkRemeber.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if  (chkRemeber.isChecked()){
-                    saveUserInfo(true,emailEditText.getText().toString() , passEditText.getText().toString());
-                }else{
-                    saveUserInfo(false,emailEditText.getText().toString() , passEditText.getText().toString());
+                if (chkRemeber.isChecked()) {
+                    saveUserInfo(true, emailEditText.getText().toString(), passEditText.getText().toString());
+                } else {
+                    saveUserInfo(false, emailEditText.getText().toString(), passEditText.getText().toString());
                 }
             }
         });
     }
 
-    public void saveUserInfo(boolean isSave, String account, String password){
-        if (isSave){
+    public void saveUserInfo(boolean isSave, String account, String password) {
+        if (isSave) {
             tinydb.putString("account", account);
             tinydb.putString("password", password);
             remeberMe = true;
-        }else{
+        } else {
             tinydb.putString("account", "");
             tinydb.putString("password", "");
             remeberMe = false;
@@ -196,7 +202,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 firebaseAuthWithGoogle(account);
             } else {
             }
-        }else{
+        } else {
             mCallbackManager.onActivityResult(requestCode, resultCode, data);
         }
     }
@@ -210,10 +216,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         FirebaseUser user = mAuth.getCurrentUser();
                         Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
                         Intent i = new Intent(LoginActivity.this, MainActivity.class);
-                        i.putExtra("isVistor","N");
-                        i.putExtra("name",user.getDisplayName());
-                        i.putExtra("uid",user.getUid());
-                        i.putExtra("email",user.getEmail());
+                        i.putExtra("isVistor", "N");
+                        i.putExtra("name", user.getDisplayName());
+                        i.putExtra("uid", user.getUid());
+                        i.putExtra("email", user.getEmail());
                         startActivity(i);
                         if (!task.isSuccessful()) {
                             Log.w(TAG, "signInWithCredential", task.getException());
@@ -235,7 +241,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             Toast.makeText(LoginActivity.this, "訪客身分登入成功",
                                     Toast.LENGTH_SHORT).show();
                             Intent i = new Intent(LoginActivity.this, MainActivity.class);
-                            i.putExtra("isVistor","Y");
+                            i.putExtra("isVistor", "Y");
                             startActivity(i);
                         } else {
                             Log.w(TAG, "signInAnonymously:failure", task.getException());
@@ -274,12 +280,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                     register(email, password);
                                 }
                             } else {
-
                                 Intent i = new Intent(LoginActivity.this, MainActivity.class);
-                                i.putExtra("isVistor","N");
-                                i.putExtra("name",user.getDisplayName());
-                                i.putExtra("uid",user.getUid());
-                                i.putExtra("email",user.getEmail());
+                                i.putExtra("isVistor", "N");
+                                i.putExtra("name", user.getDisplayName());
+                                i.putExtra("uid", user.getUid());
+                                i.putExtra("email", user.getEmail());
                                 startActivity(i);
                             }
                         }
@@ -336,6 +341,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 .setPositiveButton("確認", null)
                 .show();
     }
+
     // validating password
     private boolean isValidPassword(String pass) {
         if (pass != null && pass.length() >= 4) {
@@ -354,23 +360,28 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     public void onClick(View v) {
         int i = v.getId();
         relativeLy = (RelativeLayout) findViewById(R.id.relative_layout_GoogleFacebook);
-        if (i == R.id.button_email) {
-            checkLogin();
-        } else if (i == R.id.button_google) {
-            googleSignIn();
-        } else if (i == R.id.button_facebook) {
-        } else if (i == R.id.button_anonymously) {
-            Anonymously();
-        } else if (i == R.id.button_other) {
-            if (relativeLy.getVisibility() == View.VISIBLE) {
-                relativeLy.setVisibility(View.GONE);
-                tvForgetPass.setVisibility(View.VISIBLE);
-            } else {
-                relativeLy.setVisibility(View.VISIBLE);
-                tvForgetPass.setVisibility(View.GONE);
+        if (!isFastDoubleClick()) {
+            if (i == R.id.button_email) {
+                checkLogin();
+            } else if (i == R.id.button_google) {
+                googleSignIn();
+            } else if (i == R.id.button_facebook) {
+            } else if (i == R.id.button_anonymously) {
+                Anonymously();
+            } else if (i == R.id.button_other) {
+                if (relativeLy.getVisibility() == View.VISIBLE) {
+                    relativeLy.setVisibility(View.GONE);
+                    tvForgetPass.setVisibility(View.VISIBLE);
+                } else {
+                    relativeLy.setVisibility(View.VISIBLE);
+                    tvForgetPass.setVisibility(View.GONE);
+                }
             }
+        }else{
+            return;
         }
     }
+
     private void handleFacebookAccessToken(AccessToken token) {
         Log.e(TAG, "handleFacebookAccessToken:" + token);
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
@@ -384,10 +395,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
                             //Log.e(TAG, "User profile : " +user.getUid() + " :: " + user.getEmail() + " :: "+ user.getDisplayName() );
                             Intent i = new Intent(LoginActivity.this, MainActivity.class);
-                            i.putExtra("isVistor","N");
-                            i.putExtra("name",user.getDisplayName());
-                            i.putExtra("uid",user.getUid());
-                            i.putExtra("email",user.getEmail());
+                            i.putExtra("isVistor", "N");
+                            i.putExtra("name", user.getDisplayName());
+                            i.putExtra("uid", user.getUid());
+                            i.putExtra("email", user.getEmail());
                             startActivity(i);
                         } else {
                             Log.e(TAG, "signInWithCredential:failure", task.getException());

@@ -47,7 +47,6 @@
             android:textColor="@color/colorBlack"
             android:textSize="20dp"
             android:layout_alignTop="@+id/switchAvgDay"
-            android:layout_alignLeft="@+id/spinner_countNumber"
             android:layout_alignStart="@+id/spinner_countNumber" />
 
         <Spinner
@@ -167,12 +166,23 @@
         android:id="@+id/relative_layout3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
-        android:layout_weight="0.30"
+        android:layout_marginBottom="40dp"
+        android:layout_weight="0.08"
         android:orientation="vertical"
         android:paddingLeft="10dp"
         android:textColor="@android:color/background_dark"
         android:visibility="visible">
+
+        <Spinner
+            android:id="@+id/spinner_avgEPS"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/switchStatus3"
+            android:layout_alignTop="@+id/switchStatus3"
+            android:layout_marginStart="20dp"
+            android:layout_toEndOf="@+id/switchStatus3"
+            android:textColor="@color/colorBlack"
+            android:textSize="20dp" />
 
         <TextView
             android:id="@+id/switchStatus3"
@@ -182,9 +192,20 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignTop="@+id/advanceSwitch"
-            android:text="尚未開放"
+            android:text="EPS大於"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/textViewFeature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="20dp"
+            android:layout_below="@+id/switchStatus3"
+            android:layout_alignParentStart="true" />
 
         <android.support.v7.widget.SwitchCompat
             android:id="@+id/advanceSwitch"
@@ -195,12 +216,13 @@
             android:layout_alignParentTop="true"
             android:layout_marginEnd="36dp"
             android:layout_marginRight="36dp"
-            android:layout_marginTop="11dp"
+            android:layout_marginTop="20dp"
             android:checked="false"
             android:scaleX="1.5"
             android:scaleY="1.5"
             android:showText="false"
             app:switchMinWidth="50dp" />
+
     </RelativeLayout>
 
     <Button
