@@ -23,7 +23,7 @@ public class DummyFragment extends Fragment {
     private String classcal;
     private String TAG = DummyFragment.class.getSimpleName();
     private int year;
-    private Resources res ;
+    private Resources res;
 
     private static RecyclerView recyclerView;
     private ArrayList eps = new ArrayList();
@@ -69,10 +69,10 @@ public class DummyFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));//Linear Items
         res = getResources();
-        String [] titleEPS = res.getStringArray(R.array.hisEPS);
-        String [] titleGuli = res.getStringArray(R.array.hisGuLi);
-        String [] titleGuShi = res.getStringArray(R.array.hisGuShi);
-        String [] titlePresent = res.getStringArray(R.array.hisPresent);
+        String[] titleEPS = res.getStringArray(R.array.hisEPS);
+        String[] titleGuli = res.getStringArray(R.array.hisGuLi);
+        String[] titleGuShi = res.getStringArray(R.array.hisGuShi);
+        String[] titlePresent = res.getStringArray(R.array.hisPresent);
 
         epsResult = eps.toString().replace("[[", "").replace("]]", "").split(",");
         guliResult = guli.toString().replace("[[", "").replace("]]", "").split(",");
@@ -80,60 +80,64 @@ public class DummyFragment extends Fragment {
         presentResult = present.toString().replace("[[", "").replace("]]", "").split(",");
         ArrayList<String> arrayList = new ArrayList<>();
 
-        for (int i =0; i<presentResult.length;i++){
-            Log.e(TAG,presentResult[i]);
+        for (int i = 0; i < presentResult.length; i++) {
+            Log.e(TAG, presentResult[i]);
+        }
+        if (classcal != null) {
+            if (classcal.equals("eps")) {
+                if (eps.size() == 0) {
+                    arrayList.add("無該股票資料");
+                } else {
+                    if (titleEPS.length == epsResult.length) {
+                        for (int j = 3; j < epsResult.length; j++) {
+                            arrayList.add(titleEPS[j] + " : " + epsResult[j]);
+                        }
+                    } else {
+                        arrayList.add("無該股票資料");
+                    }
+                }
+            } else if (classcal.equals("guli")) {
+                if (guli.size() == 0) {
+                    arrayList.add("無該股票資料");
+                } else {
+                    if (titleGuShi.length == guliResult.length) {
+                        for (int j = 3; j < guliResult.length; j++) {
+                            arrayList.add(titleGuShi[j] + " : " + guliResult[j]);
+
+                        }
+                    } else {
+                        arrayList.add("無該股票資料");
+                    }
+                }
+            } else if (classcal.equals("gushi")) {
+                if (gushi.size() == 0) {
+                    arrayList.add("無該股票資料");
+                } else {
+                    if (titleGuli.length == gushiResult.length) {
+                        for (int j = 3; j < gushiResult.length; j++) {
+                            arrayList.add(titleGuli[j] + " : " + gushiResult[j]);
+                        }
+                    } else {
+                        arrayList.add("無該股票資料");
+                    }
+                }
+            } else if (classcal.equals("present")) {
+                if (present.size() == 0) {
+                    arrayList.add("無該股票資料");
+                } else {
+                    if (titlePresent.length == presentResult.length) {
+                        for (int j = 3; j < presentResult.length; j++) {
+                            arrayList.add(titlePresent[j] + " : " + presentResult[j]);
+                        }
+                    } else {
+                        arrayList.add("無該股票資料");
+                    }
+                }
+            }
+        }else{
+            arrayList.add("無該股票資料");
         }
 
-        if (classcal.equals("eps")) {
-            if (eps.size() ==0){
-                arrayList.add("無該股票資料");
-            }else{
-                if (titleEPS.length == epsResult.length){
-                    for (int j = 3; j < epsResult.length; j++) {
-                        arrayList.add( titleEPS[j]+ " : " + epsResult[j]);
-                    }
-                }else{
-                    arrayList.add("無該股票資料");
-                }
-            }
-        } else if (classcal.equals("guli")) {
-            if (guli.size() ==0){
-                arrayList.add("無該股票資料");
-            }else {
-                if (titleGuShi.length == guliResult.length) {
-                    for (int j = 3; j < guliResult.length; j++) {
-                        arrayList.add(titleGuShi[j] + " : " + guliResult[j]);
-
-                    }
-                }else{
-                    arrayList.add("無該股票資料");
-                }
-            }
-        } else if (classcal.equals("gushi")) {
-            if (gushi.size() ==0){
-                arrayList.add("無該股票資料");
-            }else {
-                if (titleGuli.length == gushiResult.length) {
-                    for (int j = 3; j < gushiResult.length; j++) {
-                        arrayList.add(titleGuli[j] + " : " + gushiResult[j]);
-                    }
-                }else{
-                    arrayList.add("無該股票資料");
-                }
-            }
-        } else if (classcal.equals("present")) {
-            if (present.size() ==0){
-                arrayList.add("無該股票資料");
-            }else {
-                if (titlePresent.length == presentResult.length) {
-                    for (int j = 3; j < presentResult.length; j++) {
-                        arrayList.add(titlePresent[j] + " : " + presentResult[j]);
-                    }
-                }else{
-                    arrayList.add("無該股票資料");
-                }
-            }
-        }
         RecyclerView_Adapter adapter = new RecyclerView_Adapter(getActivity(), arrayList);
         recyclerView.setAdapter(adapter);
     }

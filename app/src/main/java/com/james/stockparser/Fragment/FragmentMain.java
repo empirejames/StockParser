@@ -34,6 +34,7 @@ public class FragmentMain extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 onBackPressed();
+                overridePendingTransition(R.anim.slide_in_right_1, R.anim.slide_in_right_2);
             }
         });
         Bundle bundle = getIntent().getExtras();

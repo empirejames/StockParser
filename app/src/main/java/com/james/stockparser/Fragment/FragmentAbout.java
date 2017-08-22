@@ -2,6 +2,7 @@ package com.james.stockparser.Fragment;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.facebook.share.widget.ShareDialog;
+import com.james.stockparser.NetWork.stockLastValue;
 import com.james.stockparser.R;
 import com.james.stockparser.util.IabHelper;
 import com.james.stockparser.util.IabResult;
@@ -39,6 +41,7 @@ public class FragmentAbout extends AppCompatActivity {
     static final int RC_REQUEST = 10001;
     static final String SKU_PREMIUM = "master_power";
     static final String base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtnB5b/JRahdkri2hQI5U2poHfioefrhZA5cgd7Znuddj4DIPuVSgLm33oTTGVanIRsfi5lomgVvOltNDSnSu6gcfHcG4qRjK3CLNLlwSCUXeOBt/OotXkghufRgYY8JAq+8iz4e4/RV/rba3z778u/B973q/XUQPVBmNifGBVqHIgkHLPlcZE80kQpxXALjKFF4EiCDv1PDKrTU4fhJzEt5mGHVv6qUYppj9TVHH4a5XhANH0DSHPHCvJeXHEC8tHmzE1NNHDuxjKdfVsKhTBxAEXK2wWnLi/uTaNREGfojCEu8YW5flcA3Dn4sH4DNNRaQyLbXUzowsqmH0DW7yOwIDAQAB";
+    public String returnString;
 
     //about_logo
     @Override
@@ -101,15 +104,29 @@ public class FragmentAbout extends AppCompatActivity {
         btn_share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                new MyAsyncTask().execute("2498");
             }
         });
         iv_aboutLog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(FragmentAbout.this,upNewData.class);
+                Intent i = new Intent(FragmentAbout.this, upNewData.class);
                 startActivity(i);
             }
         });
+    }
+    private class MyAsyncTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... params) {
+            String stockNum = params[0];
+            stockLastValue sv = new stockLastValue(stockNum, FragmentAbout.this);
+            returnString = sv.getData();
+            return returnString;
+        }
+        @Override
+        protected void onPostExecute(String result) {
+            Log.e(TAG, "result :  " + result);
+        }
     }
 
     @Override
@@ -118,6 +135,7 @@ public class FragmentAbout extends AppCompatActivity {
         if (mHelper != null) mHelper.dispose();
         mHelper = null;
     }
+
     @Override
     public void onStop() {
         super.onStop();

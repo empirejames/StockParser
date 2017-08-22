@@ -49,22 +49,18 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.james.stockparser.Fragment.FragmentAbout;
 import com.james.stockparser.Fragment.FragmentMain;
+import com.james.stockparser.NetWork.stockLastValue;
 import com.james.stockparser.Unit.User;
 import com.james.stockparser.dataBase.TinyDB;
 
-import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import au.com.bytecode.opencsv.CSVReader;
 
@@ -72,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
     String TAG = MainActivity.class.getSimpleName();
     private ListView listV;
     public MyAdapter adapter;
+    public String returnString;
     ArrayList<StockItem> myDataset = new ArrayList<StockItem>();
     ArrayList<StockEPS> myEPS = new ArrayList<StockEPS>();
     ArrayList<HistoryItem> myHisEPS = new ArrayList<HistoryItem>();
@@ -222,12 +219,11 @@ public class MainActivity extends AppCompatActivity {
         listV = (ListView) findViewById(R.id.list_view);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        mToolbar.setNavigationIcon(R.drawable.ic_keyboard_arrow_left_white_48dp);
+        //mToolbar.setNavigationIcon(R.drawable.ic_keyboard_arrow_left_white_48dp);
         mToolbar.setOnMenuItemClickListener(onMenuItemClick);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e(TAG, "AAAAAAAAAAAAA");
                 onBackPressed();
             }
         });
@@ -509,9 +505,6 @@ public class MainActivity extends AppCompatActivity {
         btnDiglog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Log.e(TAG, "Btn_avgLow = " + avgLow);
-//                Log.e(TAG, "Btn_countHigh = " + countHigh);
-//                Log.e(TAG, "Btn_percent :: " + percentTaixi);
                 userStatus = "filting";
                 myDataFilter = filterResult("null", true, percentTaixi);
                 alert.dismiss();
@@ -730,6 +723,7 @@ public class MainActivity extends AppCompatActivity {
                 checkUsing();
             } else {
                 Toast.makeText(getApplicationContext(), "搜索不到資料! 請更改一下篩選條件", Toast.LENGTH_LONG).show();
+                checkUsing();
             }
 
         }
@@ -783,7 +777,7 @@ public class MainActivity extends AppCompatActivity {
     public void CSVRead() {
         CSVReader reader = null;
         try {
-            reader = new CSVReader(new BufferedReader(new InputStreamReader(getAssets().open("data.csv"), "UTF-8")));
+            //reader = new CSVReader(new BufferedReader(new InputStreamReader(getAssets().open("data.csv"), "UTF-8")));
             while ((nextLine = reader.readNext()) != null) {
                 //Log.e(TAG, nextLine[0] + nextLine[1] + nextLine[2] + nextLine[3] + nextLine[4] + nextLine[5] + nextLine[6]);
                 myDataset.add(new StockItem(nextLine[0], nextLine[1], nextLine[2], nextLine[3], nextLine[4], nextLine[5], nextLine[6]));
@@ -866,6 +860,9 @@ public class MainActivity extends AppCompatActivity {
     private class GetStockInfo extends AsyncTask<String, Integer, String> {
         @Override
         protected String doInBackground(final String... params) {
+            stockLastValue sv = new stockLastValue(params[0], MainActivity.this);
+            returnString = sv.getData();
+            Log.e(TAG,"returnString: "  + returnString);
             hstEPS.clear();
             hstGuShi.clear();
             hstGuLi.clear();
@@ -908,47 +905,43 @@ public class MainActivity extends AppCompatActivity {
             });
             return null;
         }
-
         public void startFragment() {
             Log.e(TAG, "startFragment EPS: " + hstEPS);
             Intent in = new Intent(getApplicationContext(), FragmentMain.class);
             in.putExtra("stockNumber", stockNumber);
-            in.putExtra("stockName", stockName);
+            if(returnString.equals("HIGH")){
+                in.putExtra("stockName", stockName);
+            }else{
+                in.putExtra("stockName", stockName + "    現價 : "+returnString);
+            }
             in.putExtra("stockEps", hstEPS);
             in.putExtra("stockGuLi", hstGuLi);
             in.putExtra("stockGuShi", hstGuShi);
             in.putExtra("stockPresent", hstPresent);
             startActivity(in);
-        }
-
-        @Override
-        protected void onPostExecute(String a) {
-            super.onPostExecute(a);
-            runOnUiThread(new Runnable() {
-                public void run() {
-                }
-            });
+            overridePendingTransition(R.anim.slide_in_left_1, R.anim.slide_int_left_2);
         }
     }
 
     private void checkUsing() {
         CountNum += 1;
-        if (CountNum == 15) {
+        if (CountNum == 10) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("◎ 給個 5 星好評，讓我們永續經營")
                     .setTitle("感恩您的愛用")
                     .setCancelable(false)
-                    .setPositiveButton("是", new DialogInterface.OnClickListener() {
+                    .setPositiveButton("讚", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             Intent intentDL = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.james.stockparser"));
                             startActivity(intentDL);
                         }
                     })
-                    .setNegativeButton("否", new DialogInterface.OnClickListener() {
+                    .setNegativeButton("下次", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             dialog.cancel();
                         }
                     });
+            CountNum = 0;
             AlertDialog alert = builder.create();
             alert.show();
         }

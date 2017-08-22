@@ -155,6 +155,16 @@
                 android:layout_marginLeft="60dp"
                 android:text="2017/06/27"
                 android:textSize="15sp" />
+            <ImageView
+                android:id="@+id/right_select"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_chevron_right_black_48dp"
+                android:layout_marginRight="10dp">
+            </ImageView>
+
 
             <CheckBox
                 android:id="@+id/checkbox"
