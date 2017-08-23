@@ -125,6 +125,8 @@ public class MainActivity extends AppCompatActivity {
     String userStatus = "home";
     AdView mAdView;
     int CountNum = 0;
+    String alreadyGj = "false";
+    boolean alreadyGood;
     //IabHelper mHelper;
 
     @Override
@@ -202,7 +204,8 @@ public class MainActivity extends AppCompatActivity {
         mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().addTestDevice("F618803C89E1614E3394A55D5E7A756B").build(); //Nexus 5
         mAdView.loadAd(adRequest);
-
+        tinydb = new TinyDB(MainActivity.this);
+        alreadyGj = tinydb.getString("GJ");
 //            interstitial = new InterstitialAd(this);
 //            interstitial.setAdUnitId(MY_AD_UNIT_ID);
 //            // Begin loading your interstitial.
@@ -840,7 +843,7 @@ public class MainActivity extends AppCompatActivity {
         protected String doInBackground(final String... params) {
             stockLastValue sv = new stockLastValue(params[0], MainActivity.this);
             returnString = sv.getData();
-            Log.e(TAG,"returnString: "  + returnString);
+            Log.e(TAG, "returnString: " + returnString);
             hstEPS.clear();
             hstGuShi.clear();
             hstGuLi.clear();
@@ -883,14 +886,15 @@ public class MainActivity extends AppCompatActivity {
             });
             return null;
         }
+
         public void startFragment() {
             Log.e(TAG, "startFragment EPS: " + hstEPS);
             Intent in = new Intent(getApplicationContext(), FragmentMain.class);
             in.putExtra("stockNumber", stockNumber);
-            if(returnString.equals("HIGH")){
+            if (returnString.equals("HIGH")) {
                 in.putExtra("stockName", stockName);
-            }else{
-                in.putExtra("stockName", stockName + "    現價 : "+returnString);
+            } else {
+                in.putExtra("stockName", stockName + "    現價 : " + returnString);
             }
             in.putExtra("stockEps", hstEPS);
             in.putExtra("stockGuLi", hstGuLi);
@@ -903,7 +907,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void checkUsing() {
         CountNum += 1;
-        if (CountNum == 10) {
+        if (CountNum == 10 && !alreadyGj.equals("true")) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("◎ 給個 5 星好評，讓我們永續經營")
                     .setTitle("感恩您的愛用")
@@ -914,12 +918,20 @@ public class MainActivity extends AppCompatActivity {
                             startActivity(intentDL);
                         }
                     })
+                    .setNeutralButton("已經讚囉", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            tinydb.putString("GJ", "true");
+                            alreadyGood = true;
+                        }
+                    })
                     .setNegativeButton("下次", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
+                            tinydb.putString("GJ", "false");
+                            alreadyGood = false;
+                            CountNum = 0;
                             dialog.cancel();
                         }
                     });
-            CountNum = 0;
             AlertDialog alert = builder.create();
             alert.show();
         }
