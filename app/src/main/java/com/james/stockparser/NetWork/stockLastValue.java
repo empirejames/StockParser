@@ -31,7 +31,7 @@ public class stockLastValue {
     }
 
     public String getData(){
-        final String url = "https://www.google.com/finance/getprices?q=" + stockNm + "&x=TPE&i=7200&p=1d";
+        final String url = "https://www.google.com/finance/getprices?q=" + stockNm + "&x=TPE&i=7200&p=2d";
         String[] temp;
         try {
             String json = Jsoup.connect(url).ignoreContentType(true).execute().body();

@@ -12,7 +12,7 @@ public class checkDoubleClick {
     public static boolean isFastDoubleClick() {
         String TAG = checkDoubleClick.class.getSimpleName();
         long time = System.currentTimeMillis();
-        if (time - lastClickTime < 500) {
+        if (time - lastClickTime < 1000) {
             return true;
         }
         lastClickTime = time;

@@ -68,6 +68,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private static final int RC_SIGN_IN = 9001;
     CallbackManager mCallbackManager;
     TinyDB tinydb;
+    boolean isTouchLG =false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -280,12 +281,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                     register(email, password);
                                 }
                             } else {
-                                Intent i = new Intent(LoginActivity.this, MainActivity.class);
-                                i.putExtra("isVistor", "N");
-                                i.putExtra("name", user.getDisplayName());
-                                i.putExtra("uid", user.getUid());
-                                i.putExtra("email", user.getEmail());
-                                startActivity(i);
+                                    Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                                    i.putExtra("isVistor", "N");
+                                    i.putExtra("name", user.getDisplayName());
+                                    i.putExtra("uid", user.getUid());
+                                    i.putExtra("email", user.getEmail());
+                                    startActivity(i);
                             }
                         }
                     });

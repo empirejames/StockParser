@@ -62,7 +62,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import au.com.bytecode.opencsv.CSVReader;
 
 public class MainActivity extends AppCompatActivity {
     String TAG = MainActivity.class.getSimpleName();
@@ -774,27 +773,6 @@ public class MainActivity extends AppCompatActivity {
         return date;
     }
 
-    public void CSVRead() {
-        CSVReader reader = null;
-        try {
-            //reader = new CSVReader(new BufferedReader(new InputStreamReader(getAssets().open("data.csv"), "UTF-8")));
-            while ((nextLine = reader.readNext()) != null) {
-                //Log.e(TAG, nextLine[0] + nextLine[1] + nextLine[2] + nextLine[3] + nextLine[4] + nextLine[5] + nextLine[6]);
-                myDataset.add(new StockItem(nextLine[0], nextLine[1], nextLine[2], nextLine[3], nextLine[4], nextLine[5], nextLine[6]));
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                }
-            }
-        }
-    }
 
     private void saveUserData(final ArrayList favorite) {
         Log.e(TAG, "saveUserData:: " + favorite);
