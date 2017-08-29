@@ -104,7 +104,7 @@ public class FragmentAbout extends AppCompatActivity {
         btn_share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new MyAsyncTask().execute("2498");
+                shareFriend();
             }
         });
         iv_aboutLog.setOnClickListener(new View.OnClickListener() {
@@ -176,6 +176,15 @@ public class FragmentAbout extends AppCompatActivity {
     boolean verifyDeveloperPayload(Purchase p) {
         String payload = p.getDeveloperPayload();
         return true;
+    }
+    public void shareFriend(){
+        Intent share_intent = new Intent();
+        share_intent.setAction(Intent.ACTION_SEND);
+        share_intent.setType("text/plain");
+        share_intent.putExtra(Intent.EXTRA_SUBJECT, "權息大師");
+        share_intent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.share_content));
+        share_intent = Intent.createChooser(share_intent, "選擇分享");
+        startActivity(share_intent);
     }
 
 }

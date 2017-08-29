@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">權息大師</string>
     <string name="edit">Edit</string>
-    <string name="app_ver">APP Version 3.3</string>
+    <string name="app_ver">APP Version 3.5</string>
     <string name="taixiday">填息平均日小於 :</string>
     <string name="taixipercent">填息機率大於 :</string>
     <string name="copy_right">Copyright © 2017 StockMaster.</string>
@@ -14,6 +14,7 @@
     <string name="forgot_password">忘記密碼 ?</string>
     <string name="forgot_msg">輸入您註冊的Email帳號，我們將發送一封重設密碼信至您的信箱</string>
     <string name="banner_ad_unit_id">ca-app-pub-1659435325076970/4141743043</string>
+    <string name="share_content">【權息大師】這款我覺得好用APP推薦給您，可以查詢歷史權息資料、歷史資訊統計、即將除權股、歷年EPS統計\n◎◎◎快上Google Play免費下載◎◎◎\n https://play.google.com/store/apps/details?id=com.james.stockparser</string>
     <string name="stockFYI">1. 本軟體對於任何包含於、經由、或聯結、下載或從任何與本軟體有關服務 (以下簡稱「服務」) 所獲得之資訊、內容或廣告 (以下簡稱「資料」)，不聲明或保證其內容之正確性或可靠性；並且, 對於您透過「服務」上之廣告、資訊或要約而展示、購買或取得之任何產品、資訊或資料(「產品」)，本軟體亦不負品質保證之責任。您於此接受並承認信賴任何「資料」所生之風險應自行承擔。本軟體有權但無此義務，改善或更正在「服務」或「資料」任何部分之錯誤或疏失。\n\n
     2. 本軟體之服務與資料是基於「現況」及「現有」提供，而且 本網站明確地表示拒絕對於「服務」、「資料」或「產品」給予任何明示或暗示之保證, 包括但不限於，得為商業使用或適合於特定目的之保證\n\n
         3. 本軟體對於因「服務」、「資料」或「產品」所生之任何直接、間接、附帶的或因此而導致之衍生性損失概不負責。\n\n
