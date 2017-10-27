@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<StockItem> myDataFilter = new ArrayList<StockItem>();
     ArrayList<StockItem> nearlyStock = new ArrayList<StockItem>();
     ArrayList<StockItem> myFavorite = new ArrayList<StockItem>();
-
+    ArrayList<StockItem> myHistory = new ArrayList<StockItem>();
 
     ArrayList a = new ArrayList();
 
@@ -233,7 +233,10 @@ public class MainActivity extends AppCompatActivity {
         listV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
                 if (!searchView.getQuery().toString().equals("")) {
+                    addingSeearch(myHistory,position);
+                    Log.e(TAG, "stockName " + stockName + "position" + position);
                     stockName = myDataFilter.get(position).getStockName();
                     stockNumber = myDataFilter.get(position).getStockNumber();
                     //Log.e(TAG, "stockName " + stockName + "stockNumber" + stockNumber);
@@ -241,15 +244,20 @@ public class MainActivity extends AppCompatActivity {
                     stockName = myDataFilter.get(position).getStockName();
                     stockNumber = myDataFilter.get(position).getStockNumber();
                 } else if (userStatus.equals("home")) {
+                    addingArrList(myHistory,position);
                     stockName = myDataset.get(position).getStockName();
                     stockNumber = myDataset.get(position).getStockNumber();
-                    //Log.e(TAG, "stockName " + stockName + "stockNumber" + stockNumber);
+                    Log.e(TAG, "stockName " + stockName + "stockNumber" + stockNumber);
                 } else if (userStatus.equals("nearly")) {
+                    addingNear(myHistory,position);
                     stockName = nearlyStock.get(position).getStockName();
                     stockNumber = nearlyStock.get(position).getStockNumber();
                 } else if (userStatus.equals("favorite")) {
                     stockName = myFavorite.get(position).getStockName();
                     stockNumber = myFavorite.get(position).getStockNumber();
+                } else if (userStatus.equals("history")) {
+                    stockName = myHistory.get(position).getStockName();
+                    stockNumber = myHistory.get(position).getStockNumber();
                 }
                 for (int i = 0; i < stockNumbers.size(); i++) {
                     if (stockNumbers.get(i).equals(stockNumber)) {
@@ -345,16 +353,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public boolean isVistor() {
-        if (bundle.getString("isVistor") != null) {
-            String vistor = bundle.getString("isVistor");
-            if (vistor.toString().equals("Y")) {
-                return true;
+        if(bundle!=null){
+            if (bundle.getString("isVistor") != null) {
+                String vistor = bundle.getString("isVistor");
+                if (vistor.toString().equals("Y")) {
+                    return true;
+                } else {
+                    return false;
+                }
             } else {
                 return false;
             }
-        } else {
-            return false;
         }
+        return false;
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -394,6 +405,14 @@ public class MainActivity extends AppCompatActivity {
                         listV.setAdapter(adapter);
                         listV.invalidateViews();
                     }
+                    return true;
+                case R.id.navigation_history:
+                    PageNumber = 1;
+                        invalidateOptionsMenu();//update toolbar
+                        userStatus = "history";
+                        adapter = new MyAdapter(getApplicationContext(), myHistory, isVistor, true);
+                        listV.setAdapter(adapter);
+                        listV.invalidateViews();
                     return true;
                 case R.id.navigation_notifications:
                     Intent i = new Intent(MainActivity.this, FragmentAbout.class);
@@ -757,6 +776,28 @@ public class MainActivity extends AppCompatActivity {
                 myDataset.get(i).getTianxiPercent(),
                 myDataset.get(i).getTianxiDay(),
                 myDataset.get(i).getThisYear())
+        );
+        return item;
+    }
+    public ArrayList<StockItem> addingSeearch(ArrayList<StockItem> item, int i) {
+        item.add(new StockItem(myDataFilter.get(i).getStockNumber(),
+                myDataFilter.get(i).getStockName(),
+                myDataFilter.get(i).getTianxiCount(),
+                myDataFilter.get(i).getReleaseCount(),
+                myDataFilter.get(i).getTianxiPercent(),
+                myDataFilter.get(i).getTianxiDay(),
+                myDataFilter.get(i).getThisYear())
+        );
+        return item;
+    }
+    public ArrayList<StockItem> addingNear(ArrayList<StockItem> item, int i) {
+        item.add(new StockItem(nearlyStock.get(i).getStockNumber(),
+                nearlyStock.get(i).getStockName(),
+                nearlyStock.get(i).getTianxiCount(),
+                nearlyStock.get(i).getReleaseCount(),
+                nearlyStock.get(i).getTianxiPercent(),
+                nearlyStock.get(i).getTianxiDay(),
+                nearlyStock.get(i).getThisYear())
         );
         return item;
     }

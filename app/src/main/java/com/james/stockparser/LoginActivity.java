@@ -84,6 +84,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         chkRemeber = (CheckBox) findViewById(R.id.chkRemeber);
         tvForgetPass = (TextView) findViewById(R.id.tv_forgotPass);
         loginOther = (Button) findViewById(R.id.button_other);
+        loginOther.setVisibility(View.GONE);
         loginOther.setOnClickListener(this);
         loginAnonymously = (Button) findViewById(R.id.button_anonymously);
         loginAnonymously.setOnClickListener(this);
