@@ -95,7 +95,7 @@ public class FragmentMain extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new DummyFragment(2017,"eps",hisEPS,hisGuLi,hisGuShi,hisPresent), "歷年EPS");
         adapter.addFrag(new DummyFragment(2017,"guli",hisEPS,hisGuLi,hisGuShi,hisPresent), "歷年配股息發放");
-        adapter.addFrag(new DummyFragment(2017,"gushi",hisEPS,hisGuLi,hisGuShi,hisPresent), "歷年配股息時間");
+        adapter.addFrag(new DummyFragment(2017,"gushi",hisEPS,hisGuLi,hisGuShi,hisPresent), "歷年配股配息");
         adapter.addFrag(new DummyFragment(2017,"present",hisEPS,hisGuLi,hisGuShi,hisPresent), "歷年股東會禮品");
         viewPager.setAdapter(adapter);
     }

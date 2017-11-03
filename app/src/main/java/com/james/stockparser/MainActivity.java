@@ -52,9 +52,6 @@ import com.james.stockparser.Fragment.FragmentMain;
 import com.james.stockparser.NetWork.stockLastValue;
 import com.james.stockparser.Unit.User;
 import com.james.stockparser.dataBase.TinyDB;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -110,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
     boolean isVistor;
     boolean mDisPlayFav = false;
     boolean selectAll = false;
+    boolean containStock = false;
     int PageNumber = 0;
     private Menu menuItem;
     Boolean countHigh = false;
@@ -145,6 +143,12 @@ public class MainActivity extends AppCompatActivity {
             menu.getItem(0).setVisible(false);
             menu.getItem(1).setVisible(false);
             menu.getItem(4).setVisible(false);
+        } else if(PageNumber == 2){
+            menu.getItem(0).setVisible(false); //搜尋
+            menu.getItem(1).setVisible(false); //我的最愛
+            menu.getItem(2).setVisible(false); //上傳
+            menu.getItem(3).setVisible(false); //刪除
+            menu.getItem(4).setVisible(false); //篩選
         }
         SearchManager searchManager = (SearchManager) getSystemService(getApplicationContext().SEARCH_SERVICE);
         searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
@@ -262,17 +266,16 @@ public class MainActivity extends AppCompatActivity {
                 for (int i = 0; i < stockNumbers.size(); i++) {
                     if (stockNumbers.get(i).equals(stockNumber)) {
                         Log.e(TAG, "stockNumbers.size() " + stockNumbers.size() + "stockNumbers.get(i) " + stockNumbers.get(i));
-                        new GetStockInfo().execute(stockNumber);
-                        checkUsing();
-//                        Intent in = new Intent(getApplicationContext(), FragmentMain.class);
-//                        in.putExtra("stockNumber", stockNumbers.get(i).toString());
-//                        in.putExtra("stockName", stockName);
-//                        startActivity(in);
-                        // Toast.makeText(MainActivity.this, "歷史查詢功能近期開放....  " + stockNumbers,Toast.LENGTH_SHORT).show();
+                        containStock = true;
                     }
                 }
-                //StockInfoParser stockinfo = new StockInfoParser();
-                //stockinfo.start(stocknumber);
+                if(containStock){
+                    new GetStockInfo().execute(stockNumber);
+                    checkUsing();
+                    containStock = false;
+                }else{
+                    Toast.makeText(MainActivity.this, "暫無此檔股票資訊", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -376,7 +379,7 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId()) {
 
                 case R.id.navigation_nearly:
-                    PageNumber = 0;
+                    PageNumber = 2;
                     checkUsing();
                     invalidateOptionsMenu(); //update toolbar
                     userStatus = "nearly";
@@ -407,7 +410,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     return true;
                 case R.id.navigation_history:
-                    PageNumber = 1;
+                    PageNumber = 2;
                         invalidateOptionsMenu();//update toolbar
                         userStatus = "history";
                         adapter = new MyAdapter(getApplicationContext(), myHistory, isVistor, true);
