@@ -25,6 +25,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
@@ -34,6 +35,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.Spinner;
@@ -339,13 +341,13 @@ public class MainActivity extends AppCompatActivity {
         //readFav();
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (!isVistor() && adapter.getToDelete() != null) {
-            saveUserData(compareNewData(favList, adapter.getToDelete(), false));
-        }
-    }
+//    @Override
+//    public void onStop() {
+//        super.onStop();
+//        if (!isVistor() && adapter.getToDelete() != null) {
+//            saveUserData(compareNewData(favList, adapter.getToDelete(), false));
+//        }
+//    }
 
     @Override
     public void onDestroy() {
@@ -411,11 +413,11 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 case R.id.navigation_history:
                     PageNumber = 2;
-                        invalidateOptionsMenu();//update toolbar
-                        userStatus = "history";
-                        adapter = new MyAdapter(getApplicationContext(), myHistory, isVistor, true);
-                        listV.setAdapter(adapter);
-                        listV.invalidateViews();
+                    invalidateOptionsMenu();//update toolbar
+                    userStatus = "history";
+                    adapter = new MyAdapter(getApplicationContext(), myHistory, isVistor, true);
+                    listV.setAdapter(adapter);
+                    listV.invalidateViews();
                     return true;
                 case R.id.navigation_notifications:
                     Intent i = new Intent(MainActivity.this, FragmentAbout.class);
@@ -541,10 +543,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onMenuItemClick(MenuItem menuItem) {
             String msg = "";
-            LayoutInflater inflater = LayoutInflater.from(MainActivity.this);
-
-            final View v = inflater.inflate(R.layout.alert_layout, null);
-
             switch (menuItem.getItemId()) {
                 case R.id.action_search:
                     navigation.setVisibility(View.GONE);
@@ -935,11 +933,16 @@ public class MainActivity extends AppCompatActivity {
             Log.e(TAG, "startFragment EPS: " + hstEPS);
             Intent in = new Intent(getApplicationContext(), FragmentMain.class);
             in.putExtra("stockNumber", stockNumber);
-            if (returnString.equals("HIGH")) {
-                in.putExtra("stockName", stockName);
-            } else {
-                in.putExtra("stockName", stockName + "    現價 : " + returnString);
+            if(returnString != null){
+                if (returnString.equals("HIGH")) {
+                    in.putExtra("stockName", stockName);
+                } else {
+                    in.putExtra("stockName", stockName + "    現價 : " + returnString);
+                }
+            }else{
+                in.putExtra("stockName", stockName + "    現價 : " + "無");
             }
+
             in.putExtra("stockEps", hstEPS);
             in.putExtra("stockGuLi", hstGuLi);
             in.putExtra("stockGuShi", hstGuShi);

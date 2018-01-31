@@ -75,6 +75,7 @@ public class MyAdapter extends BaseAdapter implements Filterable {
         float transTianx = 0;
         final View row = inflater.inflate(R.layout.list_stock, parent, false);
         final StockItem item = mListItems.get(position);
+        final ImageView img_right = row.findViewById(R.id.right_select);
         final CheckBox cb = (CheckBox) row.findViewById(R.id.checkbox);
         final CheckBox cbDel = (CheckBox) row.findViewById(R.id.checkbox_delete);
         cb.setVisibility(View.GONE);
@@ -86,6 +87,7 @@ public class MyAdapter extends BaseAdapter implements Filterable {
         if (deleteContext) {
             if (!page2) {
                 cb.setVisibility(View.VISIBLE);
+                img_right.setVisibility(View.GONE);
             } else {
                 cbDel.setVisibility(View.VISIBLE);
             }
