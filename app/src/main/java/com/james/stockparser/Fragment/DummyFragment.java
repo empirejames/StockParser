@@ -126,10 +126,16 @@ public class DummyFragment extends Fragment {
                     arrayList.add("無該股票資料");
                 } else {
                     if (titlePresent.length == presentResult.length) {
-                        for (int j = 3; j < presentResult.length; j++) {
-                            arrayList.add(titlePresent[j] + " : " + presentResult[j]);
+                        arrayList.add(titlePresent[3] + " : " + presentResult[presentResult.length-1]);
+                        for (int j = 4; j < presentResult.length; j++) {
+                            arrayList.add(titlePresent[j] + " : " + presentResult[j-1]);
                         }
-                    } else {
+                    } else if(titlePresent.length > presentResult.length){
+                        arrayList.add(titlePresent[3] + " : " + presentResult[presentResult.length-1]);
+                        for (int j = 4; j < presentResult.length; j++) {
+                            arrayList.add(titlePresent[j] + " : " + presentResult[j-1]);
+                        }
+                    }else{
                         arrayList.add("無該股票資料");
                     }
                 }

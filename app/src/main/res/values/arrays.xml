@@ -73,10 +73,11 @@
         <item>代號</item>
         <item>公司</item>
         <item>股價</item>
-        <item>105年紀念品</item>
-        <item>104年紀念品</item>
-        <item>103年紀念品</item>
-        <item>102年紀念品</item>
-        <item>101年紀念品</item>
+        <item>(年-1)紀念品</item>
+        <item>(年-2)紀念品</item>
+        <item>(年-3)紀念品</item>
+        <item>(年-4)紀念品</item>
+        <item>(年-5)紀念品</item>
+        <item>(年-6)紀念品</item>
     </string-array>
 </resources>

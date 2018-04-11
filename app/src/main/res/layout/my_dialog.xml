@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:textColor="@color/colorWhite"
-        android:background="@color/colorPrimaryLight"
+        android:background="@drawable/background_radius"
         android:visibility="visible"
         android:layout_weight="0.1">
 
@@ -145,7 +145,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:textColor="@android:color/background_dark"
-        android:background="@color/colorPrimaryLight"
+        android:background="@drawable/background_radius"
         android:layout_weight="0.1"
         android:visibility="visible">
 

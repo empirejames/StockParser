@@ -17,8 +17,9 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            android:minHeight="?attr/actionBarSize"></android.support.v7.widget.Toolbar>
+            android:background="@drawable/background_radius"
+            android:minHeight="?attr/actionBarSize">
+        </android.support.v7.widget.Toolbar>
 
         <ListView
             android:id="@+id/list_view"
@@ -34,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_gravity="bottom"
-            android:background="?attr/colorPrimary"
+            android:background="@drawable/background_radius"
             app:itemTextColor="@color/colorWhite"
             app:itemIconTint="@color/colorWhite"
             app:menu="@menu/navigation_bottom" />

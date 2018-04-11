@@ -26,8 +26,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
+import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -189,10 +193,12 @@ public class MainActivity extends AppCompatActivity {
                     adapter = new MyAdapter(getApplicationContext(), myDataFilter, true, selectAll);
                     listV.setAdapter(adapter);
                     listV.invalidateViews();
+                    listV.setLayoutAnimation(getListAnim());
                 } else {
                     adapter = new MyAdapter(getApplicationContext(), myDataset, true, selectAll);
                     listV.setAdapter(adapter);
                     listV.invalidateViews();
+                    listV.setLayoutAnimation(getListAnim());
                 }
                 return false;
             }
@@ -308,6 +314,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+        listV.setLayoutAnimation(getListAnim());
     }
 
     @Override
@@ -389,6 +396,7 @@ public class MainActivity extends AppCompatActivity {
                     adapter = new MyAdapter(getApplicationContext(), nearlyStock, true, selectAll);
                     listV.setAdapter(adapter);
                     listV.invalidateViews();
+                    listV.setLayoutAnimation(getListAnim());
                     return true;
                 case R.id.navigation_home:
                     PageNumber = 0;
@@ -397,6 +405,7 @@ public class MainActivity extends AppCompatActivity {
                     adapter = new MyAdapter(getApplicationContext(), myDataset, true, selectAll);
                     listV.setAdapter(adapter);
                     listV.invalidateViews();
+                    listV.setLayoutAnimation(getListAnim());
                     return true;
                 case R.id.navigation_dashboard:
                     PageNumber = 1;
@@ -409,6 +418,7 @@ public class MainActivity extends AppCompatActivity {
                         adapter = new MyAdapter(getApplicationContext(), myFavorite, isVistor, true);
                         listV.setAdapter(adapter);
                         listV.invalidateViews();
+                        listV.setLayoutAnimation(getListAnim());
                     }
                     return true;
                 case R.id.navigation_history:
@@ -418,6 +428,7 @@ public class MainActivity extends AppCompatActivity {
                     adapter = new MyAdapter(getApplicationContext(), myHistory, isVistor, true);
                     listV.setAdapter(adapter);
                     listV.invalidateViews();
+                    listV.setLayoutAnimation(getListAnim());
                     return true;
                 case R.id.navigation_notifications:
                     Intent i = new Intent(MainActivity.this, FragmentAbout.class);
@@ -428,6 +439,22 @@ public class MainActivity extends AppCompatActivity {
         }
 
     };
+
+    private LayoutAnimationController getListAnim() {
+        AnimationSet set = new AnimationSet(true);
+        Animation animation = new AlphaAnimation(0.0f, 1.0f);
+        animation.setDuration(300);
+        set.addAnimation(animation);
+
+        animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
+                Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
+                -1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
+        animation.setDuration(500);
+        set.addAnimation(animation);
+        LayoutAnimationController controller = new LayoutAnimationController(
+                set, 0.5f);
+        return controller;
+    }
 
     public void showDialog() {
         AlertDialog.Builder optionDialog = new AlertDialog.Builder(this);
@@ -737,6 +764,7 @@ public class MainActivity extends AppCompatActivity {
             adapter = new MyAdapter(getApplicationContext(), item, isVistor, selectAll);
             listV.setAdapter(adapter);
             listV.invalidateViews();
+            listV.setLayoutAnimation(getListAnim());
             avgLow = false;
             countHigh = false;
             avgEPS = false;
@@ -1061,6 +1089,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     adapter = new MyAdapter(getApplicationContext(), myDataset, true, selectAll);
                     listV.setAdapter(adapter);
+                    listV.setLayoutAnimation(getListAnim());
                     if (mProgressDialog != null) {
                         mProgressDialog.dismiss();
                     }

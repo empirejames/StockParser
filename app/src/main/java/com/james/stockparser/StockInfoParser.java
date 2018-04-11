@@ -28,7 +28,7 @@ public class StockInfoParser {
     String url = "http://goodinfo.tw/StockInfo/StockDividendScheduleList.asp?MARKET_CAT=%E5%85%A8%E9%83%A8&YEAR=%E5%8D%B3%E5%B0%87%E9%99%A4%E6%AC%8A%E6%81%AF&INDUSTRY_CAT=%E5%85%A8%E9%83%A8";
     String urlForGuHi = "http://stock.wespai.com/p/5625";
     String urlForEPS = "http://stock.wespai.com/p/7733";
-    String urlForPresent = "http://stock.wespai.com/stock";
+    String urlForPresent = "http://stock.wespai.com/stock107";
     String urlForGuli = "http://stock.wespai.com/tenrate#";
 
     private HandlerThread mThread;
@@ -57,8 +57,8 @@ public class StockInfoParser {
 //                updateHistoryData("present");
 //                historyGuli = getUrlInfo(urlForGuli);
 //                updateHistoryData("guli");
-                getDateTaiXiDay();
-                updateStockData();
+                  getDateTaiXiDay();
+                  updateStockData();
             }
         });
 
@@ -98,18 +98,19 @@ public class StockInfoParser {
                         }
                     }
                 }else if (stuff.equals("present")){
+                    DatabaseReference fbDb = null;
+                    if (fbDb == null) {
+                        fbDb = FirebaseDatabase.getInstance().getReference();
+                    }
                     for (final DataSnapshot dsp : dataSnapshot.getChildren()) {
+
                         if (dsp.getKey().equals("history")){
                             for (DataSnapshot stockNm : dsp.getChildren()) {
                                 for(int i =0; i<historyPresent.size();i++){
-                                    if (historyPresent.get(i).split(" ")[0].equals(stockNm.getKey().toString())){
-                                        for(int j=0;j<historyPresent.get(i).split(" ").length;j++){
-                                            if(historyPresent.get(i).split(" ")[j].equals("")){
-                                                ref.child("history").child(historyPresent.get(i).split(" ")[0]).child(stuff).child(j+"").setValue("無發放");
-                                            }else{
-                                                ref.child("history").child(historyPresent.get(i).split(" ")[0]).child(stuff).child(j+"").setValue(historyPresent.get(i).split(" ")[j]);
-                                            }
-                                        }
+                                    if (historyPresent.get(i).split(" ")[1].equals(stockNm.getKey().toString())){
+                                        UpdateNewPresent(historyPresent.get(i).split(" ")[1],historyPresent.get(i).split(" ")[5], true);
+                                    }else{
+                                        //UpdateNewPresent(historyPresent.get(i).split(" ")[1],historyPresent.get(i).split(" ")[5],false);
                                     }
                                 }
                             }
@@ -135,6 +136,28 @@ public class StockInfoParser {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+    private void UpdateNewPresent(final String stockNum, final String present,final boolean isHavePresent) {
+
+        ref = FirebaseDatabase.getInstance().getReference();
+        final DatabaseReference usersRef = ref.child("history").child(stockNum).child("present");
+        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String size = dataSnapshot.getChildrenCount()+"";
+                Log.e(TAG, "UpdateNewPresent:: " + stockNum + " : " + present +" : "+ size);
+                if(isHavePresent){
+                    ref.child("history").child(stockNum).child("present").child(size).setValue(present);
+                }else{
+                    ref.child("history").child(stockNum).child("present").child(size).setValue("無發放");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
             }
         });
     }
