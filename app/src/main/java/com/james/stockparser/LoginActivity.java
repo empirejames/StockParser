@@ -8,6 +8,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -342,7 +344,20 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
     }
-
+    private void toVisibleAnim(View view) {
+        TranslateAnimation mShowAction = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
+                Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
+                -1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
+        mShowAction.setDuration(500);
+        view.startAnimation(mShowAction);
+    }
+    private void toGoneAnim(View view) {
+        TranslateAnimation mHiddenAction = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
+                Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
+                0.0f, Animation.RELATIVE_TO_SELF, -1.0f);
+        mHiddenAction.setDuration(500);
+        view.startAnimation(mHiddenAction);
+    }
     private void alertDialog(String message) {
         new AlertDialog.Builder(LoginActivity.this)
                 .setMessage(message)
@@ -377,11 +392,18 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             } else if (i == R.id.button_anonymously) {
                 Anonymously();
             } else if (i == R.id.button_other) {
-                if (relativeLy.getVisibility() == View.VISIBLE) {
-                    relativeLy.setVisibility(View.GONE);
+                if (loginGoogle.getVisibility() == View.VISIBLE) {
+                    toGoneAnim(loginGoogle);
+                    toGoneAnim(loginFaceBook);
+                    toVisibleAnim(tvForgetPass);
+                    loginGoogle.setVisibility(View.GONE);
+                    loginFaceBook.setVisibility(View.GONE);
                     tvForgetPass.setVisibility(View.VISIBLE);
                 } else {
-                    relativeLy.setVisibility(View.VISIBLE);
+                    toVisibleAnim(loginGoogle);
+                    toVisibleAnim(loginFaceBook);
+                    loginGoogle.setVisibility(View.VISIBLE);
+                    loginFaceBook.setVisibility(View.VISIBLE);
                     tvForgetPass.setVisibility(View.GONE);
                 }
             }

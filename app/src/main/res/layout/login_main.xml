@@ -108,19 +108,7 @@
             android:visibility="visible"
             android:text="其他方式登入" />
 
-        <TextView
-            android:id="@+id/tv_forgotPass"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/button_other"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="40dp"
-            android:text="忘記密碼 ?"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="#FFF" />
     </RelativeLayout>
-
     <RelativeLayout
         android:id="@+id/relative_layout_GoogleFacebook"
         android:layout_width="match_parent"
@@ -131,7 +119,7 @@
         android:paddingLeft="10dp"
         android:paddingTop="10dp"
         android:textColor="@android:color/background_dark"
-        android:visibility="gone">
+        >
 
         <com.google.android.gms.common.SignInButton
             android:id="@+id/button_google"
@@ -139,7 +127,7 @@
             android:layout_height="wrap_content"
             android:textSize="20dp"
             android:layout_marginTop="10dp"
-            android:visibility="visible"
+            android:visibility="gone"
             />
         <com.facebook.login.widget.LoginButton
             android:id="@+id/button_facebook"
@@ -147,9 +135,22 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_below="@+id/button_google"
-            android:textSize="18dp"
+            android:textSize="17dp"
             android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp" />
+            android:layout_marginTop="10dp"
+            android:visibility="gone"
+            />
+        <TextView
+            android:id="@+id/tv_forgotPass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/button_facebook"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="40dp"
+            android:text="忘記密碼 ?"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#FFF" />
     </RelativeLayout>
 
 </LinearLayout>
