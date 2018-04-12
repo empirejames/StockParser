@@ -105,6 +105,7 @@
             android:layout_below="@+id/button_anonymously"
             android:layout_marginTop="10dp"
             android:background="@drawable/selector_xml_btn_yellow"
+            android:visibility="visible"
             android:text="其他方式登入" />
 
         <TextView
@@ -138,7 +139,7 @@
             android:layout_height="wrap_content"
             android:textSize="20dp"
             android:layout_marginTop="10dp"
-            android:visibility="gone"
+            android:visibility="visible"
             />
         <com.facebook.login.widget.LoginButton
             android:id="@+id/button_facebook"
