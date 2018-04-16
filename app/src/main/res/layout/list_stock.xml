@@ -37,18 +37,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_marginLeft="70dp"
-                android:layout_alignLeft="@+id/stock_Number"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/stock_Number"
                 android:text="HonHan"
                 android:textColor="@android:color/holo_blue_dark"
                 android:textSize="20sp" />
+
             <TextView
                 android:id="@+id/stock_good"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_marginLeft="170dp"
-                android:layout_alignLeft="@+id/stock_Number"
+                android:layout_marginEnd="10dp"
+                android:layout_toStartOf="@+id/RatingBar01"
                 android:text="填息機率"
                 android:textColor="@android:color/holo_purple"
                 android:textSize="20sp" />
@@ -82,78 +83,80 @@
                 android:id="@+id/release"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/tianxiCountName"
-                android:layout_marginLeft="100dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignStart="@+id/thisyear"
+                android:text="發放次數 : "
                 android:textColor="@android:color/background_dark"
-                android:textSize="15sp"
-                android:text="發放次數 : " />
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/releaseName"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/release"
-                android:layout_marginLeft="70dp"
-                android:textColor="@android:color/background_dark"
+                android:layout_toRightOf="@+id/release"
+                android:layout_marginLeft="5dp"
                 android:text="5"
+                android:textColor="@android:color/background_dark"
                 android:textSize="15sp" />
+
             <TextView
                 android:id="@+id/tianxiCount"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/background_dark"
                 android:text="填息次數 :"
+                android:textColor="@android:color/background_dark"
                 android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/tianxiCountName"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/tianxiCount"
-                android:layout_marginLeft="70dp"
-                android:textColor="@android:color/background_dark"
+                android:layout_toRightOf="@+id/right_select"
+                android:layout_toEndOf="@+id/tianxiCount"
+                android:layout_marginLeft="5dp"
                 android:text="10"
+                android:textColor="@android:color/background_dark"
                 android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/taixiaverage"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tianxiCount"
-                android:textColor="@android:color/background_dark"
                 android:text="填息平均日:"
+                android:textColor="@android:color/background_dark"
                 android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/taixiaverageName"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/taixiaverage"
                 android:layout_below="@+id/tianxiCount"
-                android:layout_alignLeft="@+id/taixiaverage"
-                android:layout_marginLeft="80dp"
-                android:textColor="@android:color/background_dark"
+                android:layout_marginLeft="5dp"
                 android:text="5"
+                android:textColor="@android:color/background_dark"
                 android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/thisyear"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/tianxiCount"
-                android:textColor="@android:color/background_dark"
                 android:layout_alignLeft="@+id/taixiaverageName"
+                android:layout_below="@+id/tianxiCount"
                 android:layout_marginLeft="90dp"
-                android:textSize="15sp"
-                android:text="除息日 : " />
+                android:text="除息日 : "
+                android:textColor="@android:color/background_dark"
+                android:textSize="15sp" />
+
             <TextView
                 android:id="@+id/thisyearName"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/background_dark"
-                android:layout_below="@+id/tianxiCount"
-                android:layout_alignLeft="@+id/thisyear"
-                android:layout_marginLeft="60dp"
+                android:layout_below="@+id/release"
+                android:layout_toRightOf="@+id/thisyear"
                 android:text="2017/06/27"
+                android:textColor="@android:color/background_dark"
                 android:textSize="15sp" />
             <ImageView
                 android:id="@+id/right_select"
