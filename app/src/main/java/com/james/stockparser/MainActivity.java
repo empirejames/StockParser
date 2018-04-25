@@ -61,6 +61,7 @@ import com.james.stockparser.Fragment.FragmentMain;
 import com.james.stockparser.NetWork.stockLastValue;
 import com.james.stockparser.Unit.User;
 import com.james.stockparser.dataBase.TinyDB;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -126,8 +127,8 @@ public class MainActivity extends AppCompatActivity {
     String countSelectNumber, avgSelectNumber, epsSelectNumber;
     boolean scrollFlag;
     BottomNavigationView navigation;
-    Animation mShowAction;
-    Animation mHiddenAction;
+    Animation mShowAction, mShowToolbar;
+    Animation mHiddenAction, mHiddenToolbar;
     InterstitialAd interstitial;
     String userStatus = "home";
     AdView mAdView;
@@ -152,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
             menu.getItem(0).setVisible(false);
             menu.getItem(1).setVisible(false);
             menu.getItem(4).setVisible(false);
-        } else if(PageNumber == 2){
+        } else if (PageNumber == 2) {
             menu.getItem(0).setVisible(false); //搜尋
             menu.getItem(1).setVisible(false); //我的最愛
             menu.getItem(2).setVisible(false); //上傳
@@ -193,15 +194,9 @@ public class MainActivity extends AppCompatActivity {
                 if (!s.equals("")) {
                     Log.e(TAG, "onQueryTextChange : " + s);
                     myDataFilter = filterResult(s, true, 0);
-                    adapter = new MyAdapter(getApplicationContext(), myDataFilter, true, selectAll);
-                    listV.setAdapter(adapter);
-                    listV.invalidateViews();
-                    listV.setLayoutAnimation(getListAnim());
+                    listAdaperr(myDataFilter, true, selectAll);
                 } else {
-                    adapter = new MyAdapter(getApplicationContext(), myDataset, true, selectAll);
-                    listV.setAdapter(adapter);
-                    listV.invalidateViews();
-                    listV.setLayoutAnimation(getListAnim());
+                    listAdaperr(myDataset, true, selectAll);
                 }
                 return false;
             }
@@ -220,7 +215,9 @@ public class MainActivity extends AppCompatActivity {
                 .showAppUpdated(false)  // 若已是最新版本, 則 true: 仍會提示之, false: 不會提示之
                 .start();
         mShowAction = AnimationUtils.loadAnimation(this, R.anim.alpha_in);
+        mShowToolbar = AnimationUtils.loadAnimation(this, R.anim.alpha_in_toolbar);
         mHiddenAction = AnimationUtils.loadAnimation(this, R.anim.alpha_out);
+        mHiddenToolbar = AnimationUtils.loadAnimation(this, R.anim.alpha_out_toolbar);
         mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().addTestDevice("F618803C89E1614E3394A55D5E7A756B").build(); //Nexus 5
         mAdView.loadAd(adRequest);
@@ -255,7 +252,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 if (!searchView.getQuery().toString().equals("")) {
-                    addingSeearch(myHistory,position);
+                    addingSeearch(myHistory, position);
                     Log.e(TAG, "stockName " + stockName + "position" + position);
                     stockName = myDataFilter.get(position).getStockName();
                     stockNumber = myDataFilter.get(position).getStockNumber();
@@ -264,12 +261,12 @@ public class MainActivity extends AppCompatActivity {
                     stockName = myDataFilter.get(position).getStockName();
                     stockNumber = myDataFilter.get(position).getStockNumber();
                 } else if (userStatus.equals("home")) {
-                    addingArrList(myHistory,position);
+                    addingArrList(myHistory, position);
                     stockName = myDataset.get(position).getStockName();
                     stockNumber = myDataset.get(position).getStockNumber();
                     Log.e(TAG, "stockName " + stockName + "stockNumber" + stockNumber);
                 } else if (userStatus.equals("nearly")) {
-                    addingNear(myHistory,position);
+                    addingNear(myHistory, position);
                     stockName = nearlyStock.get(position).getStockName();
                     stockNumber = nearlyStock.get(position).getStockNumber();
                 } else if (userStatus.equals("favorite")) {
@@ -285,33 +282,25 @@ public class MainActivity extends AppCompatActivity {
                         containStock = true;
                     }
                 }
-                if(containStock){
+                if (containStock) {
                     new GetStockInfo().execute(stockNumber);
                     checkUsing();
                     containStock = false;
-                }else{
+                } else {
                     Toast.makeText(MainActivity.this, "暫無此檔股票資訊", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
         listV.setOnScrollListener(new AbsListView.OnScrollListener() {
+            private int lastVisibleItemPosition;
+
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 switch (scrollState) {
                     case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:// rolling stop
-                        if (listV.getFirstVisiblePosition() == 0) {   // if Go top
-                            navigation.setVisibility(View.VISIBLE);
-                            navigation.startAnimation(mShowAction);
-                        }
-                        break;
-                    case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:// Touch rolling
-                        scrollFlag = true;
-                        navigation.setVisibility(View.GONE);
                         break;
                     case AbsListView.OnScrollListener.SCROLL_STATE_FLING: //stating rolling
-                        navigation.setVisibility(View.GONE);
-                        scrollFlag = true;
                         break;
                 }
 
@@ -319,7 +308,25 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (firstVisibleItem > lastVisibleItemPosition ) {
+                    if (!scrollFlag) {
+                        navigation.setVisibility(View.GONE);
+                        navigation.startAnimation(mHiddenAction);
+                        mToolbar.setVisibility(View.GONE);
+                        mToolbar.startAnimation(mHiddenToolbar);
+                        scrollFlag = true;
+                    }
+                }else if(firstVisibleItem < lastVisibleItemPosition){
+                    if(scrollFlag){
+                        navigation.setVisibility(View.VISIBLE);
+                        navigation.startAnimation(mShowAction);
+                        mToolbar.setVisibility(View.VISIBLE);
+                        mToolbar.startAnimation(mShowToolbar);
+                        scrollFlag = false;
+                    }
 
+                }
+                lastVisibleItemPosition = firstVisibleItem;
             }
         });
         listV.setLayoutAnimation(getListAnim());
@@ -373,7 +380,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public boolean isVistor() {
-        if(bundle!=null){
+        if (bundle != null) {
             if (bundle.getString("isVistor") != null) {
                 String vistor = bundle.getString("isVistor");
                 if (vistor.toString().equals("Y")) {
@@ -386,6 +393,13 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return false;
+    }
+
+    public void listAdaperr(ArrayList<StockItem> item, boolean isVistor, boolean selectAll) {
+        adapter = new MyAdapter(getApplicationContext(), item, isVistor, selectAll);
+        listV.setAdapter(adapter);
+        listV.invalidateViews();
+        listV.setLayoutAnimation(getListAnim());
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -401,19 +415,13 @@ public class MainActivity extends AppCompatActivity {
                     invalidateOptionsMenu(); //update toolbar
                     userStatus = "nearly";
                     nearlyStock = nearly_Taixi();
-                    adapter = new MyAdapter(getApplicationContext(), nearlyStock, true, selectAll);
-                    listV.setAdapter(adapter);
-                    listV.invalidateViews();
-                    listV.setLayoutAnimation(getListAnim());
+                    listAdaperr(nearlyStock, true, selectAll);
                     return true;
                 case R.id.navigation_home:
                     PageNumber = 0;
                     invalidateOptionsMenu(); //update toolbar
                     userStatus = "home";
-                    adapter = new MyAdapter(getApplicationContext(), myDataset, true, selectAll);
-                    listV.setAdapter(adapter);
-                    listV.invalidateViews();
-                    listV.setLayoutAnimation(getListAnim());
+                    listAdaperr(myDataset, true, selectAll);
                     return true;
                 case R.id.navigation_dashboard:
                     PageNumber = 1;
@@ -423,20 +431,14 @@ public class MainActivity extends AppCompatActivity {
                         invalidateOptionsMenu();//update toolbar
                         userStatus = "favorite";
                         myFavorite = myFavovResult(compareNewData(favList, adapter.getFavorite(), true)); //summary main item
-                        adapter = new MyAdapter(getApplicationContext(), myFavorite, isVistor, true);
-                        listV.setAdapter(adapter);
-                        listV.invalidateViews();
-                        listV.setLayoutAnimation(getListAnim());
+                        listAdaperr(myFavorite, isVistor, true);
                     }
                     return true;
                 case R.id.navigation_history:
                     PageNumber = 2;
                     invalidateOptionsMenu();//update toolbar
                     userStatus = "history";
-                    adapter = new MyAdapter(getApplicationContext(), myHistory, isVistor, true);
-                    listV.setAdapter(adapter);
-                    listV.invalidateViews();
-                    listV.setLayoutAnimation(getListAnim());
+                    listAdaperr(myHistory, isVistor, true);
                     return true;
                 case R.id.navigation_notifications:
                     Intent i = new Intent(MainActivity.this, FragmentAbout.class);
@@ -769,10 +771,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             }
-            adapter = new MyAdapter(getApplicationContext(), item, isVistor, selectAll);
-            listV.setAdapter(adapter);
-            listV.invalidateViews();
-            listV.setLayoutAnimation(getListAnim());
+            listAdaperr(item, isVistor, selectAll);
             avgLow = false;
             countHigh = false;
             avgEPS = false;
@@ -816,6 +815,7 @@ public class MainActivity extends AppCompatActivity {
         );
         return item;
     }
+
     public ArrayList<StockItem> addingSeearch(ArrayList<StockItem> item, int i) {
         item.add(new StockItem(myDataFilter.get(i).getStockNumber(),
                 myDataFilter.get(i).getStockName(),
@@ -827,6 +827,7 @@ public class MainActivity extends AppCompatActivity {
         );
         return item;
     }
+
     public ArrayList<StockItem> addingNear(ArrayList<StockItem> item, int i) {
         item.add(new StockItem(nearlyStock.get(i).getStockNumber(),
                 nearlyStock.get(i).getStockName(),
@@ -969,13 +970,13 @@ public class MainActivity extends AppCompatActivity {
             Log.e(TAG, "startFragment EPS: " + hstEPS);
             Intent in = new Intent(getApplicationContext(), FragmentMain.class);
             in.putExtra("stockNumber", stockNumber);
-            if(returnString != null){
+            if (returnString != null) {
                 if (returnString.equals("HIGH")) {
                     in.putExtra("stockName", stockName);
                 } else {
                     in.putExtra("stockName", stockName + "    現價 : " + returnString);
                 }
-            }else{
+            } else {
                 in.putExtra("stockName", stockName + "    現價 : " + "無");
             }
 
@@ -1095,9 +1096,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                     }
-                    adapter = new MyAdapter(getApplicationContext(), myDataset, true, selectAll);
-                    listV.setAdapter(adapter);
-                    listV.setLayoutAnimation(getListAnim());
+                    listAdaperr(myDataset, true, selectAll);
                     if (mProgressDialog != null) {
                         mProgressDialog.dismiss();
                     }
