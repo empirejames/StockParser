@@ -2,14 +2,18 @@ package com.james.stockparser;
 
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -19,7 +23,9 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -30,7 +36,7 @@ public class StockInfoParser {
     String urlForEPS = "http://stock.wespai.com/p/7733";
     String urlForPresent = "http://stock.wespai.com/stock107";
     String urlForGuli = "http://stock.wespai.com/tenrate#";
-
+    Map<String, String> stockDividend;
     private HandlerThread mThread;
     private Handler mThreadHandler;
     DatabaseReference ref;
@@ -47,6 +53,9 @@ public class StockInfoParser {
         mThreadHandler.post(new Runnable() {
             @Override
             public void run() {
+
+//                getDividend();
+//                getValue();
 //                historyGuHi = getUrlInfo(urlForGuHi);
 //                updateHistoryData("guShi");
 //                Log.e(TAG,"updateHistoryData");
@@ -57,11 +66,31 @@ public class StockInfoParser {
 //                updateHistoryData("present");
 //                historyGuli = getUrlInfo(urlForGuli);
 //                updateHistoryData("guli");
-                  getDateTaiXiDay();
-                  updateStockData();
+//                  getDateTaiXiDay();
+//                  updateStockData();
+                getRemoteConfig();
             }
         });
 
+    }
+
+    private void getRemoteConfig(){
+
+        final FirebaseRemoteConfig mRemoteConfig = FirebaseRemoteConfig.getInstance();
+        long cacheExpiration = 3600;
+        mRemoteConfig.fetch(cacheExpiration)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            //Make the values available to your app
+                            mRemoteConfig.activateFetched();
+                            //get value from remote config
+                            String testString = mRemoteConfig.getString("test");
+                            Log.e(TAG, "Test " + testString);
+                        }
+                    }
+                });
     }
 
     private void updateHistoryData(final String stuff) {
@@ -187,6 +216,34 @@ public class StockInfoParser {
             public void onCancelled(DatabaseError databaseError) {
             }
         });
+    }
+
+    public void getValue(){
+        String s = stockDividend.get("1101").toString();
+        Log.e(TAG, "Stock 1101 " + s);
+    }
+
+
+    public void getDividend(){
+        Log.e(TAG, "getDividend start");
+        String urlDevidend = "http://www.twse.com.tw/exchangeReport/BWIBBU_d?response=html&date=20180518&selectType=ALL";
+       stockDividend = new HashMap<String, String>();
+
+        try {
+            Document doc = Jsoup.connect(urlDevidend).get();
+            Element table = doc.select("tbody").first();
+            Elements rows = table.select("tr");
+            Element td_stock, td_dividend;
+            for (int i = 0; i < rows.size(); i++) {
+                td_stock = rows.get(i).child(0);
+                td_dividend = rows.get(i).child(2);
+                stockDividend.put(rows.get(i).child(0).text(),rows.get(i).child(2).text());
+                Log.e(TAG, td_stock.text() + " : "+ td_dividend.text());
+            }
+
+        }catch (Exception e){
+            Log.e(TAG, e.toString());
+        }
     }
 
 

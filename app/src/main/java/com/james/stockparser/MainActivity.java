@@ -12,6 +12,7 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.FloatingActionButton;
 import android.support.multidex.MultiDex;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -25,7 +26,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -39,7 +39,6 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.Spinner;
@@ -58,6 +57,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.james.stockparser.Fragment.FragmentAbout;
 import com.james.stockparser.Fragment.FragmentMain;
+import com.james.stockparser.NetWork.getRemoteConfig;
+import com.james.stockparser.NetWork.stockDividend;
 import com.james.stockparser.NetWork.stockLastValue;
 import com.james.stockparser.Unit.User;
 import com.james.stockparser.dataBase.TinyDB;
@@ -66,7 +67,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 
@@ -75,6 +78,9 @@ public class MainActivity extends AppCompatActivity {
     private ListView listV;
     public MyAdapter adapter;
     public String returnString;
+
+    Map<String, String> stockMap = new HashMap<String, String>();
+
     ArrayList<StockItem> myDataset = new ArrayList<StockItem>();
     ArrayList<StockEPS> myEPS = new ArrayList<StockEPS>();
     ArrayList<HistoryItem> myHisEPS = new ArrayList<HistoryItem>();
@@ -102,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
     private String[] nextLine;
     private Toolbar mToolbar;
     SearchView searchView;
+    String dividend;
     String releaseCount, stockName, stockNumber, thisYear, tianxiCount, tianxiDay, tianxiPercent;
     String hisName, hisNumber, hisProduct, hisEPS;
     String stockInfoName, stockInfoNumber, stockInfoEPS;
@@ -130,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
     Animation mShowAction, mShowToolbar;
     Animation mHiddenAction, mHiddenToolbar;
     InterstitialAd interstitial;
+    FloatingActionButton mFab;
     String userStatus = "home";
     AdView mAdView;
     int CountNum = 0;
@@ -229,6 +237,9 @@ public class MainActivity extends AppCompatActivity {
 //            interstitial.loadAd(adRequest);
         bundle = getIntent().getExtras();
         isVistor = isVistor();
+
+            initFab();
+
         if (!isVistor) {
             writeNewUserIfNeeded();
         }
@@ -314,6 +325,8 @@ public class MainActivity extends AppCompatActivity {
                         navigation.startAnimation(mHiddenAction);
                         mToolbar.setVisibility(View.GONE);
                         mToolbar.startAnimation(mHiddenToolbar);
+                        mFab.setVisibility(View.GONE);
+                        mFab.startAnimation(mHiddenToolbar);
                         scrollFlag = true;
                     }
                 }else if(firstVisibleItem < lastVisibleItemPosition){
@@ -322,6 +335,8 @@ public class MainActivity extends AppCompatActivity {
                         navigation.startAnimation(mShowAction);
                         mToolbar.setVisibility(View.VISIBLE);
                         mToolbar.startAnimation(mShowToolbar);
+                        mFab.setVisibility(View.VISIBLE);
+                        mFab.startAnimation(mShowToolbar);
                         scrollFlag = false;
                     }
 
@@ -378,7 +393,23 @@ public class MainActivity extends AppCompatActivity {
             saveUserData(compareNewData(favList, adapter.getToDelete(), false));
         }
     }
+    private void initFab(){
+        mFab = findViewById(R.id.fab);
 
+
+
+        if(tinydb.getString("show_floating_button").equals("false")){
+            //fab.setVisibility(View.GONE);
+        }
+        mFab.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, InstructionActivity.class);
+                startActivity(i);
+                //Toast.makeText(MainActivity.this, "FAB Clicked", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+    }
     public boolean isVistor() {
         if (bundle != null) {
             if (bundle.getString("isVistor") != null) {
@@ -805,7 +836,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public ArrayList<StockItem> addingArrList(ArrayList<StockItem> item, int i) {
-        item.add(new StockItem(myDataset.get(i).getStockNumber(),
+        item.add(new StockItem(
+                myDataset.get(i).getNowDividend(),
+                myDataset.get(i).getStockNumber(),
                 myDataset.get(i).getStockName(),
                 myDataset.get(i).getTianxiCount(),
                 myDataset.get(i).getReleaseCount(),
@@ -817,7 +850,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public ArrayList<StockItem> addingSeearch(ArrayList<StockItem> item, int i) {
-        item.add(new StockItem(myDataFilter.get(i).getStockNumber(),
+        item.add(new StockItem(
+                myDataFilter.get(i).getNowDividend(),
+                myDataFilter.get(i).getStockNumber(),
                 myDataFilter.get(i).getStockName(),
                 myDataFilter.get(i).getTianxiCount(),
                 myDataFilter.get(i).getReleaseCount(),
@@ -829,7 +864,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public ArrayList<StockItem> addingNear(ArrayList<StockItem> item, int i) {
-        item.add(new StockItem(nearlyStock.get(i).getStockNumber(),
+        item.add(new StockItem(
+                nearlyStock.get(i).getNowDividend(),
+                nearlyStock.get(i).getStockNumber(),
                 nearlyStock.get(i).getStockName(),
                 nearlyStock.get(i).getTianxiCount(),
                 nearlyStock.get(i).getReleaseCount(),
@@ -922,6 +959,7 @@ public class MainActivity extends AppCompatActivity {
         protected String doInBackground(final String... params) {
             stockLastValue sv = new stockLastValue(params[0], MainActivity.this);
             returnString = sv.getData();
+
             Log.e(TAG, "returnString: " + returnString);
             hstEPS.clear();
             hstGuShi.clear();
@@ -1034,6 +1072,11 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... params) {
+            stockDividend sd = new stockDividend();
+            stockMap = sd.getDividend();
+            getRemoteConfig grc = new getRemoteConfig(MainActivity.this);
+            grc.getRemotePara();
+            Log.e(TAG, "tag :: " + tinydb.getString("show_floating_button"));
             userId = bundle.getString("uid");
             ref = FirebaseDatabase.getInstance().getReference();
             ref.keepSynced(true);
@@ -1054,11 +1097,17 @@ public class MainActivity extends AppCompatActivity {
                                 releaseCount = stock.child("releaseCount").getValue().toString();
                                 stockName = stock.child("stockName").getValue().toString();
                                 stockNumber = stock.child("stockNumber").getValue().toString();
+                                if(stockMap.get(stockNumber)!=null){
+                                    //Log.e(TAG,"Get Dividend : " + dividend);
+                                    dividend = stockMap.get(stockNumber).toString() + " ％";
+                                }else{
+                                    dividend = "無";
+                                }
                                 thisYear = stock.child("thisYear").getValue().toString();
                                 tianxiDay = stock.child("tianxiDay").getValue().toString();
                                 tianxiPercent = stock.child("tianxiPercent").getValue().toString();
                                 tianxiCount = stock.child("tianxiCount").getValue().toString();
-                                myDataset.add(new StockItem(stockNumber, stockName, tianxiCount, releaseCount, tianxiPercent, tianxiDay, thisYear));
+                                myDataset.add(new StockItem(dividend, stockNumber, stockName, tianxiCount, releaseCount, tianxiPercent, tianxiDay, thisYear));
                             }
                         } else if (!isVistor() && dsp.getKey().equals("users")) {
                             for (DataSnapshot users : dsp.getChildren()) {
@@ -1109,6 +1158,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
             return null;
+
         }
 
         @Override

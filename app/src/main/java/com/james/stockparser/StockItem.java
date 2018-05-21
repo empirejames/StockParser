@@ -9,9 +9,11 @@ import android.util.Log;
 
 public class StockItem {
     String TAG = StockItem.class.getSimpleName();
+    private String nowVlaue, nowDividend;
     private String stockNumber, stockName, tianxiCount, releaseCount, tianxiPercent, tianxiDay, thisYear, stockValue;
 
-    public StockItem(String stockNumber, String stockName, String tianxiCount, String releaseCount, String tianxiPercent, String tianxiDay, String thisYear) {
+    public StockItem(String nowDividend, String stockNumber, String stockName, String tianxiCount, String releaseCount, String tianxiPercent, String tianxiDay, String thisYear) {
+        this.nowDividend = nowDividend; //股票現價
         this.stockNumber = stockNumber; //股票代號
         this.stockName = stockName; //股票名稱
         this.tianxiCount = tianxiCount; //填息次數
@@ -20,17 +22,9 @@ public class StockItem {
         this.tianxiDay = tianxiDay; //填息平均天數
         this.thisYear = thisYear; //本年除息日
     }
-    public StockItem(String stockNumber, String stockName, String tianxiCount, String releaseCount, String tianxiPercent, String tianxiDay, String thisYear,String stockValue) {
-        this.stockNumber = stockNumber; //股票代號
-        this.stockName = stockName; //股票名稱
-        this.tianxiCount = tianxiCount; //填息次數
-        this.releaseCount = releaseCount; //發放次數
-        this.tianxiPercent = tianxiPercent; //填息比例
-        this.tianxiDay = tianxiDay; //填息平均天數
-        this.thisYear = thisYear; //本年除息日
-        this.stockValue = stockValue; //本年除息日
+    public String getNowDividend() {
+        return nowDividend;
     }
-
     public String getStockNumber() {
         return stockNumber;
     }

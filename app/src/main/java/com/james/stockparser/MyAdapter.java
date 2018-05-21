@@ -69,9 +69,20 @@ public class MyAdapter extends BaseAdapter implements Filterable {
     public long getItemId(int position) {
         return mListItems.indexOf(getItem(position));
     }
-
+    static class ViewHolder
+    {
+        private TextView dividend;
+        private TextView stockName;
+        private RatingBar rb1;
+        private TextView tianxiCount;
+        private TextView releaseCount;
+        private TextView tianxiDay;
+        private TextView thisYear;
+        private TextView stockNumber = null;
+    }
     @Override
     public View getView(int position, final View convertView, ViewGroup parent) {
+        final ViewHolder holder = new ViewHolder();
         float transTianx = 0;
         final View row = inflater.inflate(R.layout.list_stock, parent, false);
         final StockItem item = mListItems.get(position);
@@ -97,37 +108,40 @@ public class MyAdapter extends BaseAdapter implements Filterable {
                 cbDel.setVisibility(View.GONE);
             }
         }
-        final TextView stockNumber = (TextView) row.findViewById(R.id.stock_Number);
-        stockNumber.setText(item.getStockNumber());
+        holder.stockNumber = (TextView) row.findViewById(R.id.stock_Number);
+        holder.stockNumber.setText(item.getStockNumber());
 
-        TextView stockName = (TextView) row.findViewById(R.id.stock_Name);
-        stockName.setText(item.getStockName());
+        holder.dividend = (TextView) row.findViewById(R.id.now_dividend_data);
+        holder.dividend.setText(item.getNowDividend());
 
-        RatingBar rb1 = (RatingBar) row.findViewById(R.id.RatingBar01);
+        holder.stockName = (TextView) row.findViewById(R.id.stock_Name);
+        holder.stockName.setText(item.getStockName());
+
+        holder.rb1 = (RatingBar) row.findViewById(R.id.RatingBar01);
 
         transTianx = Float.parseFloat(item.getTianxiPercent()) * 100 / 20;
 
-        rb1.setRating(transTianx);
+        holder.rb1.setRating(transTianx);
 
-        TextView tianxiCount = (TextView) row.findViewById(R.id.tianxiCountName);
-        tianxiCount.setText(item.getTianxiCount());
+        holder.tianxiCount = (TextView) row.findViewById(R.id.tianxiCountName);
+        holder.tianxiCount.setText(item.getTianxiCount());
 
-        TextView releaseCount = (TextView) row.findViewById(R.id.releaseName);
-        releaseCount.setText(item.getReleaseCount());
+        holder.releaseCount = (TextView) row.findViewById(R.id.releaseName);
+        holder.releaseCount.setText(item.getReleaseCount());
 
-        TextView tianxiDay = (TextView) row.findViewById(R.id.taixiaverageName);
-        tianxiDay.setText(item.getTianxiDay());
+        holder.tianxiDay = (TextView) row.findViewById(R.id.taixiaverageName);
+        holder.tianxiDay.setText(item.getTianxiDay());
 
-        TextView thisYear = (TextView) row.findViewById(R.id.thisyearName);
+        holder.thisYear = (TextView) row.findViewById(R.id.thisyearName);
         if (item.getThisYear().equals("")) {
-            thisYear.setText("未公告");
+            holder.thisYear.setText("未公告");
         } else {
-            thisYear.setText(item.getThisYear());
+            holder.thisYear.setText(item.getThisYear());
         }
         cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                String sn = stockNumber.getText().toString();
+                String sn = holder.stockNumber.getText().toString();
                 if (isChecked && !myFavorite.contains(sn)) {
                     Log.e(TAG, " ADD : " + sn);
                     myFavorite.add(sn);
@@ -140,7 +154,7 @@ public class MyAdapter extends BaseAdapter implements Filterable {
         cbDel.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                String sn = stockNumber.getText().toString();
+                String sn = holder.stockNumber.getText().toString();
                 if (isChecked) {
                     Log.e(TAG, " Remove : " + sn);
                     toDelete.add(sn);

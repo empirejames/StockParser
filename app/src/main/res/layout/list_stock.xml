@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -68,6 +69,45 @@
                 android:progressTint="@android:color/holo_orange_light"
                 android:rating="3.5"></RatingBar>
         </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/nowUpdateValue"
+            android:layout_width="match_parent"
+            android:visibility="visible"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/infoSection"
+            android:orientation="vertical"
+            android:paddingRight="10dp"
+            >
+
+            <com.ant.liao.GifView
+                android:id="@+id/loc_ref_Icon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/now40" />
+
+            <TextView
+                android:id="@+id/dividend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/loc_ref_Icon"
+                android:paddingLeft="5dp"
+                android:text="即時殖利率 : "
+                android:textColor="@color/colorOrange"
+                android:textSize="15sp" />
+            <TextView
+                android:id="@+id/now_dividend_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/dividend"
+                android:textColor="@color/colorOrange"
+                android:text="50"
+                android:textSize="15sp" />
+        </RelativeLayout>
+
 
         <RelativeLayout
             android:id="@+id/relative_layout"
