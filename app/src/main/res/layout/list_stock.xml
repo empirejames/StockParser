@@ -106,6 +106,34 @@
                 android:textColor="@color/colorOrange"
                 android:text="50"
                 android:textSize="15sp" />
+
+            <com.ant.liao.GifView
+                android:id="@+id/loc_ref_Icon2"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignStart="@+id/dividend"
+                android:layout_marginLeft="152dp"
+                android:background="@drawable/now40" />
+            <TextView
+                android:id="@+id/peRatio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignStart="@+id/loc_ref_Icon2"
+                android:layout_marginLeft="25dp"
+                android:text="即時本益比 : "
+                android:textColor="@color/colorOrange"
+                android:textSize="15sp" />
+            <TextView
+                android:id="@+id/peRatio_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/peRatio"
+                android:textColor="@color/colorOrange"
+                android:text="昂貴"
+                android:textSize="15sp" />
         </RelativeLayout>
 
 

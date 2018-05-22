@@ -71,6 +71,7 @@ public class MyAdapter extends BaseAdapter implements Filterable {
     }
     static class ViewHolder
     {
+        private TextView peRatio;
         private TextView dividend;
         private TextView stockName;
         private RatingBar rb1;
@@ -110,7 +111,8 @@ public class MyAdapter extends BaseAdapter implements Filterable {
         }
         holder.stockNumber = (TextView) row.findViewById(R.id.stock_Number);
         holder.stockNumber.setText(item.getStockNumber());
-
+        holder.peRatio = (TextView) row.findViewById(R.id.peRatio_data);
+        holder.peRatio.setText(item.getPeRatio());
         holder.dividend = (TextView) row.findViewById(R.id.now_dividend_data);
         holder.dividend.setText(item.getNowDividend());
 

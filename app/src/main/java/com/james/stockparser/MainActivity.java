@@ -60,12 +60,14 @@ import com.james.stockparser.Fragment.FragmentMain;
 import com.james.stockparser.NetWork.getRemoteConfig;
 import com.james.stockparser.NetWork.stockDividend;
 import com.james.stockparser.NetWork.stockLastValue;
+import com.james.stockparser.NetWork.stockPERatio;
 import com.james.stockparser.Unit.User;
 import com.james.stockparser.dataBase.TinyDB;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -80,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
     public String returnString;
 
     Map<String, String> stockMap = new HashMap<String, String>();
-
+    Map<String, String> stockPEMap = new HashMap<String, String>();
     ArrayList<StockItem> myDataset = new ArrayList<StockItem>();
     ArrayList<StockEPS> myEPS = new ArrayList<StockEPS>();
     ArrayList<HistoryItem> myHisEPS = new ArrayList<HistoryItem>();
@@ -108,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
     private String[] nextLine;
     private Toolbar mToolbar;
     SearchView searchView;
-    String dividend;
+    String dividend, peRatio;
     String releaseCount, stockName, stockNumber, thisYear, tianxiCount, tianxiDay, tianxiPercent;
     String hisName, hisNumber, hisProduct, hisEPS;
     String stockInfoName, stockInfoNumber, stockInfoEPS;
@@ -237,9 +239,7 @@ public class MainActivity extends AppCompatActivity {
 //            interstitial.loadAd(adRequest);
         bundle = getIntent().getExtras();
         isVistor = isVistor();
-
             initFab();
-
         if (!isVistor) {
             writeNewUserIfNeeded();
         }
@@ -837,6 +837,7 @@ public class MainActivity extends AppCompatActivity {
 
     public ArrayList<StockItem> addingArrList(ArrayList<StockItem> item, int i) {
         item.add(new StockItem(
+                myDataset.get(i).getPeRatio(),
                 myDataset.get(i).getNowDividend(),
                 myDataset.get(i).getStockNumber(),
                 myDataset.get(i).getStockName(),
@@ -851,6 +852,7 @@ public class MainActivity extends AppCompatActivity {
 
     public ArrayList<StockItem> addingSeearch(ArrayList<StockItem> item, int i) {
         item.add(new StockItem(
+                myDataset.get(i).getPeRatio(),
                 myDataFilter.get(i).getNowDividend(),
                 myDataFilter.get(i).getStockNumber(),
                 myDataFilter.get(i).getStockName(),
@@ -865,6 +867,7 @@ public class MainActivity extends AppCompatActivity {
 
     public ArrayList<StockItem> addingNear(ArrayList<StockItem> item, int i) {
         item.add(new StockItem(
+                nearlyStock.get(i).getPeRatio(),
                 nearlyStock.get(i).getNowDividend(),
                 nearlyStock.get(i).getStockNumber(),
                 nearlyStock.get(i).getStockName(),
@@ -889,6 +892,14 @@ public class MainActivity extends AppCompatActivity {
     public String getDate() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         String date = sdf.format(new java.util.Date());
+        return date;
+    }
+    public String getYesterDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        Calendar c = Calendar.getInstance();
+        int day = c.get(Calendar.DATE);
+        c.set(Calendar.DATE, day - 1);
+        String date = sdf.format(c.getTime());
         return date;
     }
 
@@ -1059,6 +1070,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+
     private class GetData extends AsyncTask<String, Integer, String> {
         @Override
         protected void onPreExecute() {
@@ -1073,10 +1086,12 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... params) {
             stockDividend sd = new stockDividend();
-            stockMap = sd.getDividend();
+            stockMap = sd.getDividend(getYesterDate());
+            stockPERatio sdPE = new stockPERatio();
+            stockPEMap = sdPE.getPERatio(getYesterDate());
             getRemoteConfig grc = new getRemoteConfig(MainActivity.this);
             grc.getRemotePara();
-            Log.e(TAG, "tag :: " + tinydb.getString("show_floating_button"));
+            //Log.e(TAG, "tag :: " + tinydb.getString("show_floating_button"));
             userId = bundle.getString("uid");
             ref = FirebaseDatabase.getInstance().getReference();
             ref.keepSynced(true);
@@ -1103,11 +1118,16 @@ public class MainActivity extends AppCompatActivity {
                                 }else{
                                     dividend = "無";
                                 }
+                                if(stockPEMap.get(stockNumber)!=null){
+                                    peRatio = stockPEMap.get(stockNumber).toString();
+                                }else{
+                                    peRatio = "無";
+                                }
                                 thisYear = stock.child("thisYear").getValue().toString();
                                 tianxiDay = stock.child("tianxiDay").getValue().toString();
                                 tianxiPercent = stock.child("tianxiPercent").getValue().toString();
                                 tianxiCount = stock.child("tianxiCount").getValue().toString();
-                                myDataset.add(new StockItem(dividend, stockNumber, stockName, tianxiCount, releaseCount, tianxiPercent, tianxiDay, thisYear));
+                                myDataset.add(new StockItem(peRatio,dividend, stockNumber, stockName, tianxiCount, releaseCount, tianxiPercent, tianxiDay, thisYear));
                             }
                         } else if (!isVistor() && dsp.getKey().equals("users")) {
                             for (DataSnapshot users : dsp.getChildren()) {

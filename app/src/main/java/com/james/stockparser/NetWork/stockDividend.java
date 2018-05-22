@@ -17,9 +17,9 @@ import java.util.Map;
 public class stockDividend {
     String TAG = stockDividend.class.getSimpleName();
 
-    public Map<String,String> getDividend(){
-        Log.e(TAG, "getDividend start");
-        String urlDevidend = "http://www.twse.com.tw/exchangeReport/BWIBBU_d?response=html&date=20180518&selectType=ALL";
+    public Map<String,String> getDividend(String date){
+        String urlDevidend = "http://www.twse.com.tw/exchangeReport/BWIBBU_d?response=html&date="+date+"&selectType=ALL";
+        Log.e(TAG, "urlDevidend: " + urlDevidend);
         Map<String, String> stockDividend = new HashMap<String, String>();
 
         try {
@@ -31,7 +31,7 @@ public class stockDividend {
                 td_stock = rows.get(i).child(0);
                 td_dividend = rows.get(i).child(2);
                 stockDividend.put(rows.get(i).child(0).text(),rows.get(i).child(2).text());
-                //Log.e(TAG, td_stock.text() + " : "+ td_dividend.text());
+                Log.e(TAG, td_stock.text() + " : "+ td_dividend.text());
             }
 
         }catch (Exception e){
