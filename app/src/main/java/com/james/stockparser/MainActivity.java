@@ -264,7 +264,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if (!searchView.getQuery().toString().equals("")) {
                     addingSeearch(myHistory, position);
-                    Log.e(TAG, "stockName " + stockName + "position" + position);
+                   // Log.e(TAG, "stockName " + stockName + "position" + position);
                     stockName = myDataFilter.get(position).getStockName();
                     stockNumber = myDataFilter.get(position).getStockNumber();
                     //Log.e(TAG, "stockName " + stockName + "stockNumber" + stockNumber);
@@ -275,7 +275,7 @@ public class MainActivity extends AppCompatActivity {
                     addingArrList(myHistory, position);
                     stockName = myDataset.get(position).getStockName();
                     stockNumber = myDataset.get(position).getStockNumber();
-                    Log.e(TAG, "stockName " + stockName + "stockNumber" + stockNumber);
+                    //Log.e(TAG, "stockName " + stockName + "stockNumber" + stockNumber);
                 } else if (userStatus.equals("nearly")) {
                     addingNear(myHistory, position);
                     stockName = nearlyStock.get(position).getStockName();
@@ -289,7 +289,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 for (int i = 0; i < stockNumbers.size(); i++) {
                     if (stockNumbers.get(i).equals(stockNumber)) {
-                        Log.e(TAG, "stockNumbers.size() " + stockNumbers.size() + "stockNumbers.get(i) " + stockNumbers.get(i));
+                       // Log.e(TAG, "stockNumbers.size() " + stockNumbers.size() + "stockNumbers.get(i) " + stockNumbers.get(i));
                         containStock = true;
                     }
                 }

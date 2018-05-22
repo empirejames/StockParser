@@ -19,7 +19,7 @@ public class stockPERatio {
 
     public Map<String,String> getPERatio(String date){
         String urlPERatio = "http://www.twse.com.tw/exchangeReport/BWIBBU_d?response=html&date="+date+"&selectType=ALL";
-        Log.e(TAG, "urlPERatio: " + urlPERatio);
+        //Log.e(TAG, "urlPERatio: " + urlPERatio);
         Map<String, String> stockPERatio = new HashMap<String, String>();
 
         try {
