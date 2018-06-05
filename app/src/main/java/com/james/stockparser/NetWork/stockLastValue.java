@@ -53,19 +53,23 @@ public class stockLastValue {
         String ts = timestamp.getTime() + "";
         connectTSE(mainUrl,twUrl_tse,ts);
         try {
-            if(jsonArray.length()==0){ //上櫃股票
-                connectTSE(mainUrl,twUrl_otc,ts);
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject jsonItem = jsonArray.getJSONObject(i);
-                    Log.e(TAG, i + " : " + jsonItem.getString("z"));
-                    value = jsonItem.getString("z");
+            if(jsonArray!=null){
+                if(jsonArray.length()==0){ //上櫃股票
+                    connectTSE(mainUrl,twUrl_otc,ts);
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject jsonItem = jsonArray.getJSONObject(i);
+                        Log.e(TAG, i + " : " + jsonItem.getString("z"));
+                        value = jsonItem.getString("z");
+                    }
+                }else{ //上市股票
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject jsonItem = jsonArray.getJSONObject(i);
+                        Log.e(TAG, i + " : " + jsonItem.getString("z"));
+                        value = jsonItem.getString("z");
+                    }
                 }
-            }else{ //上市股票
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject jsonItem = jsonArray.getJSONObject(i);
-                    Log.e(TAG, i + " : " + jsonItem.getString("z"));
-                    value = jsonItem.getString("z");
-                }
+            }else{
+                value = "目前伺服器問題，無法取得數據";
             }
         } catch (JSONException e) {
             e.printStackTrace();

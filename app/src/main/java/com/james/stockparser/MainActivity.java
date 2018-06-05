@@ -1166,8 +1166,14 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                     listAdaperr(myDataset, true, selectAll);
-                    if (mProgressDialog != null) {
-                        mProgressDialog.dismiss();
+                    try {
+                        if (mProgressDialog != null) {
+                            mProgressDialog.dismiss();
+                        }
+                    }catch(Exception e){
+
+                    } finally {
+                        mProgressDialog = null;
                     }
                 }
 
