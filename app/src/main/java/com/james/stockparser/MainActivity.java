@@ -144,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
     AdView mAdView;
     int CountNum = 0;
     String alreadyGj = "false";
+    String countClick;
     boolean alreadyGood;
     //IabHelper mHelper;
 
@@ -294,6 +295,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 if (containStock) {
+                    countStocks(stockNumber);
                     new GetStockInfo().execute(stockNumber);
                     checkUsing();
                     containStock = false;
@@ -925,7 +927,38 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public void countStocks(final String stockNumber) {
+        final DatabaseReference ref ;
 
+        ref = FirebaseDatabase.getInstance().getReference();
+        final DatabaseReference usersRef = ref.child("stockCount").child(stockNumber);
+        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists()) {
+                    usersRef.child("count").setValue(1);
+                }else{
+                    for(final DataSnapshot count : dataSnapshot.getChildren()){
+                        String countNumber = count.getValue().toString();
+                        int a = Integer.parseInt(countNumber)+1;
+                        usersRef.child("count").setValue(a);
+
+                    }
+//                    dataSnapshot.getChildren();
+//                    String count;
+//                    count = usersRef.getValue().toString();
+//                    int a = Integer.parseInt(count) + 1;
+//                    usersRef.child(sex).setValue(a);
+//                    usersRef.setValue("1");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
     private void writeNewUserIfNeeded() {
         ref = FirebaseDatabase.getInstance().getReference();
         String userId = bundle.getString("uid");
