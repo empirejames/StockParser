@@ -66,9 +66,9 @@ public class StockInfoParser {
 //                updateHistoryData("present");
 //                historyGuli = getUrlInfo(urlForGuli);
 //                updateHistoryData("guli");
-//                  getDateTaiXiDay();
-//                  updateStockData();
-                getRemoteConfig();
+                  getDateTaiXiDay();
+                  updateStockData();
+//                getRemoteConfig();
             }
         });
 
