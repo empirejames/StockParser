@@ -43,6 +43,7 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.james.stockparser.dataBase.TinyDB;
 
 import java.util.regex.Matcher;
@@ -77,6 +78,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_main);
+
+
         new AppUpdater(this)
                 .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
                 .setDisplay(Display.DIALOG)
@@ -178,7 +181,15 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @Override
     public void onStart() {
         super.onStart();
+        Log.e(TAG, "Login onStart");
         mAuth.addAuthStateListener(mAuthListener);
+
+        Intent intent = getIntent();
+        String msg = intent.getStringExtra("msg");
+        Log.e(TAG, "Get Login MSG" + msg);
+        if (msg!=null){
+            alertDialog("推播訊息",msg);
+        }
     }
 
     @Override
@@ -283,9 +294,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             if (!task.isSuccessful()) {
                                 Log.e(TAG, task.getException().toString());
                                 if (task.getException().toString().contains("The email address is already in use by another account.")) {
-                                    alertDialog("此 Email信箱已被註冊使用");
+                                    alertDialog("系統提示","此 Email信箱已被註冊使用");
                                 } else if (task.getException().toString().contains("The password is invalid or the user does not have a password")) {
-                                    alertDialog("密碼輸入錯誤");
+                                    alertDialog("系統提示","密碼輸入錯誤");
                                 } else if (task.getException().toString().contains("There is no user record corresponding to this identifier. The user may have been deleted")) {
                                     register(email, password);
                                 }
@@ -325,10 +336,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 //String message = task.isSuccessful() ? "註冊成功" : "註冊失敗";
                 Log.e(TAG, task.getException() + "");
                 if (task.isSuccessful()) {
-                    alertDialog("註冊成功");
+                    alertDialog("系統提示","註冊成功");
                 } else {
                     if (task.getException().toString().contains("The email address is already in use by another account.")) {
-                        alertDialog("此 Email信箱已被註冊使用");
+                        alertDialog("系統提示","此 Email信箱已被註冊使用");
                     }
                 }
             }
@@ -358,8 +369,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         mHiddenAction.setDuration(500);
         view.startAnimation(mHiddenAction);
     }
-    private void alertDialog(String message) {
+    private void alertDialog(String title , String message) {
         new AlertDialog.Builder(LoginActivity.this)
+                .setTitle(title)
                 .setMessage(message)
                 .setPositiveButton("確認", null)
                 .show();

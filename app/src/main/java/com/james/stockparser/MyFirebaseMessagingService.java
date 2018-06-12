@@ -19,6 +19,7 @@ public class MyFirebaseMessagingService  extends FirebaseMessagingService {
         Log.e(TAG, "From: " + remoteMessage.getFrom());
         Log.e(TAG, "Notification Message Body: " + remoteMessage.getNotification().getBody());
         sendNotification(remoteMessage);
+
     }
     private void sendNotification(RemoteMessage remoteMessage) {
 
@@ -33,6 +34,7 @@ public class MyFirebaseMessagingService  extends FirebaseMessagingService {
                 .setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_VIBRATE)
                 .setSound(defaultSoundUri)
+                .setChannelId("james")
                 .setWhen(System.currentTimeMillis())
                 .setContentIntent(pendingIntent);
         NotificationManager notificationManager =
