@@ -12,5 +12,7 @@
     <color name="colorYello">#F9F900</color>
     <color name="colorGreen">#00EC00</color>
     <color name="colorOrange">#b36b00</color>
-    ff9900
+    <color name="colorDarkpink">#B46875</color>
+    <color name="colorLightpink">#C21C66</color>
+
 </resources>

@@ -60,6 +60,7 @@ import com.james.stockparser.Fragment.FragmentAbout;
 import com.james.stockparser.Fragment.FragmentMain;
 import com.james.stockparser.NetWork.getRemoteConfig;
 import com.james.stockparser.NetWork.stockDividend;
+import com.james.stockparser.NetWork.stockHotCount;
 import com.james.stockparser.NetWork.stockLastValue;
 import com.james.stockparser.NetWork.stockPERatio;
 import com.james.stockparser.Unit.User;
@@ -84,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
 
     Map<String, String> stockMap = new HashMap<String, String>();
     Map<String, String> stockPEMap = new HashMap<String, String>();
+    Map<String, String> hotClick = new HashMap<String, String>();
     ArrayList<StockItem> myDataset = new ArrayList<StockItem>();
     ArrayList<StockEPS> myEPS = new ArrayList<StockEPS>();
     ArrayList<HistoryItem> myHisEPS = new ArrayList<HistoryItem>();
@@ -111,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
     private String[] nextLine;
     private Toolbar mToolbar;
     SearchView searchView;
-    String dividend, peRatio;
+    String dividend, peRatio, hotclickCount;
     String releaseCount, stockName, stockNumber, thisYear, tianxiCount, tianxiDay, tianxiPercent;
     String hisName, hisNumber, hisProduct, hisEPS;
     String stockInfoName, stockInfoNumber, stockInfoEPS;
@@ -222,11 +224,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        new AppUpdater(this)
-                .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
-                .setDisplay(Display.DIALOG)
-                .showAppUpdated(false)  // 若已是最新版本, 則 true: 仍會提示之, false: 不會提示之
-                .start();
         mShowAction = AnimationUtils.loadAnimation(this, R.anim.alpha_in);
         mShowToolbar = AnimationUtils.loadAnimation(this, R.anim.alpha_in_toolbar);
         mHiddenAction = AnimationUtils.loadAnimation(this, R.anim.alpha_out);
@@ -328,29 +325,37 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (firstVisibleItem > lastVisibleItemPosition ) {
-                    if (!scrollFlag) {
-                        navigation.setVisibility(View.GONE);
-                        navigation.startAnimation(mHiddenAction);
-                        mToolbar.setVisibility(View.GONE);
-                        mToolbar.startAnimation(mHiddenToolbar);
-                        mFab.setVisibility(View.GONE);
-                        mFab.startAnimation(mHiddenToolbar);
-                        scrollFlag = true;
-                    }
-                }else if(firstVisibleItem < lastVisibleItemPosition){
-                    if(scrollFlag){
-                        navigation.setVisibility(View.VISIBLE);
-                        navigation.startAnimation(mShowAction);
-                        mToolbar.setVisibility(View.VISIBLE);
-                        mToolbar.startAnimation(mShowToolbar);
-                        mFab.setVisibility(View.VISIBLE);
-                        mFab.startAnimation(mShowToolbar);
-                        scrollFlag = false;
-                    }
+                if (listV != null && listV.getChildCount() > 0) {
+                    boolean isAtBottom = listV.getScrollY() == listV.getChildAt(listV.getChildCount() - 1).getBottom() + listV.getPaddingBottom() - listV.getHeight();
+                    if (firstVisibleItem > lastVisibleItemPosition) {
+                        if (!scrollFlag) {
+                            navigation.setVisibility(View.GONE);
+                            navigation.startAnimation(mHiddenAction);
+                            mToolbar.setVisibility(View.GONE);
+                            mToolbar.startAnimation(mHiddenToolbar);
+                            mFab.setVisibility(View.GONE);
+                            mFab.startAnimation(mHiddenToolbar);
+                            scrollFlag = true;
+                        }
+                    } else if (firstVisibleItem < lastVisibleItemPosition) {
+                        if (scrollFlag) {
+                            navigation.setVisibility(View.VISIBLE);
+                            navigation.startAnimation(mShowAction);
+                            mToolbar.setVisibility(View.VISIBLE);
+                            mToolbar.startAnimation(mShowToolbar);
+                            mFab.setVisibility(View.VISIBLE);
+                            mFab.startAnimation(mShowToolbar);
+                            scrollFlag = false;
+                        }
 
+                    }
+                    if (isAtBottom) {
+                        mAdView.setVisibility(View.GONE);
+                    }else{
+                        mAdView.setVisibility(View.VISIBLE);
+                    }
+                    lastVisibleItemPosition = firstVisibleItem;
                 }
-                lastVisibleItemPosition = firstVisibleItem;
             }
         });
         listV.setLayoutAnimation(getListAnim());
@@ -846,6 +851,7 @@ public class MainActivity extends AppCompatActivity {
 
     public ArrayList<StockItem> addingArrList(ArrayList<StockItem> item, int i) {
         item.add(new StockItem(
+                myDataset.get(i).getＨotclickCount(),
                 myDataset.get(i).getPeRatio(),
                 myDataset.get(i).getNowDividend(),
                 myDataset.get(i).getStockNumber(),
@@ -861,6 +867,7 @@ public class MainActivity extends AppCompatActivity {
 
     public ArrayList<StockItem> addingSeearch(ArrayList<StockItem> item, int i) {
         item.add(new StockItem(
+                myDataset.get(i).getＨotclickCount(),
                 myDataset.get(i).getPeRatio(),
                 myDataFilter.get(i).getNowDividend(),
                 myDataFilter.get(i).getStockNumber(),
@@ -876,6 +883,7 @@ public class MainActivity extends AppCompatActivity {
 
     public ArrayList<StockItem> addingNear(ArrayList<StockItem> item, int i) {
         item.add(new StockItem(
+                nearlyStock.get(i).getＨotclickCount(),
                 nearlyStock.get(i).getPeRatio(),
                 nearlyStock.get(i).getNowDividend(),
                 nearlyStock.get(i).getStockNumber(),
@@ -1126,6 +1134,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... params) {
             stockDividend sd = new stockDividend();
+            stockHotCount sh = new stockHotCount();
+            hotClick = sh.getHotCount();
             stockMap = sd.getDividend(getYesterDate());
             stockPERatio sdPE = new stockPERatio();
             stockPEMap = sdPE.getPERatio(getYesterDate());
@@ -1163,11 +1173,20 @@ public class MainActivity extends AppCompatActivity {
                                 }else{
                                     peRatio = "無";
                                 }
+                                if(hotClick.get(stockNumber)!=null){
+                                    if (isVistor()){
+                                        hotclickCount = "會員獨享";
+                                    }else{
+                                        hotclickCount = hotClick.get(stockNumber).toString() + " 次";
+                                    }
+                                }else{
+                                    hotclickCount ="無";
+                                }
                                 thisYear = stock.child("thisYear").getValue().toString();
                                 tianxiDay = stock.child("tianxiDay").getValue().toString();
                                 tianxiPercent = stock.child("tianxiPercent").getValue().toString();
                                 tianxiCount = stock.child("tianxiCount").getValue().toString();
-                                myDataset.add(new StockItem(peRatio,dividend, stockNumber, stockName, tianxiCount, releaseCount, tianxiPercent, tianxiDay, thisYear));
+                                myDataset.add(new StockItem(hotclickCount, peRatio,dividend, stockNumber, stockName, tianxiCount, releaseCount, tianxiPercent, tianxiDay, thisYear));
                             }
                         } else if (!isVistor() && dsp.getKey().equals("users")) {
                             for (DataSnapshot users : dsp.getChildren()) {

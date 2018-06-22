@@ -71,6 +71,7 @@ public class MyAdapter extends BaseAdapter implements Filterable {
     }
     static class ViewHolder
     {
+        private TextView hotCount;
         private TextView peRatio;
         private TextView dividend;
         private TextView stockName;
@@ -135,6 +136,8 @@ public class MyAdapter extends BaseAdapter implements Filterable {
         holder.tianxiDay.setText(item.getTianxiDay());
 
         holder.thisYear = (TextView) row.findViewById(R.id.thisyearName);
+        holder.hotCount =  (TextView) row.findViewById(R.id.hotValue_data);
+        holder.hotCount.setText(item.getＨotclickCount());
         if (item.getThisYear().equals("")) {
             holder.thisYear.setText("未公告");
         } else {

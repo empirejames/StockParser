@@ -69,7 +69,42 @@
                 android:progressTint="@android:color/holo_orange_light"
                 android:rating="3.5"></RatingBar>
         </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/hotClick"
+            android:layout_width="match_parent"
+            android:visibility="visible"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/nowUpdateValue"
+            android:orientation="vertical"
+            android:paddingRight="10dp"
+            >
+            <com.ant.liao.GifView
+                android:id="@+id/hot"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/click" />
 
+            <TextView
+                android:id="@+id/hotValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/hot"
+                android:paddingLeft="5dp"
+                android:text="點閱率 : "
+                android:textColor="@color/colorLightpink"
+                android:textSize="15sp" />
+            <TextView
+                android:id="@+id/hotValue_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/hotValue"
+                android:textColor="@color/colorLightpink"
+                android:text="50"
+                android:textSize="15sp" />
+        </RelativeLayout>
         <RelativeLayout
             android:id="@+id/nowUpdateValue"
             android:layout_width="match_parent"

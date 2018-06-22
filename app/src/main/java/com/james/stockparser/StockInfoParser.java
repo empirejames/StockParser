@@ -14,6 +14,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.james.stockparser.NetWork.stockHotCount;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;

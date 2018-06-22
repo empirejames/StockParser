@@ -9,10 +9,11 @@ import android.util.Log;
 
 public class StockItem {
     String TAG = StockItem.class.getSimpleName();
-    private String peRatio, nowDividend;
+    private String peRatio, nowDividend, hotclickCount;
     private String stockNumber, stockName, tianxiCount, releaseCount, tianxiPercent, tianxiDay, thisYear, stockValue;
 
-    public StockItem(String peRatio, String nowDividend, String stockNumber, String stockName, String tianxiCount, String releaseCount, String tianxiPercent, String tianxiDay, String thisYear) {
+    public StockItem(String hotclickCount, String peRatio, String nowDividend, String stockNumber, String stockName, String tianxiCount, String releaseCount, String tianxiPercent, String tianxiDay, String thisYear) {
+        this.hotclickCount = hotclickCount; //熱門點閱率
         this.peRatio = peRatio; //股票本益比
         this.nowDividend = nowDividend; //股票殖利率
         this.stockNumber = stockNumber; //股票代號
@@ -22,6 +23,9 @@ public class StockItem {
         this.tianxiPercent = tianxiPercent; //填息比例
         this.tianxiDay = tianxiDay; //填息平均天數
         this.thisYear = thisYear; //本年除息日
+    }
+    public String getＨotclickCount() {
+        return hotclickCount;
     }
     public String getPeRatio() {
         return peRatio;
