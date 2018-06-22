@@ -25,9 +25,6 @@ import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.github.javiersantos.appupdater.AppUpdater;
-import com.github.javiersantos.appupdater.enums.Display;
-import com.github.javiersantos.appupdater.enums.UpdateFrom;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -79,12 +76,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_main);
 
-
-        new AppUpdater(this)
-                .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
-                .setDisplay(Display.DIALOG)
-                .showAppUpdated(false)  // 若已是最新版本, 則 true: 仍會提示之, false: 不會提示之
-                .start();
+//
+//        new AppUpdater(this)
+//                .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
+//                .setDisplay(Display.DIALOG)
+//                .showAppUpdated(false)  // 若已是最新版本, 則 true: 仍會提示之, false: 不會提示之
+//                .start();
         tinydb = new TinyDB(LoginActivity.this);
         chkRemeber = (CheckBox) findViewById(R.id.chkRemeber);
         tvForgetPass = (TextView) findViewById(R.id.tv_forgotPass);
