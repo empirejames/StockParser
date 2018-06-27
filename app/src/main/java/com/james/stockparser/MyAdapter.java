@@ -80,6 +80,8 @@ public class MyAdapter extends BaseAdapter implements Filterable {
         private TextView releaseCount;
         private TextView tianxiDay;
         private TextView thisYear;
+        private TextView guValue;
+        private TextView shiValue;
         private TextView stockNumber = null;
     }
     @Override
@@ -110,6 +112,10 @@ public class MyAdapter extends BaseAdapter implements Filterable {
                 cbDel.setVisibility(View.GONE);
             }
         }
+        holder.guValue = (TextView) row.findViewById(R.id.gu_value);
+        holder.guValue.setText(item.getPayGu());
+        holder.shiValue = (TextView) row.findViewById(R.id.shi_value);
+        holder.shiValue.setText(item.getPayShi());
         holder.stockNumber = (TextView) row.findViewById(R.id.stock_Number);
         holder.stockNumber.setText(item.getStockNumber());
         holder.peRatio = (TextView) row.findViewById(R.id.peRatio_data);
@@ -137,7 +143,7 @@ public class MyAdapter extends BaseAdapter implements Filterable {
 
         holder.thisYear = (TextView) row.findViewById(R.id.thisyearName);
         holder.hotCount =  (TextView) row.findViewById(R.id.hotValue_data);
-        holder.hotCount.setText(item.getＨotclickCount());
+        holder.hotCount.setText(item.getHotclickCount());
         if (item.getThisYear().equals("")) {
             holder.thisYear.setText("未公告");
         } else {

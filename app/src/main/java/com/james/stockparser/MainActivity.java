@@ -60,6 +60,7 @@ import com.james.stockparser.NetWork.stockDividend;
 import com.james.stockparser.NetWork.stockHotCount;
 import com.james.stockparser.NetWork.stockLastValue;
 import com.james.stockparser.NetWork.stockPERatio;
+import com.james.stockparser.NetWork.stockPayGushi;
 import com.james.stockparser.Unit.User;
 import com.james.stockparser.dataBase.TinyDB;
 
@@ -83,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
     Map<String, String> stockMap = new HashMap<String, String>();
     Map<String, String> stockPEMap = new HashMap<String, String>();
     Map<String, String> hotClick = new HashMap<String, String>();
+    Map<String, String> getPaygushi = new HashMap<String, String>();
     ArrayList<StockItem> myDataset = new ArrayList<StockItem>();
     ArrayList<StockEPS> myEPS = new ArrayList<StockEPS>();
     ArrayList<HistoryItem> myHisEPS = new ArrayList<HistoryItem>();
@@ -110,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
     private String[] nextLine;
     private Toolbar mToolbar;
     SearchView searchView;
-    String dividend, peRatio, hotclickCount;
+    String dividend, peRatio, hotclickCount, payGu, payShi;
     String releaseCount, stockName, stockNumber, thisYear, tianxiCount, tianxiDay, tianxiPercent;
     String hisName, hisNumber, hisProduct, hisEPS;
     String stockInfoName, stockInfoNumber, stockInfoEPS;
@@ -848,7 +850,9 @@ public class MainActivity extends AppCompatActivity {
 
     public ArrayList<StockItem> addingArrList(ArrayList<StockItem> item, int i) {
         item.add(new StockItem(
-                myDataset.get(i).getＨotclickCount(),
+                myDataset.get(i).getPayGu(),
+                myDataset.get(i).getPayShi(),
+                myDataset.get(i).getHotclickCount(),
                 myDataset.get(i).getPeRatio(),
                 myDataset.get(i).getNowDividend(),
                 myDataset.get(i).getStockNumber(),
@@ -864,7 +868,9 @@ public class MainActivity extends AppCompatActivity {
 
     public ArrayList<StockItem> addingSeearch(ArrayList<StockItem> item, int i) {
         item.add(new StockItem(
-                myDataset.get(i).getＨotclickCount(),
+                myDataset.get(i).getPayGu(),
+                myDataset.get(i).getPayShi(),
+                myDataset.get(i).getHotclickCount(),
                 myDataset.get(i).getPeRatio(),
                 myDataFilter.get(i).getNowDividend(),
                 myDataFilter.get(i).getStockNumber(),
@@ -880,7 +886,9 @@ public class MainActivity extends AppCompatActivity {
 
     public ArrayList<StockItem> addingNear(ArrayList<StockItem> item, int i) {
         item.add(new StockItem(
-                nearlyStock.get(i).getＨotclickCount(),
+                nearlyStock.get(i).getPayGu(),
+                nearlyStock.get(i).getPayShi(),
+                nearlyStock.get(i).getHotclickCount(),
                 nearlyStock.get(i).getPeRatio(),
                 nearlyStock.get(i).getNowDividend(),
                 nearlyStock.get(i).getStockNumber(),
@@ -1118,6 +1126,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private class GetData extends AsyncTask<String, Integer, String> {
+        private ProgressDialog progressBar;
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -1130,14 +1139,20 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... params) {
+            publishProgress(0);
             stockDividend sd = new stockDividend();
             stockHotCount sh = new stockHotCount();
+            stockPayGushi stp = new stockPayGushi();
+            getPaygushi = stp.getNowGuShi();
+            publishProgress(20);
             hotClick = sh.getHotCount();
             stockMap = sd.getDividend(getYesterDate());
             stockPERatio sdPE = new stockPERatio();
+            publishProgress(40);
             stockPEMap = sdPE.getPERatio(getYesterDate());
             getRemoteConfig grc = new getRemoteConfig(MainActivity.this);
             grc.getRemotePara();
+
             //Log.e(TAG, "tag :: " + tinydb.getString("show_floating_button"));
             userId = bundle.getString("uid");
             ref = FirebaseDatabase.getInstance().getReference();
@@ -1179,11 +1194,18 @@ public class MainActivity extends AppCompatActivity {
                                 }else{
                                     hotclickCount ="無";
                                 }
+                                if(getPaygushi.get(stockNumber)!=null){
+                                        payShi = getPaygushi.get(stockNumber).split(",")[0];
+                                        payGu = getPaygushi.get(stockNumber).split(",")[1];
+                                }else{
+                                    payGu = "無";
+                                    payShi = "無";
+                                }
                                 thisYear = stock.child("thisYear").getValue().toString();
                                 tianxiDay = stock.child("tianxiDay").getValue().toString();
                                 tianxiPercent = stock.child("tianxiPercent").getValue().toString();
                                 tianxiCount = stock.child("tianxiCount").getValue().toString();
-                                myDataset.add(new StockItem(hotclickCount, peRatio,dividend, stockNumber, stockName, tianxiCount, releaseCount, tianxiPercent, tianxiDay, thisYear));
+                                myDataset.add(new StockItem(payGu, payShi, hotclickCount, peRatio,dividend, stockNumber, stockName, tianxiCount, releaseCount, tianxiPercent, tianxiDay, thisYear));
                             }
                         } else if (!isVistor() && dsp.getKey().equals("users")) {
                             for (DataSnapshot users : dsp.getChildren()) {
@@ -1217,9 +1239,9 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                 }
                                 myHisEPS.add(new HistoryItem(hisNumber, hisName, hisProduct, hisEPS));
-
                             }
                         }
+
                     }
                     listAdaperr(myDataset, true, selectAll);
                     try {
@@ -1227,7 +1249,7 @@ public class MainActivity extends AppCompatActivity {
                             mProgressDialog.dismiss();
                         }
                     }catch(Exception e){
-
+                        Log.e(TAG,e.getMessage());
                     } finally {
                         mProgressDialog = null;
                     }
@@ -1253,7 +1275,16 @@ public class MainActivity extends AppCompatActivity {
             super.onProgressUpdate(values);
             runOnUiThread(new Runnable() {
                 public void run() {
-                    mProgressDialog.setMessage(values[0].toString());
+                    if(Integer.toString(values[0]).equals("0")){
+                        mProgressDialog.setMessage("取得資料中... 請稍候");
+                    }else if(Integer.toString(values[0]).equals("20")){
+                        mProgressDialog.setMessage("下載伺服器數據中...");
+                    }else if(Integer.toString(values[0]).equals("40")){
+                        mProgressDialog.setMessage("正在更新手機端資料... 請稍後");
+                    }else{
+                        mProgressDialog.setMessage("下載更新完畢");
+                    }
+
                 }
             });
 

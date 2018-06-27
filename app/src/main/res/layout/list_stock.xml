@@ -44,6 +44,7 @@
                 android:textColor="@android:color/holo_blue_dark"
                 android:textSize="20sp" />
 
+
             <TextView
                 android:id="@+id/stock_good"
                 android:layout_width="wrap_content"
@@ -90,7 +91,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_toRightOf="@+id/hot"
+                android:layout_toEndOf="@+id/hot"
                 android:paddingLeft="5dp"
                 android:text="點閱率 : "
                 android:textColor="@color/colorLightpink"
@@ -104,6 +105,46 @@
                 android:textColor="@color/colorLightpink"
                 android:text="50"
                 android:textSize="15sp" />
+
+            <com.ant.liao.GifView
+                android:id="@+id/paygu"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="152dp"
+                android:layout_alignStart="@+id/hotValue"
+                android:background="@drawable/gu" />
+            <TextView
+                android:id="@+id/gu_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignStart="@+id/paygu"
+                android:layout_marginStart="25dp"
+                android:text="2.0"
+                android:textColor="@color/colorLightpink"
+                android:textSize="15sp" />
+
+            <com.ant.liao.GifView
+                android:id="@+id/payshi"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="50dp"
+                android:layout_alignStart="@+id/gu_value"
+                android:background="@drawable/shi" />
+            <TextView
+                android:id="@+id/shi_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignStart="@+id/payshi"
+                android:layout_marginLeft="25dp"
+                android:text="2.0"
+                android:textColor="@color/colorLightpink"
+                android:textSize="15sp" />
+
+
         </RelativeLayout>
         <RelativeLayout
             android:id="@+id/nowUpdateValue"
@@ -117,8 +158,8 @@
 
             <com.ant.liao.GifView
                 android:id="@+id/loc_ref_Icon"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
                 android:layout_marginLeft="10dp"
                 android:background="@drawable/now40" />
 
@@ -144,11 +185,11 @@
 
             <com.ant.liao.GifView
                 android:id="@+id/loc_ref_Icon2"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignStart="@+id/dividend"
-                android:layout_marginLeft="152dp"
+                android:layout_marginLeft="153dp"
                 android:background="@drawable/now40" />
             <TextView
                 android:id="@+id/peRatio"

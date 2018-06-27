@@ -15,6 +15,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.james.stockparser.NetWork.stockHotCount;
+import com.james.stockparser.NetWork.stockPayGushi;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -37,6 +38,7 @@ public class StockInfoParser {
     String urlForEPS = "http://stock.wespai.com/p/7733";
     String urlForPresent = "http://stock.wespai.com/stock107";
     String urlForGuli = "http://stock.wespai.com/tenrate#";
+    String urlChoMa = "https://stock.wespai.com/lists";
     Map<String, String> stockDividend;
     private HandlerThread mThread;
     private Handler mThreadHandler;
@@ -65,11 +67,18 @@ public class StockInfoParser {
 //                Log.e(TAG,"updateHistoryData :: EPS");
 //                historyPresent = getUrlInfo(urlForPresent);
 //                updateHistoryData("present");
+//                Log.e(TAG,"updateHistoryData :: present");
 //                historyGuli = getUrlInfo(urlForGuli);
 //                updateHistoryData("guli");
-                  getDateTaiXiDay();
-                  updateStockData();
-//                getRemoteConfig();
+//                Log.e(TAG,"updateHistoryData :: guli");
+//                  getDateTaiXiDay();
+//                  updateStockData();
+//                  Log.e(TAG,"updateStockData :: TaiXiDay");
+//                  getRemoteConfig();
+                Map<String, String> getPaygushi = new HashMap<String, String>();
+                stockPayGushi stp = new stockPayGushi();
+                getPaygushi = stp.getNowGuShi();
+                Log.e(TAG,getPaygushi.get("2640"));
             }
         });
 
@@ -294,6 +303,9 @@ public class StockInfoParser {
         }
         return true;
     }
+
+
+
 
     public ArrayList<String> getUrlInfo(String url) {
         ArrayList<String> temp = new ArrayList<>();
