@@ -62,13 +62,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="3dp"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
+                android:layout_centerVertical="true"
                 android:numStars="5"
                 android:progressBackgroundTint="@android:color/darker_gray"
                 android:progressTint="@android:color/holo_orange_light"
-                android:rating="3.5"></RatingBar>
+                android:rating="3.5">
+            </RatingBar>
         </RelativeLayout>
         <RelativeLayout
             android:id="@+id/hotClick"
@@ -79,140 +78,9 @@
             android:orientation="vertical"
             android:paddingRight="10dp"
             >
-            <com.ant.liao.GifView
-                android:id="@+id/hot"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/click" />
-
-            <TextView
-                android:id="@+id/hotValue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_toEndOf="@+id/hot"
-                android:paddingLeft="5dp"
-                android:text="點閱率 : "
-                android:textColor="@color/colorLightpink"
-                android:textSize="15sp" />
-            <TextView
-                android:id="@+id/hotValue_data"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_toRightOf="@+id/hotValue"
-                android:textColor="@color/colorLightpink"
-                android:text="50"
-                android:textSize="15sp" />
-
-            <com.ant.liao.GifView
-                android:id="@+id/paygu"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:layout_alignParentTop="true"
-                android:layout_marginStart="152dp"
-                android:layout_alignStart="@+id/hotValue"
-                android:background="@drawable/gu" />
-            <TextView
-                android:id="@+id/gu_value"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignStart="@+id/paygu"
-                android:layout_marginStart="25dp"
-                android:text="2.0"
-                android:textColor="@color/colorLightpink"
-                android:textSize="15sp" />
-
-            <com.ant.liao.GifView
-                android:id="@+id/payshi"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:layout_alignParentTop="true"
-                android:layout_marginStart="50dp"
-                android:layout_alignStart="@+id/gu_value"
-                android:background="@drawable/shi" />
-            <TextView
-                android:id="@+id/shi_value"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignStart="@+id/payshi"
-                android:layout_marginLeft="25dp"
-                android:text="2.0"
-                android:textColor="@color/colorLightpink"
-                android:textSize="15sp" />
 
 
         </RelativeLayout>
-        <RelativeLayout
-            android:id="@+id/nowUpdateValue"
-            android:layout_width="match_parent"
-            android:visibility="visible"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/infoSection"
-            android:orientation="vertical"
-            android:paddingRight="10dp"
-            >
-
-            <com.ant.liao.GifView
-                android:id="@+id/loc_ref_Icon"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/now40" />
-
-            <TextView
-                android:id="@+id/dividend"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_toRightOf="@+id/loc_ref_Icon"
-                android:paddingLeft="5dp"
-                android:text="即時殖利率 : "
-                android:textColor="@color/colorOrange"
-                android:textSize="15sp" />
-            <TextView
-                android:id="@+id/now_dividend_data"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_toRightOf="@+id/dividend"
-                android:textColor="@color/colorOrange"
-                android:text="50"
-                android:textSize="15sp" />
-
-            <com.ant.liao.GifView
-                android:id="@+id/loc_ref_Icon2"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignStart="@+id/dividend"
-                android:layout_marginLeft="153dp"
-                android:background="@drawable/now40" />
-            <TextView
-                android:id="@+id/peRatio"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignStart="@+id/loc_ref_Icon2"
-                android:layout_marginLeft="25dp"
-                android:text="即時本益比 : "
-                android:textColor="@color/colorOrange"
-                android:textSize="15sp" />
-            <TextView
-                android:id="@+id/peRatio_data"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_toRightOf="@+id/peRatio"
-                android:textColor="@color/colorOrange"
-                android:text="昂貴"
-                android:textSize="15sp" />
-        </RelativeLayout>
-
-
         <RelativeLayout
             android:id="@+id/relative_layout"
             android:layout_width="match_parent"
@@ -227,8 +95,10 @@
                 android:id="@+id/release"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignStart="@+id/thisyear"
+                android:layout_above="@+id/thisyear"
+                android:layout_below="@+id/gu_value"
+                android:layout_alignStart="@+id/loc_ref_Icon2"
+                android:layout_alignBaseline="@+id/tianxiCount"
                 android:text="發放次數 : "
                 android:textColor="@android:color/background_dark"
                 android:textSize="15sp" />
@@ -237,17 +107,75 @@
                 android:id="@+id/releaseName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/release"
-                android:layout_marginLeft="5dp"
-                android:text="5"
+                android:layout_toEndOf="@+id/release"
+                android:layout_below="@+id/loc_ref_Icon2"
+                android:layout_alignBaseline="@+id/release"
+                android:text="15"
                 android:textColor="@android:color/background_dark"
                 android:textSize="15sp" />
+
+
+            <com.ant.liao.GifView
+                android:id="@+id/hot"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:background="@drawable/click" />
+
+            <com.ant.liao.GifView
+                android:id="@+id/loc_ref_Icon"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_below="@+id/hot"
+                android:layout_marginTop="5dp"
+                android:layout_alignStart="@+id/hot"
+                android:background="@drawable/now40" />
+
+            <TextView
+                android:id="@+id/dividend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/tianxiCount"
+                android:layout_below="@+id/hotValue"
+                android:layout_alignStart="@+id/hotValue"
+                android:layout_alignBaseline="@+id/loc_ref_Icon"
+                android:text="即時殖利率 : "
+                android:textColor="@color/colorOrange"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/now_dividend_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/dividend"
+                android:layout_toEndOf="@+id/dividend"
+                android:text="50"
+                android:textColor="@color/colorOrange"
+                android:textSize="15sp" />
+            <com.ant.liao.GifView
+                android:id="@+id/paygu"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_alignBottom="@+id/gu_value"
+                android:layout_toStartOf="@+id/gu_value"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/gu" />
+            <com.ant.liao.GifView
+                android:id="@+id/loc_ref_Icon2"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_below="@+id/paygu"
+                android:layout_marginTop="5dp"
+                android:layout_alignStart="@+id/paygu"
+                android:background="@drawable/now40" />
 
             <TextView
                 android:id="@+id/tianxiCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="填息次數 :"
+                android:layout_alignBaseline="@+id/tianxiCountName"
+                android:layout_alignBottom="@+id/tianxiCountName"
+                android:layout_toEndOf="@+id/checkbox_delete"
+                android:text="填息次數 : "
                 android:textColor="@android:color/background_dark"
                 android:textSize="15sp" />
 
@@ -255,9 +183,9 @@
                 android:id="@+id/tianxiCountName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/right_select"
                 android:layout_toEndOf="@+id/tianxiCount"
-                android:layout_marginLeft="5dp"
+                android:layout_below="@+id/loc_ref_Icon"
+                android:layout_marginTop="10dp"
                 android:text="10"
                 android:textColor="@android:color/background_dark"
                 android:textSize="15sp" />
@@ -267,7 +195,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tianxiCount"
-                android:text="填息平均日:"
+                android:layout_alignStart="@+id/tianxiCount"
+                android:text="填息平均日 : "
                 android:textColor="@android:color/background_dark"
                 android:textSize="15sp" />
 
@@ -277,7 +206,8 @@
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/taixiaverage"
                 android:layout_below="@+id/tianxiCount"
-                android:layout_marginLeft="5dp"
+                android:layout_alignBottom="@+id/taixiaverage"
+                android:layout_marginStart="5dp"
                 android:text="5"
                 android:textColor="@android:color/background_dark"
                 android:textSize="15sp" />
@@ -286,9 +216,9 @@
                 android:id="@+id/thisyear"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/taixiaverageName"
+                android:layout_alignStart="@+id/release"
                 android:layout_below="@+id/tianxiCount"
-                android:layout_marginLeft="90dp"
+                android:layout_alignBaseline="@+id/taixiaverage"
                 android:text="除息日 : "
                 android:textColor="@android:color/background_dark"
                 android:textSize="15sp" />
@@ -298,7 +228,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/release"
-                android:layout_toRightOf="@+id/thisyear"
+                android:layout_toEndOf="@+id/thisyear"
+                android:layout_alignBaseline="@+id/thisyear"
                 android:text="2017/06/27"
                 android:textColor="@android:color/background_dark"
                 android:textSize="15sp" />
@@ -317,9 +248,9 @@
                 android:id="@+id/checkbox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
                 android:button="@drawable/checkbox_favorite"
                 android:visibility="visible">
             </CheckBox>
@@ -333,6 +264,85 @@
                 android:button="@drawable/checkbox_delete"
                 android:visibility="gone">
             </CheckBox>
+
+            <TextView
+                android:id="@+id/peRatio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/release"
+                android:layout_below="@+id/gu_value"
+                android:layout_toEndOf="@+id/loc_ref_Icon2"
+                android:layout_alignBaseline="@+id/loc_ref_Icon2"
+                android:layout_marginEnd="-10dp"
+                android:text="即時本益比 : "
+                android:textColor="@color/colorOrange"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/peRatio_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/releaseName"
+                android:layout_toEndOf="@+id/peRatio"
+                android:layout_marginStart="10dp"
+                android:layout_below="@+id/gu_value"
+                android:layout_alignBaseline="@+id/loc_ref_Icon2"
+                android:text="昂貴"
+                android:textColor="@color/colorOrange"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/hotValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/hot"
+                android:paddingLeft="5dp"
+                android:text="點閱率 : "
+                android:textColor="@color/colorLightpink"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/hotValue_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/checkbox_delete"
+                android:layout_toEndOf="@+id/hotValue"
+                android:text="50"
+                android:textColor="@color/colorLightpink"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/gu_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignBottom="@+id/payshi"
+                android:layout_below="@+id/hotValue"
+                android:layout_toStartOf="@+id/payshi"
+                android:layout_marginEnd="30dp"
+                android:text="2.0"
+                android:textColor="@color/colorLightpink"
+                android:textSize="15sp" />
+
+            <com.ant.liao.GifView
+                android:id="@+id/payshi"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_alignBottom="@+id/shi_value"
+                android:layout_toStartOf="@+id/shi_value"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/shi" />
+
+            <TextView
+                android:id="@+id/shi_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="80dp"
+                android:text="2.0"
+                android:textColor="@color/colorLightpink"
+                android:textSize="15sp" />
         </RelativeLayout>
 
     </LinearLayout>

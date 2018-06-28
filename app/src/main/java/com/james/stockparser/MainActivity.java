@@ -241,11 +241,10 @@ public class MainActivity extends AppCompatActivity {
             initFab();
         if (!isVistor) {
             String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-
-            Log.e("FCN TOKEN GET", "Refreshed token: " + refreshedToken);
+            //Log.e("FCN TOKEN GET", "Refreshed token: " + refreshedToken);
             writeNewUserIfNeeded();
         }else{
-            alertDialog("目前會員數已達3000人，為持續服務優質會員，伺服器滿載後將關閉訪客註冊及登入，趕快搶先註冊會員唷!");
+            alertDialog("目前會員數已達4000人，為持續服務優質會員，伺服器滿載後將關閉訪客註冊及登入，趕快搶先註冊會員唷!");
         }
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);

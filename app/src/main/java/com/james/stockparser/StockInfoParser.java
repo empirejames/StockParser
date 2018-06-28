@@ -71,14 +71,14 @@ public class StockInfoParser {
 //                historyGuli = getUrlInfo(urlForGuli);
 //                updateHistoryData("guli");
 //                Log.e(TAG,"updateHistoryData :: guli");
-//                  getDateTaiXiDay();
-//                  updateStockData();
+                  getDateTaiXiDay();
+                  updateStockData();
 //                  Log.e(TAG,"updateStockData :: TaiXiDay");
 //                  getRemoteConfig();
-                Map<String, String> getPaygushi = new HashMap<String, String>();
-                stockPayGushi stp = new stockPayGushi();
-                getPaygushi = stp.getNowGuShi();
-                Log.e(TAG,getPaygushi.get("2640"));
+//                Map<String, String> getPaygushi = new HashMap<String, String>();
+//                stockPayGushi stp = new stockPayGushi();
+//                getPaygushi = stp.getNowGuShi();
+//                Log.e(TAG,getPaygushi.get("2640"));
             }
         });
 
