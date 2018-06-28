@@ -31,7 +31,7 @@
                 android:layout_marginStart="10dp"
                 android:text="2318"
                 android:textColor="@android:color/holo_red_light"
-                android:textSize="20sp" />
+                android:textSize="20dp" />
 
             <TextView
                 android:id="@+id/stock_Name"
@@ -42,7 +42,7 @@
                 android:layout_toRightOf="@+id/stock_Number"
                 android:text="HonHan"
                 android:textColor="@android:color/holo_blue_dark"
-                android:textSize="20sp" />
+                android:textSize="20dp" />
 
 
             <TextView
@@ -54,7 +54,7 @@
                 android:layout_toStartOf="@+id/RatingBar01"
                 android:text="填息機率"
                 android:textColor="@android:color/holo_purple"
-                android:textSize="20sp" />
+                android:textSize="20dp" />
 
             <RatingBar
                 android:id="@+id/RatingBar01"
@@ -101,7 +101,7 @@
                 android:layout_alignBaseline="@+id/tianxiCount"
                 android:text="發放次數 : "
                 android:textColor="@android:color/background_dark"
-                android:textSize="15sp" />
+                android:textSize="15dp" />
 
             <TextView
                 android:id="@+id/releaseName"
@@ -112,7 +112,7 @@
                 android:layout_alignBaseline="@+id/release"
                 android:text="15"
                 android:textColor="@android:color/background_dark"
-                android:textSize="15sp" />
+                android:textSize="15dp" />
 
 
             <com.ant.liao.GifView
@@ -125,22 +125,20 @@
                 android:id="@+id/loc_ref_Icon"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
-                android:layout_below="@+id/hot"
-                android:layout_marginTop="5dp"
-                android:layout_alignStart="@+id/hot"
+                android:layout_alignParentStart="true"
+                android:layout_alignTop="@+id/loc_ref_Icon2"
                 android:background="@drawable/now40" />
 
             <TextView
                 android:id="@+id/dividend"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/tianxiCount"
-                android:layout_below="@+id/hotValue"
-                android:layout_alignStart="@+id/hotValue"
-                android:layout_alignBaseline="@+id/loc_ref_Icon"
+                android:layout_alignBaseline="@+id/peRatio"
+                android:layout_alignBottom="@+id/peRatio"
+                android:layout_toEndOf="@+id/loc_ref_Icon"
                 android:text="即時殖利率 : "
                 android:textColor="@color/colorOrange"
-                android:textSize="15sp" />
+                android:textSize="15dp" />
 
             <TextView
                 android:id="@+id/now_dividend_data"
@@ -150,7 +148,7 @@
                 android:layout_toEndOf="@+id/dividend"
                 android:text="50"
                 android:textColor="@color/colorOrange"
-                android:textSize="15sp" />
+                android:textSize="15dp" />
             <com.ant.liao.GifView
                 android:id="@+id/paygu"
                 android:layout_width="18dp"
@@ -177,7 +175,7 @@
                 android:layout_toEndOf="@+id/checkbox_delete"
                 android:text="填息次數 : "
                 android:textColor="@android:color/background_dark"
-                android:textSize="15sp" />
+                android:textSize="15dp" />
 
             <TextView
                 android:id="@+id/tianxiCountName"
@@ -188,7 +186,7 @@
                 android:layout_marginTop="10dp"
                 android:text="10"
                 android:textColor="@android:color/background_dark"
-                android:textSize="15sp" />
+                android:textSize="15dp" />
 
             <TextView
                 android:id="@+id/taixiaverage"
@@ -198,7 +196,7 @@
                 android:layout_alignStart="@+id/tianxiCount"
                 android:text="填息平均日 : "
                 android:textColor="@android:color/background_dark"
-                android:textSize="15sp" />
+                android:textSize="15dp" />
 
             <TextView
                 android:id="@+id/taixiaverageName"
@@ -210,7 +208,7 @@
                 android:layout_marginStart="5dp"
                 android:text="5"
                 android:textColor="@android:color/background_dark"
-                android:textSize="15sp" />
+                android:textSize="15dp" />
 
             <TextView
                 android:id="@+id/thisyear"
@@ -221,7 +219,7 @@
                 android:layout_alignBaseline="@+id/taixiaverage"
                 android:text="除息日 : "
                 android:textColor="@android:color/background_dark"
-                android:textSize="15sp" />
+                android:textSize="15dp" />
 
             <TextView
                 android:id="@+id/thisyearName"
@@ -232,7 +230,7 @@
                 android:layout_alignBaseline="@+id/thisyear"
                 android:text="2017/06/27"
                 android:textColor="@android:color/background_dark"
-                android:textSize="15sp" />
+                android:textSize="15dp" />
             <ImageView
                 android:id="@+id/right_select"
                 android:layout_width="wrap_content"
@@ -269,27 +267,23 @@
                 android:id="@+id/peRatio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/release"
-                android:layout_below="@+id/gu_value"
+                android:layout_alignBottom="@+id/loc_ref_Icon2"
                 android:layout_toEndOf="@+id/loc_ref_Icon2"
-                android:layout_alignBaseline="@+id/loc_ref_Icon2"
-                android:layout_marginEnd="-10dp"
                 android:text="即時本益比 : "
                 android:textColor="@color/colorOrange"
-                android:textSize="15sp" />
+                android:textSize="15dp" />
 
             <TextView
                 android:id="@+id/peRatio_data"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/releaseName"
-                android:layout_toEndOf="@+id/peRatio"
-                android:layout_marginStart="10dp"
-                android:layout_below="@+id/gu_value"
-                android:layout_alignBaseline="@+id/loc_ref_Icon2"
+                android:layout_alignBaseline="@+id/peRatio"
+                android:layout_alignBottom="@+id/peRatio"
+                android:layout_toEndOf="@+id/payshi"
+                android:layout_marginLeft="10dp"
                 android:text="昂貴"
                 android:textColor="@color/colorOrange"
-                android:textSize="15sp" />
+                android:textSize="15dp" />
 
             <TextView
                 android:id="@+id/hotValue"
@@ -300,7 +294,7 @@
                 android:paddingLeft="5dp"
                 android:text="點閱率 : "
                 android:textColor="@color/colorLightpink"
-                android:textSize="15sp" />
+                android:textSize="15dp" />
 
             <TextView
                 android:id="@+id/hotValue_data"
@@ -310,7 +304,7 @@
                 android:layout_toEndOf="@+id/hotValue"
                 android:text="50"
                 android:textColor="@color/colorLightpink"
-                android:textSize="15sp" />
+                android:textSize="15dp" />
 
             <TextView
                 android:id="@+id/gu_value"
@@ -323,7 +317,7 @@
                 android:layout_marginEnd="30dp"
                 android:text="2.0"
                 android:textColor="@color/colorLightpink"
-                android:textSize="15sp" />
+                android:textSize="15dp" />
 
             <com.ant.liao.GifView
                 android:id="@+id/payshi"
@@ -339,10 +333,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="80dp"
+                android:layout_marginEnd="70dp"
                 android:text="2.0"
                 android:textColor="@color/colorLightpink"
-                android:textSize="15sp" />
+                android:textSize="15dp" />
         </RelativeLayout>
 
     </LinearLayout>
