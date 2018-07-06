@@ -140,7 +140,6 @@ public class MainActivity extends AppCompatActivity {
     BottomNavigationView navigation;
     Animation mShowAction, mShowToolbar;
     Animation mHiddenAction, mHiddenToolbar;
-    InterstitialAd interstitial;
     FloatingActionButton mFab;
     String userStatus = "home";
     AdView mAdView;
@@ -148,7 +147,10 @@ public class MainActivity extends AppCompatActivity {
     String alreadyGj = "false";
     String countClick;
     boolean alreadyGood;
+    private InterstitialAd interstitial;
+    private AdRequest adRequestAA;
     //IabHelper mHelper;
+    private int countAD;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -230,12 +232,15 @@ public class MainActivity extends AppCompatActivity {
         mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().addTestDevice("F618803C89E1614E3394A55D5E7A756B").build(); //Nexus 5
         mAdView.loadAd(adRequest);
+
+        interstitial = new InterstitialAd(this);
+        interstitial.setAdUnitId("ca-app-pub-1659435325076970/8847307592");
+        adRequestAA = new AdRequest.Builder().addTestDevice("F618803C89E1614E3394A55D5E7A756B").build(); //Nexus 5
+        interstitial.loadAd(adRequestAA);
+        displayInterstitial();
         tinydb = new TinyDB(MainActivity.this);
         alreadyGj = tinydb.getString("GJ");
-//            interstitial = new InterstitialAd(this);
-//            interstitial.setAdUnitId(MY_AD_UNIT_ID);
-//            // Begin loading your interstitial.
-//            interstitial.loadAd(adRequest);
+
         bundle = getIntent().getExtras();
         isVistor = isVistor();
             initFab();
@@ -244,7 +249,7 @@ public class MainActivity extends AppCompatActivity {
             //Log.e("FCN TOKEN GET", "Refreshed token: " + refreshedToken);
             writeNewUserIfNeeded();
         }else{
-            alertDialog("目前會員數已達4000人，為持續服務優質會員，伺服器滿載後將關閉訪客註冊及登入，趕快搶先註冊會員唷!");
+            alertDialog("目前會員數已達5000人，為持續服務優質會員，伺服器滿載後將關閉訪客註冊及登入，趕快搶先註冊會員唷!");
         }
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -261,10 +266,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         new GetData().execute();
+
         listV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                countAD += 1;
+                if (countAD == 5) {
+                    displayInterstitial();
+                    countAD = 0;
+                }
                 if (!searchView.getQuery().toString().equals("")) {
                     addingSeearch(myHistory, position);
                    // Log.e(TAG, "stockName " + stockName + "position" + position);
@@ -359,6 +369,7 @@ public class MainActivity extends AppCompatActivity {
         listV.setLayoutAnimation(getListAnim());
     }
 
+
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
@@ -373,6 +384,7 @@ public class MainActivity extends AppCompatActivity {
                 .setPositiveButton("是", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         MainActivity.this.finish();
+
                     }
                 })
                 .setNegativeButton("否", new DialogInterface.OnClickListener() {
@@ -403,6 +415,15 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         if (!isVistor() && adapter.getToDelete() != null) {
             saveUserData(compareNewData(favList, adapter.getToDelete(), false));
+        }
+    }
+    public void displayInterstitial() {
+        if (interstitial.isLoaded()) {
+            interstitial.show();
+            Log.e(TAG,"interstitial.show();");
+        } else {
+            interstitial.loadAd(adRequestAA);
+            Log.e(TAG,"interstitial.loadAd(adRequestAA)");
         }
     }
     private void initFab(){
@@ -458,6 +479,7 @@ public class MainActivity extends AppCompatActivity {
                     invalidateOptionsMenu(); //update toolbar
                     userStatus = "nearly";
                     nearlyStock = nearly_Taixi();
+                    displayInterstitial();
                     listAdaperr(nearlyStock, true, selectAll);
                     return true;
                 case R.id.navigation_home:
