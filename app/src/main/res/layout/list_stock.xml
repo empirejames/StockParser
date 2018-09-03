@@ -82,7 +82,7 @@
 
         </RelativeLayout>
         <RelativeLayout
-            android:id="@+id/relative_layout"
+            android:id="@+id/relative_layout_main"
             android:layout_width="match_parent"
             android:visibility="visible"
             android:layout_height="wrap_content"
@@ -337,6 +337,176 @@
                 android:text="2.0"
                 android:textColor="@color/colorLightpink"
                 android:textSize="15dp" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/relative_layout"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/infoSection"
+            android:textColor="@android:color/background_dark"
+            android:orientation="vertical"
+            android:paddingLeft="10dp">
+            <TextView
+                android:id="@+id/brand"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Brand :"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/brandName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="70dp"
+                android:text="Evsp"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/device"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/brandName"
+                android:layout_marginLeft="100dp"
+                android:textSize="15sp"
+                android:text="Device : " />
+
+            <TextView
+                android:id="@+id/deviceName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/device"
+                android:layout_marginLeft="60dp"
+                android:text="GoogleNx5"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/model"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/brand"
+                android:text="Model :"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/modelName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/brandName"
+                android:layout_marginLeft="70dp"
+                android:text="Europe"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/idTag"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/device"
+                android:layout_alignLeft="@+id/modelName"
+                android:layout_marginLeft="100dp"
+                android:textSize="15sp"
+                android:text="ID : " />
+
+            <TextView
+                android:id="@+id/idName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/deviceName"
+                android:layout_alignLeft="@+id/idTag"
+                android:layout_marginLeft="60dp"
+                android:text="CC125"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/product"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/model"
+                android:text="Product :"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/productName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/modelName"
+                android:layout_marginLeft="70dp"
+                android:text="HomeSYS"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/sdk"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/idTag"
+                android:layout_alignLeft="@+id/productName"
+                android:layout_marginLeft="100dp"
+                android:textSize="15sp"
+                android:text="SDK : " />
+
+            <TextView
+                android:id="@+id/sdkName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/idName"
+                android:layout_alignLeft="@+id/sdk"
+                android:layout_marginLeft="60dp"
+                android:text="25"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/release1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/product"
+                android:text="Release :"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/releaseName1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/productName"
+                android:layout_marginLeft="70dp"
+                android:text="TTT"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/incremental"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/sdk"
+                android:layout_alignLeft="@+id/releaseName1"
+                android:layout_marginLeft="100dp"
+                android:textSize="15sp"
+                android:text="Incremental: " />
+
+            <TextView
+                android:id="@+id/IncrementalName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/incremental"
+                android:layout_marginLeft="85dp"
+                android:layout_below="@+id/sdkName"
+                android:text="XXX"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/stacktrace"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/release1"
+                android:text="Log :"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/stacktraceLog"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/releaseName1"
+                android:layout_marginLeft="40dp"
+                android:text="TTT"
+                android:textSize="15sp" />
         </RelativeLayout>
 
     </LinearLayout>

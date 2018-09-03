@@ -1,5 +1,6 @@
 package com.james.stockparser;
 
+import android.animation.ValueAnimator;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
@@ -13,7 +14,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
-import android.support.multidex.MultiDex;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -39,8 +39,10 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -150,7 +152,8 @@ public class MainActivity extends AppCompatActivity {
     private InterstitialAd interstitial;
     private AdRequest adRequestAA;
     //IabHelper mHelper;
-    private int countAD;
+    private int countAD = 4;
+    private ImageView right_select;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -177,6 +180,7 @@ public class MainActivity extends AppCompatActivity {
         }
         SearchManager searchManager = (SearchManager) getSystemService(getApplicationContext().SEARCH_SERVICE);
         searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+
         EditText searchEditText = (EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setSubmitButtonEnabled(false);
@@ -249,8 +253,9 @@ public class MainActivity extends AppCompatActivity {
             //Log.e("FCN TOKEN GET", "Refreshed token: " + refreshedToken);
             writeNewUserIfNeeded();
         }else{
-            alertDialog("目前會員數已達5000人，為持續服務優質會員，伺服器滿載後將關閉訪客註冊及登入，趕快搶先註冊會員唷!");
+            alertDialog("目前會員數已達8000人，為持續服務優質會員，伺服器滿載後將關閉訪客註冊及登入，趕快搶先註冊會員唷!");
         }
+
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         BottomNavigationViewHelper.disableShiftMode(navigation);
@@ -270,49 +275,16 @@ public class MainActivity extends AppCompatActivity {
         listV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                countAD += 1;
-                if (countAD == 5) {
-                    displayInterstitial();
-                    countAD = 0;
-                }
-                if (!searchView.getQuery().toString().equals("")) {
-                    addingSeearch(myHistory, position);
-                   // Log.e(TAG, "stockName " + stockName + "position" + position);
-                    stockName = myDataFilter.get(position).getStockName();
-                    stockNumber = myDataFilter.get(position).getStockNumber();
-                    //Log.e(TAG, "stockName " + stockName + "stockNumber" + stockNumber);
-                } else if (userStatus.equals("filting")) {
-                    stockName = myDataFilter.get(position).getStockName();
-                    stockNumber = myDataFilter.get(position).getStockNumber();
-                } else if (userStatus.equals("home")) {
-                    addingArrList(myHistory, position);
-                    stockName = myDataset.get(position).getStockName();
-                    stockNumber = myDataset.get(position).getStockNumber();
-                    //Log.e(TAG, "stockName " + stockName + "stockNumber" + stockNumber);
-                } else if (userStatus.equals("nearly")) {
-                    addingNear(myHistory, position);
-                    stockName = nearlyStock.get(position).getStockName();
-                    stockNumber = nearlyStock.get(position).getStockNumber();
-                } else if (userStatus.equals("favorite")) {
-                    stockName = myFavorite.get(position).getStockName();
-                    stockNumber = myFavorite.get(position).getStockNumber();
-                } else if (userStatus.equals("history")) {
-                    stockName = myHistory.get(position).getStockName();
-                    stockNumber = myHistory.get(position).getStockNumber();
-                }
-                for (int i = 0; i < stockNumbers.size(); i++) {
-                    if (stockNumbers.get(i).equals(stockNumber)) {
-                       // Log.e(TAG, "stockNumbers.size() " + stockNumbers.size() + "stockNumbers.get(i) " + stockNumbers.get(i));
-                        containStock = true;
-                    }
-                }
-                if (containStock) {
-                    countStocks(stockNumber);
-                    new GetStockInfo().execute(stockNumber);
-                    checkUsing();
-                    containStock = false;
+
+                RelativeLayout relativeLy;
+                relativeLy = (RelativeLayout) view.findViewById(R.id.relative_layout);
+                relativeLy.measure(0, 0);
+
+                final int height = relativeLy.getMeasuredHeight();
+                if (relativeLy.getVisibility() == View.GONE) {
+                    show(relativeLy, height);
                 } else {
-                    Toast.makeText(MainActivity.this, "暫無此檔股票資訊", Toast.LENGTH_SHORT).show();
+                    dismiss(relativeLy, height);
                 }
             }
         });
@@ -373,7 +345,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        MultiDex.install(this);
     }
 
     @Override
@@ -400,6 +371,40 @@ public class MainActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         //readFav();
+    }
+
+    public void show(final View v, int height) {
+        v.setVisibility(View.VISIBLE);
+        ValueAnimator animator = ValueAnimator.ofInt(0, height);
+        animator.setDuration(200);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int value = (Integer) animation.getAnimatedValue();
+                v.setVisibility(View.VISIBLE);
+                v.getLayoutParams().height = value;
+                v.setLayoutParams(v.getLayoutParams());
+            }
+        });
+        animator.start();
+    }
+
+    public void dismiss(final View v, int height) {
+
+        ValueAnimator animator = ValueAnimator.ofInt(height, 0);
+        animator.setDuration(200);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int value = (Integer) animation.getAnimatedValue();
+                if (value == 0) {
+                    v.setVisibility(View.GONE);
+                }
+                v.getLayoutParams().height = value;
+                v.setLayoutParams(v.getLayoutParams());
+            }
+        });
+        animator.start();
     }
 
 //    @Override
@@ -479,7 +484,11 @@ public class MainActivity extends AppCompatActivity {
                     invalidateOptionsMenu(); //update toolbar
                     userStatus = "nearly";
                     nearlyStock = nearly_Taixi();
-                    displayInterstitial();
+                    countAD += 1;
+                    if (countAD == 5) {
+                        displayInterstitial();
+                        countAD = 0;
+                    }
                     listAdaperr(nearlyStock, true, selectAll);
                     return true;
                 case R.id.navigation_home:
@@ -1039,7 +1048,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class GetStockInfo extends AsyncTask<String, Integer, String> {
+    public class GetStockInfo extends AsyncTask<String, Integer, String> {
         @Override
         protected String doInBackground(final String... params) {
             stockLastValue sv = new stockLastValue(params[0], MainActivity.this);
@@ -1144,7 +1153,52 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
+    public void addSome(int position){
+                countAD += 1;
+                if (countAD == 5) {
+                    displayInterstitial();
+                    countAD = 0;
+                }
+                if (!searchView.getQuery().toString().equals("")) {
+                    addingSeearch(myHistory, position);
+                   // Log.e(TAG, "stockName " + stockName + "position" + position);
+                    stockName = myDataFilter.get(position).getStockName();
+                    stockNumber = myDataFilter.get(position).getStockNumber();
+                    //Log.e(TAG, "stockName " + stockName + "stockNumber" + stockNumber);
+                } else if (userStatus.equals("filting")) {
+                    stockName = myDataFilter.get(position).getStockName();
+                    stockNumber = myDataFilter.get(position).getStockNumber();
+                } else if (userStatus.equals("home")) {
+                    addingArrList(myHistory, position);
+                    stockName = myDataset.get(position).getStockName();
+                    stockNumber = myDataset.get(position).getStockNumber();
+                    //Log.e(TAG, "stockName " + stockName + "stockNumber" + stockNumber);
+                } else if (userStatus.equals("nearly")) {
+                    addingNear(myHistory, position);
+                    stockName = nearlyStock.get(position).getStockName();
+                    stockNumber = nearlyStock.get(position).getStockNumber();
+                } else if (userStatus.equals("favorite")) {
+                    stockName = myFavorite.get(position).getStockName();
+                    stockNumber = myFavorite.get(position).getStockNumber();
+                } else if (userStatus.equals("history")) {
+                    stockName = myHistory.get(position).getStockName();
+                    stockNumber = myHistory.get(position).getStockNumber();
+                }
+                for (int i = 0; i < stockNumbers.size(); i++) {
+                    if (stockNumbers.get(i).equals(stockNumber)) {
+                       // Log.e(TAG, "stockNumbers.size() " + stockNumbers.size() + "stockNumbers.get(i) " + stockNumbers.get(i));
+                        containStock = true;
+                    }
+                }
+                if (containStock) {
+                    countStocks(stockNumber);
+                    new GetStockInfo().execute(stockNumber);
+                    checkUsing();
+                    containStock = false;
+                } else {
+                    Toast.makeText(MainActivity.this, "暫無此檔股票資訊", Toast.LENGTH_SHORT).show();
+                }
+    }
 
     private class GetData extends AsyncTask<String, Integer, String> {
         private ProgressDialog progressBar;

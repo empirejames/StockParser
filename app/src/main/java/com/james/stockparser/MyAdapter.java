@@ -3,6 +3,7 @@ package com.james.stockparser;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
@@ -85,7 +86,7 @@ public class MyAdapter extends BaseAdapter implements Filterable {
         private TextView stockNumber = null;
     }
     @Override
-    public View getView(int position, final View convertView, ViewGroup parent) {
+    public View getView(final int position, final View convertView, final ViewGroup parent) {
         final ViewHolder holder = new ViewHolder();
         float transTianx = 0;
         final View row = inflater.inflate(R.layout.list_stock, parent, false);
@@ -172,6 +173,13 @@ public class MyAdapter extends BaseAdapter implements Filterable {
                     convertView.invalidate();
                     // myFavorite.remove(sn);
                 }
+            }
+        });
+        img_right.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainActivity) parent.getContext()).addSome(position);
+                Log.e(TAG,"Click right selector......");
             }
         });
         cb.setChecked(myFavorite.contains(item.getStockNumber()));
