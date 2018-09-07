@@ -10,7 +10,8 @@
     <color name="colorGrayDark">#62757f</color>
     <color name="colorBlack">#000000</color>
     <color name="colorYello">#F9F900</color>
-    <color name="colorGreen">#00EC00</color>
+    <color name="colorGreen">#48A46D</color>
+    <color name="colorRed">#ff0000</color>
     <color name="colorOrange">#b36b00</color>
     <color name="colorDarkpink">#B46875</color>
     <color name="colorLightpink">#C21C66</color>

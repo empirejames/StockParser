@@ -44,6 +44,7 @@ import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
@@ -84,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
     public String returnString;
 
     Map<String, String> stockMap = new HashMap<String, String>();
+    Map<String, String> stockChoMa = new HashMap<String, String>();
     Map<String, String> stockPEMap = new HashMap<String, String>();
     Map<String, String> hotClick = new HashMap<String, String>();
     Map<String, String> getPaygushi = new HashMap<String, String>();
@@ -97,8 +99,6 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<StockItem> myHistory = new ArrayList<StockItem>();
 
     ArrayList a = new ArrayList();
-
-
     ArrayList<String> hstEPS = new ArrayList<String>();
     ArrayList<String> hstGuLi = new ArrayList<String>();
     ArrayList<String> hstGuShi = new ArrayList<String>();
@@ -154,6 +154,7 @@ public class MainActivity extends AppCompatActivity {
     //IabHelper mHelper;
     private int countAD = 4;
     private ImageView right_select;
+    private TextView VolNm, longchiNm, toshinNm, longchiUseNm, wichiNm, longChunNm, threebigNm, longChunUseNm, selfemployNm;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -277,12 +278,13 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 RelativeLayout relativeLy;
-                relativeLy = (RelativeLayout) view.findViewById(R.id.relative_layout);
+                relativeLy = (RelativeLayout) view.findViewById(R.id.relative_layout_all);
                 relativeLy.measure(0, 0);
 
                 final int height = relativeLy.getMeasuredHeight();
                 if (relativeLy.getVisibility() == View.GONE) {
-                    show(relativeLy, height);
+                   String stockNm =  myDataset.get(position).getStockNumber();
+                    show(relativeLy, height, stockNm);
                 } else {
                     dismiss(relativeLy, height);
                 }
@@ -373,8 +375,43 @@ public class MainActivity extends AppCompatActivity {
         //readFav();
     }
 
-    public void show(final View v, int height) {
+    public void initView(View v){
+        VolNm = v.findViewById(R.id.VolNm);
+        longchiNm = v.findViewById(R.id.longchiNm);
+        toshinNm = v.findViewById(R.id.toshinNm);
+        longchiUseNm = v.findViewById(R.id.longchiUseNm);
+        wichiNm = v.findViewById(R.id.wichiNm);
+        longChunNm = v.findViewById(R.id.longChunNm);
+        threebigNm = v.findViewById(R.id.threebigNm);
+        longChunUseNm  = v.findViewById(R.id.longChunUseNm);
+        selfemployNm = v.findViewById(R.id.selfemployNm);
+    }
+
+    public void changeValue(String  value ,TextView v ){
+        if(Integer.parseInt(value)>=0){
+            v.setTextColor(getResources().getColor(R.color.colorRed));
+        }else{
+            v.setTextColor(getResources().getColor(R.color.colorGreen));
+        }
+        v.setText(value);
+    }
+
+    public void show(final View v, int height, String stockNm) {
         v.setVisibility(View.VISIBLE);
+        initView(v);
+        if(stockChoMa.get(stockNm)!=null){
+            String choMa[] = stockChoMa.get(stockNm).split(":");
+            VolNm.setText(choMa[0]);
+            changeValue(choMa[1],toshinNm);
+            changeValue(choMa[2],wichiNm);
+            changeValue(choMa[3],selfemployNm);
+            changeValue(choMa[4],threebigNm);
+            changeValue(choMa[5],longchiNm);
+            changeValue(choMa[7],longChunNm);
+            longchiUseNm.setText(choMa[6]);
+            longChunUseNm.setText(choMa[8]);
+        }
+
         ValueAnimator animator = ValueAnimator.ofInt(0, height);
         animator.setDuration(200);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -1227,7 +1264,8 @@ public class MainActivity extends AppCompatActivity {
             stockPEMap = sdPE.getPERatio(getYesterDate());
             getRemoteConfig grc = new getRemoteConfig(MainActivity.this);
             grc.getRemotePara();
-
+            StockInfoParser spinfo = new StockInfoParser();
+            stockChoMa = spinfo.getChoma();
             //Log.e(TAG, "tag :: " + tinydb.getString("show_floating_button"));
             userId = bundle.getString("uid");
             ref = FirebaseDatabase.getInstance().getReference();

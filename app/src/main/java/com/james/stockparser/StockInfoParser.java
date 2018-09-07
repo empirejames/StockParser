@@ -48,6 +48,7 @@ public class StockInfoParser {
     ArrayList<String> historyEPS = new ArrayList<String>();
     ArrayList<String> historyPresent = new ArrayList<String>();
     ArrayList<String> historyGuli = new ArrayList<String>();
+    ArrayList<String> choMaValue = new ArrayList<String>();
 
     public void start() {
         mThread = new HandlerThread("jsoup");
@@ -71,8 +72,9 @@ public class StockInfoParser {
 //                historyGuli = getUrlInfo(urlForGuli);
 //                updateHistoryData("guli");
 //                Log.e(TAG,"updateHistoryData :: guli");
-                  getDateTaiXiDay();
-                  updateStockData();
+                getDateTaiXiDay();
+                updateStockData();
+//                getChoma();
 //                  Log.e(TAG,"updateStockData :: TaiXiDay");
 //                  getRemoteConfig();
 //                Map<String, String> getPaygushi = new HashMap<String, String>();
@@ -84,7 +86,7 @@ public class StockInfoParser {
 
     }
 
-    private void getRemoteConfig(){
+    private void getRemoteConfig() {
 
         final FirebaseRemoteConfig mRemoteConfig = FirebaseRemoteConfig.getInstance();
         long cacheExpiration = 3600;
@@ -110,22 +112,22 @@ public class StockInfoParser {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                if (stuff.equals("guShi")){
+                if (stuff.equals("guShi")) {
                     for (int i = 0; i < historyGuHi.size(); i++) {
                         for (int j = 0; j < historyGuHi.get(i).split(" ").length; j++) {
-                            ref.child("history").child(historyGuHi.get(i).split(" ")[0]).child(stuff).child(j+"").setValue(historyGuHi.get(i).split(" ")[j]);
+                            ref.child("history").child(historyGuHi.get(i).split(" ")[0]).child(stuff).child(j + "").setValue(historyGuHi.get(i).split(" ")[j]);
                             //ref.child("history").child(i+"").child(stuff).child(j + "").setValue(historyGuHi.get(0).split(" ")[j]);
                         }
                     }
-                }else if(stuff.equals("eps")){
+                } else if (stuff.equals("eps")) {
                     for (final DataSnapshot dsp : dataSnapshot.getChildren()) {
-                        if (dsp.getKey().equals("history")){
+                        if (dsp.getKey().equals("history")) {
                             for (DataSnapshot stockNm : dsp.getChildren()) {
-                                for(int i =0; i<historyEPS.size();i++){
-                                    if (historyEPS.get(i).split(" ")[0].equals(stockNm.getKey().toString())){
+                                for (int i = 0; i < historyEPS.size(); i++) {
+                                    if (historyEPS.get(i).split(" ")[0].equals(stockNm.getKey().toString())) {
                                         //Log.e(TAG, historyEPS.get(i).split(" ")[0] +" :: " + stockNm.getKey());
-                                        for(int j=0;j<historyEPS.get(i).split(" ").length;j++){
-                                            if(historyEPS.get(i).split(" ")[j].equals("")) {
+                                        for (int j = 0; j < historyEPS.get(i).split(" ").length; j++) {
+                                            if (historyEPS.get(i).split(" ")[j].equals("")) {
                                                 ref.child("history").child(historyEPS.get(i).split(" ")[0]).child(stuff).child(j + "").setValue(historyEPS.get(i).split(" ")[j]);
                                             }
                                         }
@@ -136,33 +138,33 @@ public class StockInfoParser {
                             }
                         }
                     }
-                }else if (stuff.equals("present")){
+                } else if (stuff.equals("present")) {
                     DatabaseReference fbDb = null;
                     if (fbDb == null) {
                         fbDb = FirebaseDatabase.getInstance().getReference();
                     }
                     for (final DataSnapshot dsp : dataSnapshot.getChildren()) {
 
-                        if (dsp.getKey().equals("history")){
+                        if (dsp.getKey().equals("history")) {
                             for (DataSnapshot stockNm : dsp.getChildren()) {
-                                for(int i =0; i<historyPresent.size();i++){
-                                    if (historyPresent.get(i).split(" ")[1].equals(stockNm.getKey().toString())){
-                                        UpdateNewPresent(historyPresent.get(i).split(" ")[1],historyPresent.get(i).split(" ")[5], true);
-                                    }else{
+                                for (int i = 0; i < historyPresent.size(); i++) {
+                                    if (historyPresent.get(i).split(" ")[1].equals(stockNm.getKey().toString())) {
+                                        UpdateNewPresent(historyPresent.get(i).split(" ")[1], historyPresent.get(i).split(" ")[5], true);
+                                    } else {
                                         //UpdateNewPresent(historyPresent.get(i).split(" ")[1],historyPresent.get(i).split(" ")[5],false);
                                     }
                                 }
                             }
                         }
                     }
-                }else if (stuff.equals("guli")){
+                } else if (stuff.equals("guli")) {
                     for (final DataSnapshot dsp : dataSnapshot.getChildren()) {
-                        if (dsp.getKey().equals("history")){
+                        if (dsp.getKey().equals("history")) {
                             for (DataSnapshot stockNm : dsp.getChildren()) {
-                                for(int i =0; i<historyGuli.size();i++){
-                                    if (historyGuli.get(i).split(" ")[0].equals(stockNm.getKey().toString())){
-                                        for(int j=0;j<historyGuli.get(i).split(" ").length;j++){
-                                            ref.child("history").child(historyGuli.get(i).split(" ")[0]).child(stuff).child(j+"").setValue(historyGuli.get(i).split(" ")[j]);
+                                for (int i = 0; i < historyGuli.size(); i++) {
+                                    if (historyGuli.get(i).split(" ")[0].equals(stockNm.getKey().toString())) {
+                                        for (int j = 0; j < historyGuli.get(i).split(" ").length; j++) {
+                                            ref.child("history").child(historyGuli.get(i).split(" ")[0]).child(stuff).child(j + "").setValue(historyGuli.get(i).split(" ")[j]);
                                         }
                                     }
                                 }
@@ -178,18 +180,19 @@ public class StockInfoParser {
             }
         });
     }
-    private void UpdateNewPresent(final String stockNum, final String present,final boolean isHavePresent) {
+
+    private void UpdateNewPresent(final String stockNum, final String present, final boolean isHavePresent) {
 
         ref = FirebaseDatabase.getInstance().getReference();
         final DatabaseReference usersRef = ref.child("history").child(stockNum).child("present");
         usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                String size = dataSnapshot.getChildrenCount()+"";
-                Log.e(TAG, "UpdateNewPresent:: " + stockNum + " : " + present +" : "+ size);
-                if(isHavePresent){
+                String size = dataSnapshot.getChildrenCount() + "";
+                Log.e(TAG, "UpdateNewPresent:: " + stockNum + " : " + present + " : " + size);
+                if (isHavePresent) {
                     ref.child("history").child(stockNum).child("present").child(size).setValue(present);
-                }else{
+                } else {
                     ref.child("history").child(stockNum).child("present").child(size).setValue("無發放");
                 }
             }
@@ -228,16 +231,16 @@ public class StockInfoParser {
         });
     }
 
-    public void getValue(){
+    public void getValue() {
         String s = stockDividend.get("1101").toString();
         Log.e(TAG, "Stock 1101 " + s);
     }
 
 
-    public void getDividend(){
+    public void getDividend() {
         Log.e(TAG, "getDividend start");
         String urlDevidend = "http://www.twse.com.tw/exchangeReport/BWIBBU_d?response=html&date=20180518&selectType=ALL";
-       stockDividend = new HashMap<String, String>();
+        stockDividend = new HashMap<String, String>();
 
         try {
             Document doc = Jsoup.connect(urlDevidend).get();
@@ -247,15 +250,47 @@ public class StockInfoParser {
             for (int i = 0; i < rows.size(); i++) {
                 td_stock = rows.get(i).child(0);
                 td_dividend = rows.get(i).child(2);
-                stockDividend.put(rows.get(i).child(0).text(),rows.get(i).child(2).text());
-                Log.e(TAG, td_stock.text() + " : "+ td_dividend.text());
+                stockDividend.put(rows.get(i).child(0).text(), rows.get(i).child(2).text());
+                Log.e(TAG, td_stock.text() + " : " + td_dividend.text());
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             Log.e(TAG, e.toString());
         }
     }
 
+    public Map<String, String> getChoma() {
+        String url = urlChoMa;
+        String[] temp;
+        String date = "";
+        Map<String, String> stockChoMa = new HashMap<String, String>();
+        try {
+            Document doc = Jsoup.connect(url).get();
+            Element table = doc.select("table").first();
+            Elements rows = table.select("tr");
+            for (int i = 0; i < rows.size(); i++) {
+
+                temp = rows.get(i).text().split(" ");
+                //Log.e(TAG,rows.get(i).text() + "");
+                if (temp.length > 19) {
+//                    Log.e(TAG, temp[0] + ":" + temp[7]  + ":"+ temp[8]+ ":"+ temp[9]
+//                            + ":" + temp[10]  + ":"+ temp[11]+ ":"+ temp[16]
+//                            + ":" + temp[17]  + ":"+ temp[18]+ ":"+ temp[19]);
+                    stockChoMa.put(temp[0], temp[7] + ":" + temp[8] + ":" + temp[9]
+                            + ":" + temp[10] + ":" + temp[11] + ":" + temp[16]
+                            + ":" + temp[17] + ":" + temp[18] + ":" + temp[19]);
+                }
+
+                //stockNumberList.add(temp[1] + ":" + transferDate(temp[0]));
+                //transferDate(temp[0]);
+            }
+            // Log.e(TAG, stock_name.size() + " V.S " + stock_date.size());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Log.e(TAG, "End....");
+        return stockChoMa;
+    }
 
     public ArrayList<String> getDateTaiXiDay() {
         String url = "http://www.twse.com.tw/exchangeReport/TWT48U?response=html";
@@ -303,8 +338,6 @@ public class StockInfoParser {
         }
         return true;
     }
-
-
 
 
     public ArrayList<String> getUrlInfo(String url) {

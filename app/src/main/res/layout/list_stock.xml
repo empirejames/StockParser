@@ -16,8 +16,8 @@
         <RelativeLayout
             android:id="@+id/relative_layout_title"
             android:layout_width="match_parent"
-            android:visibility="visible"
             android:layout_height="wrap_content"
+            android:visibility="visible"
             android:layout_below="@+id/infoSection"
             android:orientation="vertical"
             android:paddingRight="10dp"
@@ -84,12 +84,11 @@
         <RelativeLayout
             android:id="@+id/relative_layout_main"
             android:layout_width="match_parent"
-            android:visibility="visible"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/infoSection"
+            android:visibility="visible"
             android:textColor="@android:color/background_dark"
             android:orientation="vertical"
-            android:paddingLeft="10dp">
+            android:paddingStart="10dp">
 
             <TextView
                 android:id="@+id/release"
@@ -237,8 +236,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/ic_chevron_right_black_48dp"
-                android:layout_marginRight="10dp">
+                android:src="@mipmap/right_arrow">
             </ImageView>
 
 
@@ -338,175 +336,191 @@
                 android:textColor="@color/colorLightpink"
                 android:textSize="15dp" />
         </RelativeLayout>
+
         <RelativeLayout
-            android:id="@+id/relative_layout"
+            android:id="@+id/relative_layout_all"
             android:layout_width="match_parent"
-            android:visibility="gone"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/infoSection"
-            android:textColor="@android:color/background_dark"
-            android:orientation="vertical"
-            android:paddingLeft="10dp">
-            <TextView
-                android:id="@+id/brand"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Brand :"
-                android:textSize="15sp" />
+            android:paddingEnd="20dp"
+            android:paddingStart="20dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:background="@drawable/bg_shape"
+            android:visibility="gone">
 
             <TextView
-                android:id="@+id/brandName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="70dp"
-                android:text="Evsp"
-                android:textSize="15sp" />
-
-            <TextView
-                android:id="@+id/device"
+                android:id="@+id/wichiNm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/brandName"
-                android:layout_marginLeft="100dp"
-                android:textSize="15sp"
-                android:text="Device : " />
+                android:layout_alignBaseline="@+id/wichi"
+                android:layout_marginStart="80dp"
+                android:text="----"
+                android:textSize="15dp" />
 
             <TextView
-                android:id="@+id/deviceName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/device"
-                android:layout_marginLeft="60dp"
-                android:text="GoogleNx5"
-                android:textSize="15sp" />
-
-            <TextView
-                android:id="@+id/model"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/brand"
-                android:text="Model :"
-                android:textSize="15sp" />
-
-            <TextView
-                android:id="@+id/modelName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/brandName"
-                android:layout_marginLeft="70dp"
-                android:text="Europe"
-                android:textSize="15sp" />
-
-            <TextView
-                android:id="@+id/idTag"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/device"
-                android:layout_alignLeft="@+id/modelName"
-                android:layout_marginLeft="100dp"
-                android:textSize="15sp"
-                android:text="ID : " />
-
-            <TextView
-                android:id="@+id/idName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/deviceName"
-                android:layout_alignLeft="@+id/idTag"
-                android:layout_marginLeft="60dp"
-                android:text="CC125"
-                android:textSize="15sp" />
-
-            <TextView
-                android:id="@+id/product"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/model"
-                android:text="Product :"
-                android:textSize="15sp" />
-
-            <TextView
-                android:id="@+id/productName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/modelName"
-                android:layout_marginLeft="70dp"
-                android:text="HomeSYS"
-                android:textSize="15sp" />
-
-            <TextView
-                android:id="@+id/sdk"
+                android:id="@+id/wichi"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/idTag"
-                android:layout_alignLeft="@+id/productName"
-                android:layout_marginLeft="100dp"
-                android:textSize="15sp"
-                android:text="SDK : " />
+                android:layout_below="@+id/toshin"
+                android:layout_alignParentStart="true"
+                android:text="外資 :"
+                android:textSize="15dp" />
 
             <TextView
-                android:id="@+id/sdkName"
-                android:layout_width="match_parent"
+                android:id="@+id/VolNm"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/idName"
-                android:layout_alignLeft="@+id/sdk"
-                android:layout_marginLeft="60dp"
-                android:text="25"
-                android:textSize="15sp" />
+                android:layout_alignBaseline="@+id/Vol"
+                android:layout_marginStart="80dp"
+                android:text="----"
+                android:textSize="15dp" />
 
             <TextView
-                android:id="@+id/release1"
-                android:layout_width="match_parent"
+                android:id="@+id/Vol"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/product"
-                android:text="Release :"
-                android:textSize="15sp" />
+                android:layout_alignParentStart="true"
+
+                android:text="成交量 :"
+                android:textSize="15dp" />
 
             <TextView
-                android:id="@+id/releaseName1"
-                android:layout_width="match_parent"
+                android:id="@+id/threebig"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/productName"
-                android:layout_marginLeft="70dp"
-                android:text="TTT"
-                android:textSize="15sp" />
+                android:layout_below="@+id/selfemploy"
+                android:layout_alignParentStart="true"
+                android:text="三大法人 :"
+                android:textSize="15dp" />
 
             <TextView
-                android:id="@+id/incremental"
-                android:layout_width="match_parent"
+                android:id="@+id/toshin"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/sdk"
-                android:layout_alignLeft="@+id/releaseName1"
-                android:layout_marginLeft="100dp"
-                android:textSize="15sp"
-                android:text="Incremental: " />
+                android:layout_below="@+id/Vol"
+                android:layout_alignParentStart="true"
+                android:layout_weight="1"
+                android:text="投信 :"
+                android:textSize="15dp" />
 
             <TextView
-                android:id="@+id/IncrementalName"
-                android:layout_width="match_parent"
+                android:id="@+id/threebigNm"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/incremental"
-                android:layout_marginLeft="85dp"
-                android:layout_below="@+id/sdkName"
-                android:text="XXX"
-                android:textSize="15sp" />
+                android:layout_alignBaseline="@+id/threebig"
+                android:layout_marginStart="80dp"
+                android:text="----"
+                android:textSize="15dp" />
 
             <TextView
-                android:id="@+id/stacktrace"
-                android:layout_width="match_parent"
+                android:id="@+id/selfemploy"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/release1"
-                android:text="Log :"
-                android:textSize="15sp" />
+                android:layout_below="@+id/wichi"
+                android:layout_alignParentStart="true"
+
+                android:text="自營商 :"
+                android:textSize="15dp" />
 
             <TextView
-                android:id="@+id/stacktraceLog"
-                android:layout_width="match_parent"
+                android:id="@+id/toshinNm"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/releaseName1"
-                android:layout_marginLeft="40dp"
-                android:text="TTT"
-                android:textSize="15sp" />
+                android:layout_alignBaseline="@+id/toshin"
+                android:layout_marginStart="80dp"
+                android:text="----"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/selfemployNm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/selfemploy"
+                android:layout_marginStart="80dp"
+                android:text="----"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/longchiUse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/longChun"
+                android:layout_alignStart="@+id/longchi"
+                android:text="融資使用 :"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/longChun"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/longChunUse"
+                android:layout_alignStart="@+id/longchiUse"
+                android:text="昨日融券 :"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/longChunNm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/longChun"
+                android:layout_alignBottom="@+id/longChun"
+                android:layout_toEndOf="@+id/longChun"
+                android:layout_marginStart="10dp"
+                android:text="----"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/longChunUse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/selfemployNm"
+                android:layout_alignStart="@+id/longChun"
+                android:text="融券使用 :"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/longChunUseNm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/longChunUse"
+                android:layout_alignBottom="@+id/longChunUse"
+                android:layout_toEndOf="@+id/longChunUse"
+                android:layout_marginStart="10dp"
+                android:text="----"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/longchi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/VolNm"
+                android:layout_marginStart="100dp"
+                android:layout_toEndOf="@+id/VolNm"
+                android:text="昨日融資 :"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/longchiUseNm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/longchiUse"
+                android:layout_alignBottom="@+id/longchiUse"
+                android:layout_toEndOf="@+id/longchiUse"
+                android:layout_marginStart="10dp"
+                android:text="----"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/longchiNm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/longchi"
+                android:layout_alignBottom="@+id/longchi"
+                android:layout_toEndOf="@+id/longchi"
+                android:layout_marginStart="10dp"
+                android:text="----"
+                android:textSize="15dp" />
+
         </RelativeLayout>
 
     </LinearLayout>
