@@ -354,6 +354,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@+id/wichi"
                 android:layout_marginStart="80dp"
+                android:textColor="@color/colorGrayDark"
                 android:text="----"
                 android:textSize="15dp" />
 
@@ -363,6 +364,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/toshin"
                 android:layout_alignParentStart="true"
+                android:textColor="@color/colorGrayDark"
                 android:text="外資 :"
                 android:textSize="15dp" />
 
@@ -372,6 +374,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@+id/Vol"
                 android:layout_marginStart="80dp"
+                android:textColor="@color/colorGrayDark"
                 android:text="----"
                 android:textSize="15dp" />
 
@@ -380,7 +383,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
-
+                android:textColor="@color/colorGrayDark"
                 android:text="成交量 :"
                 android:textSize="15dp" />
 
@@ -390,6 +393,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/selfemploy"
                 android:layout_alignParentStart="true"
+                android:textColor="@color/colorGrayDark"
                 android:text="三大法人 :"
                 android:textSize="15dp" />
 
@@ -399,7 +403,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/Vol"
                 android:layout_alignParentStart="true"
-                android:layout_weight="1"
+                android:textColor="@color/colorGrayDark"
                 android:text="投信 :"
                 android:textSize="15dp" />
 
@@ -409,6 +413,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@+id/threebig"
                 android:layout_marginStart="80dp"
+                android:textColor="@color/colorGrayDark"
                 android:text="----"
                 android:textSize="15dp" />
 
@@ -418,7 +423,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/wichi"
                 android:layout_alignParentStart="true"
-
+                android:textColor="@color/colorGrayDark"
                 android:text="自營商 :"
                 android:textSize="15dp" />
 
@@ -428,6 +433,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@+id/toshin"
                 android:layout_marginStart="80dp"
+                android:textColor="@color/colorGrayDark"
                 android:text="----"
                 android:textSize="15dp" />
 
@@ -437,6 +443,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@+id/selfemploy"
                 android:layout_marginStart="80dp"
+                android:textColor="@color/colorGrayDark"
                 android:text="----"
                 android:textSize="15dp" />
 
@@ -444,17 +451,19 @@
                 android:id="@+id/longchiUse"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/longChun"
                 android:layout_alignStart="@+id/longchi"
+                android:layout_below="@+id/longchi"
                 android:text="融資使用 :"
+                android:textColor="@color/colorGrayDark"
                 android:textSize="15dp" />
 
             <TextView
                 android:id="@+id/longChun"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/longChunUse"
+                android:layout_below="@+id/longchiUse"
                 android:layout_alignStart="@+id/longchiUse"
+                android:textColor="@color/colorGrayDark"
                 android:text="昨日融券 :"
                 android:textSize="15dp" />
 
@@ -466,6 +475,7 @@
                 android:layout_alignBottom="@+id/longChun"
                 android:layout_toEndOf="@+id/longChun"
                 android:layout_marginStart="10dp"
+                android:textColor="@color/colorGrayDark"
                 android:text="----"
                 android:textSize="15dp" />
 
@@ -473,8 +483,9 @@
                 android:id="@+id/longChunUse"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/selfemployNm"
+                android:layout_below="@+id/longChun"
                 android:layout_alignStart="@+id/longChun"
+                android:textColor="@color/colorGrayDark"
                 android:text="融券使用 :"
                 android:textSize="15dp" />
 
@@ -486,6 +497,7 @@
                 android:layout_alignBottom="@+id/longChunUse"
                 android:layout_toEndOf="@+id/longChunUse"
                 android:layout_marginStart="10dp"
+                android:textColor="@color/colorGrayDark"
                 android:text="----"
                 android:textSize="15dp" />
 
@@ -494,8 +506,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@+id/VolNm"
-                android:layout_marginStart="100dp"
+                android:layout_marginStart="80dp"
                 android:layout_toEndOf="@+id/VolNm"
+                android:textColor="@color/colorGrayDark"
                 android:text="昨日融資 :"
                 android:textSize="15dp" />
 
@@ -507,6 +520,7 @@
                 android:layout_alignBottom="@+id/longchiUse"
                 android:layout_toEndOf="@+id/longchiUse"
                 android:layout_marginStart="10dp"
+                android:textColor="@color/colorGrayDark"
                 android:text="----"
                 android:textSize="15dp" />
 
@@ -518,6 +532,7 @@
                 android:layout_alignBottom="@+id/longchi"
                 android:layout_toEndOf="@+id/longchi"
                 android:layout_marginStart="10dp"
+                android:textColor="@color/colorGrayDark"
                 android:text="----"
                 android:textSize="15dp" />
 
