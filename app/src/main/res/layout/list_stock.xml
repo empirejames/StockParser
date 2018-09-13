@@ -10,7 +10,7 @@
     <LinearLayout
         android:id="@+id/infoSection"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -343,8 +343,9 @@
             android:layout_height="wrap_content"
             android:paddingEnd="20dp"
             android:paddingStart="20dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
+            android:layout_marginTop="5dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
             android:background="@drawable/bg_shape"
             android:visibility="gone">
 
@@ -365,9 +366,24 @@
                 android:layout_below="@+id/toshin"
                 android:layout_alignParentStart="true"
                 android:textColor="@color/colorGrayDark"
+                android:layout_marginTop="2dp"
+                android:layout_marginStart="5dp"
                 android:text="外資 :"
                 android:textSize="15dp" />
-
+            <View
+                android:id="@+id/viewsoshin"
+                android:layout_width="2dp"
+                android:layout_height="12dp"
+                android:layout_below="@+id/viewstoshin"
+                android:layout_marginTop="10dp"
+                android:background="@color/lightBlue" />
+            <View
+                android:id="@+id/viewwichi"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/wichi"
+                android:layout_margin="1dp"
+                android:background="@color/lightgray" />
             <TextView
                 android:id="@+id/VolNm"
                 android:layout_width="wrap_content"
@@ -377,16 +393,30 @@
                 android:textColor="@color/colorGrayDark"
                 android:text="----"
                 android:textSize="15dp" />
-
+            <View
+                android:id="@+id/views"
+                android:layout_width="2dp"
+                android:layout_height="12dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignLeft="@+id/Vol"
+                android:layout_marginTop="5dp"
+                android:background="@color/lightBlue" />
             <TextView
                 android:id="@+id/Vol"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:textColor="@color/colorGrayDark"
+                android:layout_marginStart="5dp"
                 android:text="成交量 :"
                 android:textSize="15dp" />
-
+            <View
+                android:id="@+id/viewVol"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/Vol"
+                android:layout_margin="1dp"
+                android:background="@color/lightgray" />
             <TextView
                 android:id="@+id/threebig"
                 android:layout_width="wrap_content"
@@ -394,9 +424,33 @@
                 android:layout_below="@+id/selfemploy"
                 android:layout_alignParentStart="true"
                 android:textColor="@color/colorGrayDark"
+                android:layout_marginTop="2dp"
+                android:layout_marginStart="5dp"
                 android:text="三大法人 :"
                 android:textSize="15dp" />
 
+            <View
+                android:id="@+id/viewthreebigTitle"
+                android:layout_width="2dp"
+                android:layout_height="12dp"
+                android:layout_below="@+id/viewsoshin"
+                android:layout_marginTop="10dp"
+                android:background="@color/lightBlue" />
+            <View
+                android:id="@+id/viewthreebig"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/threebig"
+                android:layout_margin="1dp"
+                android:background="@color/lightgray" />
+
+            <View
+                android:id="@+id/viewstoshin"
+                android:layout_width="2dp"
+                android:layout_height="12dp"
+                android:layout_below="@+id/viewVol"
+                android:layout_marginTop="5dp"
+                android:background="@color/lightBlue" />
             <TextView
                 android:id="@+id/toshin"
                 android:layout_width="wrap_content"
@@ -404,8 +458,17 @@
                 android:layout_below="@+id/Vol"
                 android:layout_alignParentStart="true"
                 android:textColor="@color/colorGrayDark"
+                android:layout_marginTop="2dp"
+                android:layout_marginStart="5dp"
                 android:text="投信 :"
                 android:textSize="15dp" />
+            <View
+                android:id="@+id/view1"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/toshin"
+                android:layout_margin="1dp"
+                android:background="@color/lightgray" />
 
             <TextView
                 android:id="@+id/threebigNm"
@@ -424,8 +487,25 @@
                 android:layout_below="@+id/wichi"
                 android:layout_alignParentStart="true"
                 android:textColor="@color/colorGrayDark"
+                android:layout_marginTop="2dp"
+                android:layout_marginStart="5dp"
                 android:text="自營商 :"
                 android:textSize="15dp" />
+
+            <View
+                android:id="@+id/viewwichititle1"
+                android:layout_width="2dp"
+                android:layout_height="12dp"
+                android:layout_below="@+id/viewthreebigTitle"
+                android:layout_marginTop="10dp"
+                android:background="@color/lightBlue" />
+            <View
+                android:id="@+id/view"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/selfemploy"
+                android:layout_margin="1dp"
+                android:background="@color/lightgray" />
 
             <TextView
                 android:id="@+id/toshinNm"
@@ -455,7 +535,19 @@
                 android:layout_below="@+id/longchi"
                 android:text="融資使用 :"
                 android:textColor="@color/colorGrayDark"
+                android:layout_marginTop="2dp"
                 android:textSize="15dp" />
+
+            <View
+                android:id="@+id/viewlongchiUseTitle"
+                android:layout_width="2dp"
+                android:layout_height="12dp"
+                android:layout_below="@+id/viewlongchiTitle"
+                android:layout_alignTop="@+id/longchiUse"
+                android:layout_marginEnd="3dp"
+                android:layout_toLeftOf="@+id/longchiUse"
+                android:layout_marginTop="5dp"
+                android:background="@color/lightBlue" />
 
             <TextView
                 android:id="@+id/longChun"
@@ -464,8 +556,20 @@
                 android:layout_below="@+id/longchiUse"
                 android:layout_alignStart="@+id/longchiUse"
                 android:textColor="@color/colorGrayDark"
+                android:layout_marginTop="2dp"
                 android:text="昨日融券 :"
                 android:textSize="15dp" />
+
+            <View
+                android:id="@+id/viewlongChunTitle"
+                android:layout_width="2dp"
+                android:layout_height="12dp"
+                android:layout_below="@+id/viewlongchiTitle"
+                android:layout_alignTop="@+id/longChun"
+                android:layout_marginEnd="3dp"
+                android:layout_marginTop="5dp"
+                android:layout_toStartOf="@+id/longChun"
+                android:background="@color/lightBlue" />
 
             <TextView
                 android:id="@+id/longChunNm"
@@ -486,8 +590,20 @@
                 android:layout_below="@+id/longChun"
                 android:layout_alignStart="@+id/longChun"
                 android:textColor="@color/colorGrayDark"
+                android:layout_marginTop="2dp"
                 android:text="融券使用 :"
                 android:textSize="15dp" />
+
+            <View
+                android:id="@+id/viewlongChunUseTitle"
+                android:layout_width="2dp"
+                android:layout_height="12dp"
+                android:layout_below="@+id/viewlongchiTitle"
+                android:layout_alignTop="@+id/longChunUse"
+                android:layout_marginEnd="3dp"
+                android:layout_marginTop="5dp"
+                android:layout_toStartOf="@+id/longChunUse"
+                android:background="@color/lightBlue" />
 
             <TextView
                 android:id="@+id/longChunUseNm"
@@ -511,6 +627,16 @@
                 android:textColor="@color/colorGrayDark"
                 android:text="昨日融資 :"
                 android:textSize="15dp" />
+            <View
+                android:id="@+id/viewlongchiTitle"
+                android:layout_width="2dp"
+                android:layout_height="12dp"
+                android:layout_alignTop="@+id/VolNm"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="3dp"
+                android:layout_toLeftOf="@+id/longchiUse"
+                android:background="@color/lightBlue" />
+
 
             <TextView
                 android:id="@+id/longchiUseNm"

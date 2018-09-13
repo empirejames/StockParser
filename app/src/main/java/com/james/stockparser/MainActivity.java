@@ -237,7 +237,6 @@ public class MainActivity extends AppCompatActivity {
         mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().addTestDevice("F618803C89E1614E3394A55D5E7A756B").build(); //Nexus 5
         mAdView.loadAd(adRequest);
-
         interstitial = new InterstitialAd(this);
         interstitial.setAdUnitId("ca-app-pub-1659435325076970/8847307592");
         adRequestAA = new AdRequest.Builder().addTestDevice("F618803C89E1614E3394A55D5E7A756B").build(); //Nexus 5
@@ -248,12 +247,12 @@ public class MainActivity extends AppCompatActivity {
 
         bundle = getIntent().getExtras();
         isVistor = isVistor();
-            initFab();
+        initFab();
         if (!isVistor) {
             String refreshedToken = FirebaseInstanceId.getInstance().getToken();
             //Log.e("FCN TOKEN GET", "Refreshed token: " + refreshedToken);
             writeNewUserIfNeeded();
-        }else{
+        } else {
             alertDialog("目前會員數已達8000人，為持續服務優質會員，伺服器滿載後將關閉訪客註冊及登入，趕快搶先註冊會員唷!");
         }
 
@@ -272,7 +271,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         new GetData().execute();
-
         listV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -280,11 +278,24 @@ public class MainActivity extends AppCompatActivity {
                 RelativeLayout relativeLy;
                 relativeLy = (RelativeLayout) view.findViewById(R.id.relative_layout_all);
                 relativeLy.measure(0, 0);
-
+                initView(view);
                 final int height = relativeLy.getMeasuredHeight();
                 if (relativeLy.getVisibility() == View.GONE) {
-                   String stockNm =  myDataset.get(position).getStockNumber();
-                    show(relativeLy, height, stockNm);
+                    String stockNumber;
+                    if (userStatus.equals("filting")) {
+                        stockNumber = myDataFilter.get(position).getStockNumber();
+                    } else if (userStatus.equals("home")) {
+                        stockNumber = myDataset.get(position).getStockNumber();
+                    } else if (userStatus.equals("nearly")) {
+                        stockNumber = nearlyStock.get(position).getStockNumber();
+                    } else if (userStatus.equals("favorite")) {
+                        stockNumber = myFavorite.get(position).getStockNumber();
+                    } else if (userStatus.equals("history")) {
+                        stockNumber = myHistory.get(position).getStockNumber();
+                    } else {
+                        stockNumber = myDataFilter.get(position).getStockNumber();
+                    }
+                    show(relativeLy, height, stockNumber);
                 } else {
                     dismiss(relativeLy, height);
                 }
@@ -333,7 +344,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     if (isAtBottom) {
                         mAdView.setVisibility(View.GONE);
-                    }else{
+                    } else {
                         mAdView.setVisibility(View.VISIBLE);
                     }
                     lastVisibleItemPosition = firstVisibleItem;
@@ -375,7 +386,7 @@ public class MainActivity extends AppCompatActivity {
         //readFav();
     }
 
-    public void initView(View v){
+    public void initView(View v) {
         VolNm = v.findViewById(R.id.VolNm);
         longchiNm = v.findViewById(R.id.longchiNm);
         toshinNm = v.findViewById(R.id.toshinNm);
@@ -383,51 +394,50 @@ public class MainActivity extends AppCompatActivity {
         wichiNm = v.findViewById(R.id.wichiNm);
         longChunNm = v.findViewById(R.id.longChunNm);
         threebigNm = v.findViewById(R.id.threebigNm);
-        longChunUseNm  = v.findViewById(R.id.longChunUseNm);
+        longChunUseNm = v.findViewById(R.id.longChunUseNm);
         selfemployNm = v.findViewById(R.id.selfemployNm);
     }
 
-    public void changeValue(String  value ,TextView v ){
-        if(Integer.parseInt(value)>=0){
+    public void changeValue(String value, TextView v) {
+        if (Integer.parseInt(value) >= 0) {
             v.setTextColor(getResources().getColor(R.color.colorRed));
-        }else{
+        } else {
             v.setTextColor(getResources().getColor(R.color.colorGreen));
         }
         v.setText(value);
     }
 
     public void show(final View v, int height, String stockNm) {
-        v.setVisibility(View.VISIBLE);
-        initView(v);
-        if(stockChoMa.get(stockNm)!=null){
+        if (stockChoMa.get(stockNm) != null) {
+            v.setVisibility(View.VISIBLE);
             String choMa[] = stockChoMa.get(stockNm).split(":");
             VolNm.setText(choMa[0]);
-            changeValue(choMa[1],toshinNm);
-            changeValue(choMa[2],wichiNm);
-            changeValue(choMa[3],selfemployNm);
-            changeValue(choMa[4],threebigNm);
-            changeValue(choMa[5],longchiNm);
-            changeValue(choMa[7],longChunNm);
+            changeValue(choMa[1], toshinNm);
+            changeValue(choMa[2], wichiNm);
+            changeValue(choMa[3], selfemployNm);
+            changeValue(choMa[4], threebigNm);
+            changeValue(choMa[5], longchiNm);
+            changeValue(choMa[7], longChunNm);
             longchiUseNm.setText(choMa[6]);
             longChunUseNm.setText(choMa[8]);
+            ValueAnimator animator = ValueAnimator.ofInt(0, height);
+            animator.setDuration(200);
+            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    int value = (Integer) animation.getAnimatedValue();
+                    v.setVisibility(View.VISIBLE);
+                    v.getLayoutParams().height = value;
+                    v.setLayoutParams(v.getLayoutParams());
+                }
+            });
+            animator.start();
+        }else{
+            Toast.makeText(MainActivity.this, "此檔無籌碼資訊", Toast.LENGTH_LONG).show();
         }
-
-        ValueAnimator animator = ValueAnimator.ofInt(0, height);
-        animator.setDuration(200);
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                int value = (Integer) animation.getAnimatedValue();
-                v.setVisibility(View.VISIBLE);
-                v.getLayoutParams().height = value;
-                v.setLayoutParams(v.getLayoutParams());
-            }
-        });
-        animator.start();
     }
 
     public void dismiss(final View v, int height) {
-
         ValueAnimator animator = ValueAnimator.ofInt(height, 0);
         animator.setDuration(200);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -459,25 +469,27 @@ public class MainActivity extends AppCompatActivity {
             saveUserData(compareNewData(favList, adapter.getToDelete(), false));
         }
     }
+
     public void displayInterstitial() {
         if (interstitial.isLoaded()) {
             interstitial.show();
-            Log.e(TAG,"interstitial.show();");
+            Log.e(TAG, "interstitial.show();");
         } else {
             interstitial.loadAd(adRequestAA);
-            Log.e(TAG,"interstitial.loadAd(adRequestAA)");
+            Log.e(TAG, "interstitial.loadAd(adRequestAA)");
         }
     }
-    private void initFab(){
+
+    private void initFab() {
         mFab = findViewById(R.id.fab);
 
 
-
-        if(tinydb.getString("show_floating_button").equals("false")){
+        if (tinydb.getString("show_floating_button").equals("false")) {
             //fab.setVisibility(View.GONE);
         }
         mFab.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 Intent i = new Intent(MainActivity.this, InstructionActivity.class);
                 startActivity(i);
                 //Toast.makeText(MainActivity.this, "FAB Clicked", Toast.LENGTH_SHORT).show();
@@ -485,6 +497,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
     public boolean isVistor() {
         if (bundle != null) {
             if (bundle.getString("isVistor") != null) {
@@ -983,6 +996,7 @@ public class MainActivity extends AppCompatActivity {
         String date = sdf.format(new java.util.Date());
         return date;
     }
+
     public String getYesterDate() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         Calendar c = Calendar.getInstance();
@@ -1015,7 +1029,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void countStocks(final String stockNumber) {
-        final DatabaseReference ref ;
+        final DatabaseReference ref;
 
         ref = FirebaseDatabase.getInstance().getReference();
         final DatabaseReference usersRef = ref.child("stockCount").child(stockNumber);
@@ -1024,10 +1038,10 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (!dataSnapshot.exists()) {
                     usersRef.child("count").setValue(1);
-                }else{
-                    for(final DataSnapshot count : dataSnapshot.getChildren()){
+                } else {
+                    for (final DataSnapshot count : dataSnapshot.getChildren()) {
                         String countNumber = count.getValue().toString();
-                        int a = Integer.parseInt(countNumber)+1;
+                        int a = Integer.parseInt(countNumber) + 1;
                         usersRef.child("count").setValue(a);
 
                     }
@@ -1046,6 +1060,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
     private void writeNewUserIfNeeded() {
         ref = FirebaseDatabase.getInstance().getReference();
         String userId = bundle.getString("uid");
@@ -1190,55 +1205,56 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void addSome(int position){
-                countAD += 1;
-                if (countAD == 5) {
-                    displayInterstitial();
-                    countAD = 0;
-                }
-                if (!searchView.getQuery().toString().equals("")) {
-                    addingSeearch(myHistory, position);
-                   // Log.e(TAG, "stockName " + stockName + "position" + position);
-                    stockName = myDataFilter.get(position).getStockName();
-                    stockNumber = myDataFilter.get(position).getStockNumber();
-                    //Log.e(TAG, "stockName " + stockName + "stockNumber" + stockNumber);
-                } else if (userStatus.equals("filting")) {
-                    stockName = myDataFilter.get(position).getStockName();
-                    stockNumber = myDataFilter.get(position).getStockNumber();
-                } else if (userStatus.equals("home")) {
-                    addingArrList(myHistory, position);
-                    stockName = myDataset.get(position).getStockName();
-                    stockNumber = myDataset.get(position).getStockNumber();
-                    //Log.e(TAG, "stockName " + stockName + "stockNumber" + stockNumber);
-                } else if (userStatus.equals("nearly")) {
-                    addingNear(myHistory, position);
-                    stockName = nearlyStock.get(position).getStockName();
-                    stockNumber = nearlyStock.get(position).getStockNumber();
-                } else if (userStatus.equals("favorite")) {
-                    stockName = myFavorite.get(position).getStockName();
-                    stockNumber = myFavorite.get(position).getStockNumber();
-                } else if (userStatus.equals("history")) {
-                    stockName = myHistory.get(position).getStockName();
-                    stockNumber = myHistory.get(position).getStockNumber();
-                }
-                for (int i = 0; i < stockNumbers.size(); i++) {
-                    if (stockNumbers.get(i).equals(stockNumber)) {
-                       // Log.e(TAG, "stockNumbers.size() " + stockNumbers.size() + "stockNumbers.get(i) " + stockNumbers.get(i));
-                        containStock = true;
-                    }
-                }
-                if (containStock) {
-                    countStocks(stockNumber);
-                    new GetStockInfo().execute(stockNumber);
-                    checkUsing();
-                    containStock = false;
-                } else {
-                    Toast.makeText(MainActivity.this, "暫無此檔股票資訊", Toast.LENGTH_SHORT).show();
-                }
+    public void addSome(int position) {
+        countAD += 1;
+        if (countAD == 5) {
+            displayInterstitial();
+            countAD = 0;
+        }
+        if (!searchView.getQuery().toString().equals("")) {
+            addingSeearch(myHistory, position);
+            // Log.e(TAG, "stockName " + stockName + "position" + position);
+            stockName = myDataFilter.get(position).getStockName();
+            stockNumber = myDataFilter.get(position).getStockNumber();
+            //Log.e(TAG, "stockName " + stockName + "stockNumber" + stockNumber);
+        } else if (userStatus.equals("filting")) {
+            stockName = myDataFilter.get(position).getStockName();
+            stockNumber = myDataFilter.get(position).getStockNumber();
+        } else if (userStatus.equals("home")) {
+            addingArrList(myHistory, position);
+            stockName = myDataset.get(position).getStockName();
+            stockNumber = myDataset.get(position).getStockNumber();
+            //Log.e(TAG, "stockName " + stockName + "stockNumber" + stockNumber);
+        } else if (userStatus.equals("nearly")) {
+            addingNear(myHistory, position);
+            stockName = nearlyStock.get(position).getStockName();
+            stockNumber = nearlyStock.get(position).getStockNumber();
+        } else if (userStatus.equals("favorite")) {
+            stockName = myFavorite.get(position).getStockName();
+            stockNumber = myFavorite.get(position).getStockNumber();
+        } else if (userStatus.equals("history")) {
+            stockName = myHistory.get(position).getStockName();
+            stockNumber = myHistory.get(position).getStockNumber();
+        }
+        for (int i = 0; i < stockNumbers.size(); i++) {
+            if (stockNumbers.get(i).equals(stockNumber)) {
+                // Log.e(TAG, "stockNumbers.size() " + stockNumbers.size() + "stockNumbers.get(i) " + stockNumbers.get(i));
+                containStock = true;
+            }
+        }
+        if (containStock) {
+            countStocks(stockNumber);
+            new GetStockInfo().execute(stockNumber);
+            checkUsing();
+            containStock = false;
+        } else {
+            Toast.makeText(MainActivity.this, "暫無此檔股票資訊", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private class GetData extends AsyncTask<String, Integer, String> {
         private ProgressDialog progressBar;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -1287,30 +1303,30 @@ public class MainActivity extends AppCompatActivity {
                                 releaseCount = stock.child("releaseCount").getValue().toString();
                                 stockName = stock.child("stockName").getValue().toString();
                                 stockNumber = stock.child("stockNumber").getValue().toString();
-                                if(stockMap.get(stockNumber)!=null){
+                                if (stockMap.get(stockNumber) != null) {
                                     //Log.e(TAG,"Get Dividend : " + dividend);
                                     dividend = stockMap.get(stockNumber).toString() + " ％";
-                                }else{
+                                } else {
                                     dividend = "無";
                                 }
-                                if(stockPEMap.get(stockNumber)!=null){
+                                if (stockPEMap.get(stockNumber) != null) {
                                     peRatio = stockPEMap.get(stockNumber).toString();
-                                }else{
+                                } else {
                                     peRatio = "無";
                                 }
-                                if(hotClick.get(stockNumber)!=null){
-                                    if (isVistor()){
+                                if (hotClick.get(stockNumber) != null) {
+                                    if (isVistor()) {
                                         hotclickCount = "會員獨享";
-                                    }else{
+                                    } else {
                                         hotclickCount = hotClick.get(stockNumber).toString() + " 次";
                                     }
-                                }else{
-                                    hotclickCount ="無";
+                                } else {
+                                    hotclickCount = "無";
                                 }
-                                if(getPaygushi.get(stockNumber)!=null){
-                                        payShi = getPaygushi.get(stockNumber).split(",")[0];
-                                        payGu = getPaygushi.get(stockNumber).split(",")[1];
-                                }else{
+                                if (getPaygushi.get(stockNumber) != null) {
+                                    payShi = getPaygushi.get(stockNumber).split(",")[0];
+                                    payGu = getPaygushi.get(stockNumber).split(",")[1];
+                                } else {
                                     payGu = "無";
                                     payShi = "無";
                                 }
@@ -1318,7 +1334,7 @@ public class MainActivity extends AppCompatActivity {
                                 tianxiDay = stock.child("tianxiDay").getValue().toString();
                                 tianxiPercent = stock.child("tianxiPercent").getValue().toString();
                                 tianxiCount = stock.child("tianxiCount").getValue().toString();
-                                myDataset.add(new StockItem(payGu, payShi, hotclickCount, peRatio,dividend, stockNumber, stockName, tianxiCount, releaseCount, tianxiPercent, tianxiDay, thisYear));
+                                myDataset.add(new StockItem(payGu, payShi, hotclickCount, peRatio, dividend, stockNumber, stockName, tianxiCount, releaseCount, tianxiPercent, tianxiDay, thisYear));
                             }
                         } else if (!isVistor() && dsp.getKey().equals("users")) {
                             for (DataSnapshot users : dsp.getChildren()) {
@@ -1361,8 +1377,8 @@ public class MainActivity extends AppCompatActivity {
                         if (mProgressDialog != null) {
                             mProgressDialog.dismiss();
                         }
-                    }catch(Exception e){
-                        Log.e(TAG,e.getMessage());
+                    } catch (Exception e) {
+                        Log.e(TAG, e.getMessage());
                     } finally {
                         mProgressDialog = null;
                     }
@@ -1388,13 +1404,13 @@ public class MainActivity extends AppCompatActivity {
             super.onProgressUpdate(values);
             runOnUiThread(new Runnable() {
                 public void run() {
-                    if(Integer.toString(values[0]).equals("0")){
+                    if (Integer.toString(values[0]).equals("0")) {
                         mProgressDialog.setMessage("取得資料中... 請稍候");
-                    }else if(Integer.toString(values[0]).equals("20")){
+                    } else if (Integer.toString(values[0]).equals("20")) {
                         mProgressDialog.setMessage("下載伺服器數據中...");
-                    }else if(Integer.toString(values[0]).equals("40")){
+                    } else if (Integer.toString(values[0]).equals("40")) {
                         mProgressDialog.setMessage("正在更新手機端資料... 請稍後");
-                    }else{
+                    } else {
                         mProgressDialog.setMessage("下載更新完畢");
                     }
 

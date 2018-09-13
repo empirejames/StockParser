@@ -4,6 +4,7 @@
     <color name="colorPrimary">#304cd6</color>
     <color name="colorPrimaryDark">#0025a3</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="lightBlue">#739CCF</color>
     <color name="colorGrey">#E0E0E0</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorGray">#c1d5e0</color>
@@ -15,5 +16,8 @@
     <color name="colorOrange">#b36b00</color>
     <color name="colorDarkpink">#B46875</color>
     <color name="colorLightpink">#C21C66</color>
+    <color name="colorBrondDark">#C1CAD6</color>
+    <color name="lightgray">#FFFFFF</color>
+    CDD7D6
 
 </resources>
