@@ -81,9 +81,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         VersionChecker versionChecker = new VersionChecker();
         try{
             String latestVersion = versionChecker.execute("com.james.stockparser").get();
-            if(!getVersion().equals(latestVersion)){
+            Log.e(TAG,getVersion() + " :  " +  latestVersion);
+            if(getVersion()!=null && !getVersion().equals(latestVersion)){
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
                 builder.setMessage("Google play 有新版本，是否前往更新 "+latestVersion+" 版? ")
                         .setTitle("權息大師")
                         .setCancelable(false)
@@ -301,7 +301,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             PackageInfo packageInfo = getApplicationContext().getApplicationContext()
                     .getPackageManager()
                     .getPackageInfo(getPackageName(), 0);
-            localVersion = packageInfo.versionCode+"";
+            localVersion = packageInfo.versionName+"";
         }catch (Exception e){
 
         }

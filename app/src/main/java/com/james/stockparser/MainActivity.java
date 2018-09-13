@@ -97,6 +97,8 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<StockItem> nearlyStock = new ArrayList<StockItem>();
     ArrayList<StockItem> myFavorite = new ArrayList<StockItem>();
     ArrayList<StockItem> myHistory = new ArrayList<StockItem>();
+    ArrayList<StockItem> myFilterResult = new ArrayList<StockItem>();
+
 
     ArrayList a = new ArrayList();
     ArrayList<String> hstEPS = new ArrayList<String>();
@@ -212,8 +214,10 @@ public class MainActivity extends AppCompatActivity {
             public boolean onQueryTextChange(String s) {
                 myDataFilter.clear();
                 if (!s.equals("")) {
+                    userStatus = "";
                     Log.e(TAG, "onQueryTextChange : " + s);
                     myDataFilter = filterResult(s, true, 0);
+                    myFilterResult = filterResult(s, true, 0);
                     listAdaperr(myDataFilter, true, selectAll);
                 } else {
                     listAdaperr(myDataset, true, selectAll);
@@ -282,6 +286,7 @@ public class MainActivity extends AppCompatActivity {
                 final int height = relativeLy.getMeasuredHeight();
                 if (relativeLy.getVisibility() == View.GONE) {
                     String stockNumber;
+                    Log.e(TAG,"userStatus : "  + userStatus);
                     if (userStatus.equals("filting")) {
                         stockNumber = myDataFilter.get(position).getStockNumber();
                     } else if (userStatus.equals("home")) {
@@ -293,7 +298,7 @@ public class MainActivity extends AppCompatActivity {
                     } else if (userStatus.equals("history")) {
                         stockNumber = myHistory.get(position).getStockNumber();
                     } else {
-                        stockNumber = myDataFilter.get(position).getStockNumber();
+                        stockNumber = myFilterResult.get(position).getStockNumber();
                     }
                     show(relativeLy, height, stockNumber);
                 } else {
