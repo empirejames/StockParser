@@ -2,6 +2,8 @@ package com.james.stockparser;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -41,6 +43,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.james.stockparser.NetWork.VersionChecker;
 import com.james.stockparser.dataBase.TinyDB;
 
 import java.util.regex.Matcher;
@@ -75,13 +78,35 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_main);
+        VersionChecker versionChecker = new VersionChecker();
+        try{
+            String latestVersion = versionChecker.execute("com.james.stockparser").get();
+            if(!getVersion().equals(latestVersion)){
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-//
-//        new AppUpdater(this)
-//                .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
-//                .setDisplay(Display.DIALOG)
-//                .showAppUpdated(false)  // 若已是最新版本, 則 true: 仍會提示之, false: 不會提示之
-//                .start();
+                builder.setMessage("Google play 有新版本，是否前往更新 "+latestVersion+" 版? ")
+                        .setTitle("權息大師")
+                        .setCancelable(false)
+                        .setPositiveButton("是", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                Intent intentDL = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.james.stockparser"));
+                                startActivity(intentDL);
+
+                            }
+                        })
+                        .setNegativeButton("否", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+            Log.e(TAG,"latestVersion : " + latestVersion);
+        }catch(Exception e){
+
+        }
+
         tinydb = new TinyDB(LoginActivity.this);
         chkRemeber = (CheckBox) findViewById(R.id.chkRemeber);
         tvForgetPass = (TextView) findViewById(R.id.tv_forgotPass);
@@ -270,7 +295,18 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 });
 
     }
+    private String getVersion(){
+        String localVersion = "";
+        try{
+            PackageInfo packageInfo = getApplicationContext().getApplicationContext()
+                    .getPackageManager()
+                    .getPackageInfo(getPackageName(), 0);
+            localVersion = packageInfo.versionCode+"";
+        }catch (Exception e){
 
+        }
+        return localVersion;
+    }
 
     public void checkLogin() {
         final String email = emailEditText.getText().toString();
