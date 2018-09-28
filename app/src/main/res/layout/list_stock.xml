@@ -171,7 +171,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@+id/tianxiCountName"
                 android:layout_alignBottom="@+id/tianxiCountName"
-                android:layout_toEndOf="@+id/checkbox_delete"
                 android:text="填息次數 : "
                 android:textColor="@android:color/background_dark"
                 android:textSize="15dp" />
@@ -234,8 +233,9 @@
                 android:id="@+id/right_select"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
+                android:visibility="gone"
                 android:src="@mipmap/right_arrow">
             </ImageView>
 
@@ -298,7 +298,6 @@
                 android:id="@+id/hotValue_data"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/checkbox_delete"
                 android:layout_toEndOf="@+id/hotValue"
                 android:text="50"
                 android:textColor="@color/colorLightpink"

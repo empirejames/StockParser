@@ -41,6 +41,7 @@ public class MyAdapter extends BaseAdapter implements Filterable {
     ArrayList<String> myFavorite = new ArrayList<String>();
     ArrayList<String> toDelete = new ArrayList<String>();
     TinyDB tinydb;
+    String stockNumber;
     boolean page2;
 
     public MyAdapter(Context context) {
@@ -70,7 +71,7 @@ public class MyAdapter extends BaseAdapter implements Filterable {
     public long getItemId(int position) {
         return mListItems.indexOf(getItem(position));
     }
-    static class ViewHolder
+    class ViewHolder
     {
         private TextView hotCount;
         private TextView peRatio;
@@ -83,77 +84,94 @@ public class MyAdapter extends BaseAdapter implements Filterable {
         private TextView thisYear;
         private TextView guValue;
         private TextView shiValue;
-        private TextView stockNumber = null;
+        TextView stockNumber = null;
+        private ImageView img_right ;
+        private CheckBox cb;
+        private CheckBox cbDel;
     }
     @Override
-    public View getView(final int position, final View convertView, final ViewGroup parent) {
-        final ViewHolder holder = new ViewHolder();
+    public View getView(final int position, View convertView, final ViewGroup parent) {
+        ViewHolder holder = null;
         float transTianx = 0;
-        final View row = inflater.inflate(R.layout.list_stock, parent, false);
         final StockItem item = mListItems.get(position);
-        final ImageView img_right = row.findViewById(R.id.right_select);
-        final CheckBox cb = (CheckBox) row.findViewById(R.id.checkbox);
-        final CheckBox cbDel = (CheckBox) row.findViewById(R.id.checkbox_delete);
-        cb.setVisibility(View.GONE);
-        cbDel.setVisibility(View.GONE);
+
+        if(convertView == null){
+            holder = new ViewHolder();
+            convertView = inflater.inflate(R.layout.list_stock, parent, false);
+            convertView.setTag(holder);
+        }else{
+            holder = (ViewHolder)convertView.getTag();
+        }
+
+        holder.img_right = (ImageView) convertView.findViewById(R.id.right_select);
+        holder.cb = (CheckBox) convertView.findViewById(R.id.checkbox);
+        holder.cbDel = (CheckBox) convertView.findViewById(R.id.checkbox_delete);
+        holder.cb.setVisibility(View.GONE);
+        holder.cbDel.setVisibility(View.GONE);
+        holder.img_right.setVisibility(View.VISIBLE);
         if (page2) {
-            cb.setVisibility(View.GONE);
+            holder.cb.setVisibility(View.GONE);
             //cbDel.setVisibility(View.VISIBLE);
         }
         if (deleteContext) {
+
             if (!page2) {
-                cb.setVisibility(View.VISIBLE);
-                img_right.setVisibility(View.GONE);
+                holder.cb.setVisibility(View.VISIBLE);
+
+                holder.img_right.setVisibility(View.GONE);
             } else {
-                cbDel.setVisibility(View.VISIBLE);
+                holder.cbDel.setVisibility(View.VISIBLE);
+                holder.img_right.setVisibility(View.VISIBLE);
             }
             if (page2 && deleteContext) {
-                cbDel.setVisibility(View.VISIBLE);
-            } else {
-                cbDel.setVisibility(View.GONE);
+                holder.cbDel.setVisibility(View.VISIBLE);
+                holder.img_right.setVisibility(View.INVISIBLE);
+            } else{
+                holder.cbDel.setVisibility(View.GONE);
             }
         }
-        holder.guValue = (TextView) row.findViewById(R.id.gu_value);
+        holder.guValue = (TextView) convertView.findViewById(R.id.gu_value);
         holder.guValue.setText(item.getPayGu());
-        holder.shiValue = (TextView) row.findViewById(R.id.shi_value);
+        holder.shiValue = (TextView) convertView.findViewById(R.id.shi_value);
         holder.shiValue.setText(item.getPayShi());
-        holder.stockNumber = (TextView) row.findViewById(R.id.stock_Number);
+        holder.stockNumber = (TextView) convertView.findViewById(R.id.stock_Number);
         holder.stockNumber.setText(item.getStockNumber());
-        holder.peRatio = (TextView) row.findViewById(R.id.peRatio_data);
+        stockNumber = item.getStockNumber();
+        holder.peRatio = (TextView) convertView.findViewById(R.id.peRatio_data);
         holder.peRatio.setText(item.getPeRatio());
-        holder.dividend = (TextView) row.findViewById(R.id.now_dividend_data);
+        holder.dividend = (TextView) convertView.findViewById(R.id.now_dividend_data);
         holder.dividend.setText(item.getNowDividend());
 
-        holder.stockName = (TextView) row.findViewById(R.id.stock_Name);
+        holder.stockName = (TextView) convertView.findViewById(R.id.stock_Name);
         holder.stockName.setText(item.getStockName());
 
-        holder.rb1 = (RatingBar) row.findViewById(R.id.RatingBar01);
+        holder.rb1 = (RatingBar) convertView.findViewById(R.id.RatingBar01);
 
         transTianx = Float.parseFloat(item.getTianxiPercent()) * 100 / 20;
 
         holder.rb1.setRating(transTianx);
 
-        holder.tianxiCount = (TextView) row.findViewById(R.id.tianxiCountName);
+        holder.tianxiCount = (TextView) convertView.findViewById(R.id.tianxiCountName);
         holder.tianxiCount.setText(item.getTianxiCount());
 
-        holder.releaseCount = (TextView) row.findViewById(R.id.releaseName);
+        holder.releaseCount = (TextView) convertView.findViewById(R.id.releaseName);
         holder.releaseCount.setText(item.getReleaseCount());
 
-        holder.tianxiDay = (TextView) row.findViewById(R.id.taixiaverageName);
+        holder.tianxiDay = (TextView) convertView.findViewById(R.id.taixiaverageName);
         holder.tianxiDay.setText(item.getTianxiDay());
 
-        holder.thisYear = (TextView) row.findViewById(R.id.thisyearName);
-        holder.hotCount =  (TextView) row.findViewById(R.id.hotValue_data);
+        holder.thisYear = (TextView) convertView.findViewById(R.id.thisyearName);
+        holder.hotCount =  (TextView) convertView.findViewById(R.id.hotValue_data);
         holder.hotCount.setText(item.getHotclickCount());
         if (item.getThisYear().equals("")) {
             holder.thisYear.setText("未公告");
         } else {
             holder.thisYear.setText(item.getThisYear());
         }
-        cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        holder.cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                String sn = holder.stockNumber.getText().toString();
+                String sn = stockNumber;
                 if (isChecked && !myFavorite.contains(sn)) {
                     Log.e(TAG, " ADD : " + sn);
                     myFavorite.add(sn);
@@ -163,27 +181,26 @@ public class MyAdapter extends BaseAdapter implements Filterable {
                 }
             }
         });
-        cbDel.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        holder.cbDel.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                String sn = holder.stockNumber.getText().toString();
+                String sn = stockNumber;
                 if (isChecked) {
                     Log.e(TAG, " Remove : " + sn);
                     toDelete.add(sn);
-                    convertView.invalidate();
-                    // myFavorite.remove(sn);
+                    myFavorite.remove(sn);
                 }
             }
         });
-        img_right.setOnClickListener(new View.OnClickListener() {
+        holder.img_right.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((MainActivity) parent.getContext()).addSome(position);
                 Log.e(TAG,"Click right selector......");
             }
         });
-        cb.setChecked(myFavorite.contains(item.getStockNumber()));
-        return row;
+        holder.cb.setChecked(myFavorite.contains(item.getStockNumber()));
+        return convertView;
     }
 
     @Override
@@ -201,8 +218,10 @@ public class MyAdapter extends BaseAdapter implements Filterable {
     }
 
     public void showCheckBox(boolean show) {
+        Log.e(TAG," Show : " + show);
         if (show) {
             deleteContext = true;
+
         } else {
             deleteContext = false;
         }
