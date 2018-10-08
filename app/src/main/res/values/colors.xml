@@ -18,6 +18,8 @@
     <color name="colorLightpink">#C21C66</color>
     <color name="colorBrondDark">#C1CAD6</color>
     <color name="lightgray">#FFFFFF</color>
-    CDD7D6
+    <color name="gray">#888888</color>
+    <color name="lightBlueg">#5ADBFF</color>
+
 
 </resources>

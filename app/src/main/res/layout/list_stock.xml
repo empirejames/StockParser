@@ -621,7 +621,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@+id/VolNm"
-                android:layout_marginStart="80dp"
+                android:layout_marginStart="60dp"
                 android:layout_toEndOf="@+id/VolNm"
                 android:textColor="@color/colorGrayDark"
                 android:text="昨日融資 :"

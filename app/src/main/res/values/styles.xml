@@ -20,4 +20,7 @@
         <item name="thumbTint">@color/selector_switch_btn</item>
         <item name="trackTint">@color/selector_switch_btn</item>
     </style>
+    <style name="radioButton">
+        <item name="android:button">@drawable/radio_background</item>
+    </style>
 </resources>

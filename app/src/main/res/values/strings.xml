@@ -2,7 +2,7 @@
     <string name="app_name">權息大師</string>
     <string name="app_value">權息小學堂</string>
     <string name="edit">Edit</string>
-    <string name="app_ver">APP Version 6.1</string>
+    <string name="app_ver">APP Version 6.3</string>
     <string name="channel_name">James name</string>
     <string name="channel_description">Channel description</string>
     <string name="taixiday">填息平均日小於 :</string>
@@ -14,6 +14,7 @@
     <string name="stockInfo">股票代號/名稱</string>
     <string name="facebook_app_id">1434008156667910</string>
     <string name="fb_login_protocol_scheme">fb1434008156667910</string>
+    <string name="notification_channel_id">stock</string>
     <string name="forgot_password">忘記密碼 ?</string>
     <string name="forgot_msg">輸入您註冊的Email帳號，我們將發送一封重設密碼信至您的信箱</string>
     <string name="banner_ad_unit_id">ca-app-pub-1659435325076970/4141743043</string>

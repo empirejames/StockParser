@@ -256,7 +256,7 @@ public class MainActivity extends AppCompatActivity {
         initFab();
         if (!isVistor) {
             String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-            //Log.e("FCN TOKEN GET", "Refreshed token: " + refreshedToken);
+            Log.e("FCN TOKEN GET", "Refreshed token: " + refreshedToken);
             writeNewUserIfNeeded();
         } else {
             alertDialog("目前會員數已達8000人，為持續服務優質會員，一萬人後將關閉訪客註冊及登入，趕快搶先註冊會員唷!");
