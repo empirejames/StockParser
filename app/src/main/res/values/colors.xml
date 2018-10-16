@@ -20,6 +20,8 @@
     <color name="lightgray">#FFFFFF</color>
     <color name="gray">#888888</color>
     <color name="lightBlueg">#5ADBFF</color>
+    <color name="transparent">#00000000</color>
+    <color name="white_transparent">#4DFFFFFF</color>
 
 
 </resources>

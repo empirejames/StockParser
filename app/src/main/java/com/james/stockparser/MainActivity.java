@@ -18,6 +18,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
@@ -41,6 +44,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
@@ -82,6 +86,9 @@ import java.util.Set;
 public class MainActivity extends AppCompatActivity {
     String TAG = MainActivity.class.getSimpleName();
     private ListView listV;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
     public MyAdapter adapter;
     public String returnString;
 
@@ -157,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
     //IabHelper mHelper;
     private int countAD = 4;
     private ImageView right_select;
-    private TextView VolNm, longchiNm, toshinNm, longchiUseNm, wichiNm, longChunNm, threebigNm, longChunUseNm, selfemployNm;
+
     MenuInflater inflater;
 
     @Override
@@ -251,6 +258,10 @@ public class MainActivity extends AppCompatActivity {
         tinydb = new TinyDB(MainActivity.this);
         alreadyGj = tinydb.getString("GJ");
 
+
+        mRecyclerView = (RecyclerView)findViewById(R.id.my_recycler_view);
+        mLayoutManager = new LinearLayoutManager(MainActivity.this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
         bundle = getIntent().getExtras();
         isVistor = isVistor();
         initFab();
@@ -265,7 +276,7 @@ public class MainActivity extends AppCompatActivity {
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         BottomNavigationViewHelper.disableShiftMode(navigation);
-        listV = (ListView) findViewById(R.id.list_view);
+        //listV = (ListView) findViewById(R.id.list_view);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         //mToolbar.setNavigationIcon(R.drawable.ic_keyboard_arrow_left_white_48dp);
@@ -276,107 +287,108 @@ public class MainActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
         new GetData().execute();
-        listV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                RelativeLayout relativeLy;
-                relativeLy = (RelativeLayout) view.findViewById(R.id.relative_layout_all);
-                relativeLy.measure(0, 0);
-                initView(view);
-                final int height = relativeLy.getMeasuredHeight();
-                if (relativeLy.getVisibility() == View.GONE) {
-                    String stockNumber;
-                    Log.e(TAG, "userStatus : " + userStatus);
-                    if (userStatus.equals("filting")) {
-                        stockNumber = myDataFilter.get(position).getStockNumber();
-                    } else if (userStatus.equals("home")) {
-                        stockNumber = myDataset.get(position).getStockNumber();
-                    } else if (userStatus.equals("nearly")) {
-                        stockNumber = nearlyStock.get(position).getStockNumber();
-                    } else if (userStatus.equals("favorite")) {
-                        stockNumber = myFavorite.get(position).getStockNumber();
-                    } else if (userStatus.equals("history")) {
-                        stockNumber = myHistory.get(position).getStockNumber();
-                    } else {
-                        stockNumber = myFilterResult.get(position).getStockNumber();
-                    }
-                    show(relativeLy, height, stockNumber);
-                } else {
-                    dismiss(relativeLy, height);
-                }
-            }
-        });
-
-        listV.setOnScrollListener(new AbsListView.OnScrollListener() {
-            private int lastVisibleItemPosition = 0;
-
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                Log.e(TAG,"onScrollStateChanged : " + scrollFlag);
-//                if (scrollFlag) {
-//                    navigation.setVisibility(View.GONE);
-//                    navigation.startAnimation(mHiddenAction);
-//                    mToolbar.setVisibility(View.GONE);
-//                    mToolbar.startAnimation(mHiddenToolbar);
-//                    mFab.setVisibility(View.GONE);
-//                    mFab.startAnimation(mHiddenToolbar);
+//        listV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//
+//                RelativeLayout relativeLy;
+//                relativeLy = (RelativeLayout) view.findViewById(R.id.relative_layout_all);
+//                relativeLy.measure(0, 0);
+//                initView(view);
+//                final int height = relativeLy.getMeasuredHeight();
+//                if (relativeLy.getVisibility() == View.GONE) {
+//                    String stockNumber;
+//                    Log.e(TAG, "userStatus : " + userStatus);
+//                    if (userStatus.equals("filting")) {
+//                        stockNumber = myDataFilter.get(position).getStockNumber();
+//                    } else if (userStatus.equals("home")) {
+//                        stockNumber = myDataset.get(position).getStockNumber();
+//                    } else if (userStatus.equals("nearly")) {
+//                        stockNumber = nearlyStock.get(position).getStockNumber();
+//                    } else if (userStatus.equals("favorite")) {
+//                        stockNumber = myFavorite.get(position).getStockNumber();
+//                    } else if (userStatus.equals("history")) {
+//                        stockNumber = myHistory.get(position).getStockNumber();
+//                    } else {
+//                        stockNumber = myFilterResult.get(position).getStockNumber();
+//                    }
+//                    show(relativeLy, height, stockNumber);
 //                } else {
-//                    navigation.setVisibility(View.VISIBLE);
-//                    navigation.startAnimation(mShowAction);
-//                    mToolbar.setVisibility(View.VISIBLE);
-//                    mToolbar.startAnimation(mShowToolbar);
-//                    mFab.setVisibility(View.VISIBLE);
-//                    mFab.startAnimation(mShowToolbar);
-//                    scrollFlag = false;
+//                    dismiss(relativeLy, height);
 //                }
+//            }
+//        });
 
-
-                switch (scrollState) {
-                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:// rolling stop
-                        break;
-                    case AbsListView.OnScrollListener.SCROLL_STATE_FLING: //stating rolling
-                        break;
-                }
-
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (view.getId() == listV.getId()) {
-                    final int currentFirstVisibleItem = listV.getFirstVisiblePosition();
-                    if (currentFirstVisibleItem > lastVisibleItemPosition) {
-                        //getSupportActionBar().hide();
-                    } else if (currentFirstVisibleItem < lastVisibleItemPosition) {
-
-                        //getSupportActionBar().show();
-                    }
-
-                    lastVisibleItemPosition = currentFirstVisibleItem;
-                }
-
-                if (listV != null && listV.getChildCount() > 0) {
-                    boolean isAtBottom = listV.getScrollY() == listV.getChildAt(listV.getChildCount() - 1).getBottom() + listV.getPaddingBottom() - listV.getHeight();
-                    if (firstVisibleItem > lastVisibleItemPosition) {
-                        scrollFlag = true;
-                    } else if (firstVisibleItem < lastVisibleItemPosition) {
-                        scrollFlag = false;
-                    }
-                    if (isAtBottom) {
-                        mAdView.setVisibility(View.GONE);
-                        navigation.setVisibility(View.GONE);
-                        navigation.startAnimation(mShowAction);
-                    } else {
-                        mAdView.setVisibility(View.VISIBLE);
-                        navigation.setVisibility(View.VISIBLE);
-                        navigation.startAnimation(mShowAction);
-                    }
-                    lastVisibleItemPosition = firstVisibleItem;
-                }
-            }
-        });
-        listV.setLayoutAnimation(getListAnim());
+//        listV.setOnScrollListener(new AbsListView.OnScrollListener() {
+//            private int lastVisibleItemPosition = 0;
+//
+//            @Override
+//            public void onScrollStateChanged(AbsListView view, int scrollState) {
+//                Log.e(TAG,"onScrollStateChanged : " + scrollFlag);
+////                if (scrollFlag) {
+////                    navigation.setVisibility(View.GONE);
+////                    navigation.startAnimation(mHiddenAction);
+////                    mToolbar.setVisibility(View.GONE);
+////                    mToolbar.startAnimation(mHiddenToolbar);
+////                    mFab.setVisibility(View.GONE);
+////                    mFab.startAnimation(mHiddenToolbar);
+////                } else {
+////                    navigation.setVisibility(View.VISIBLE);
+////                    navigation.startAnimation(mShowAction);
+////                    mToolbar.setVisibility(View.VISIBLE);
+////                    mToolbar.startAnimation(mShowToolbar);
+////                    mFab.setVisibility(View.VISIBLE);
+////                    mFab.startAnimation(mShowToolbar);
+////                    scrollFlag = false;
+////                }
+//
+//
+//                switch (scrollState) {
+//                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:// rolling stop
+//                        break;
+//                    case AbsListView.OnScrollListener.SCROLL_STATE_FLING: //stating rolling
+//                        break;
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+//                if (view.getId() == listV.getId()) {
+//                    final int currentFirstVisibleItem = listV.getFirstVisiblePosition();
+//                    if (currentFirstVisibleItem > lastVisibleItemPosition) {
+//                        //getSupportActionBar().hide();
+//                    } else if (currentFirstVisibleItem < lastVisibleItemPosition) {
+//
+//                        //getSupportActionBar().show();
+//                    }
+//
+//                    lastVisibleItemPosition = currentFirstVisibleItem;
+//                }
+//
+//                if (listV != null && listV.getChildCount() > 0) {
+//                    boolean isAtBottom = listV.getScrollY() == listV.getChildAt(listV.getChildCount() - 1).getBottom() + listV.getPaddingBottom() - listV.getHeight();
+//                    if (firstVisibleItem > lastVisibleItemPosition) {
+//                        scrollFlag = true;
+//                    } else if (firstVisibleItem < lastVisibleItemPosition) {
+//                        scrollFlag = false;
+//                    }
+//                    if (isAtBottom) {
+//                        mAdView.setVisibility(View.GONE);
+//                        navigation.setVisibility(View.GONE);
+//                        navigation.startAnimation(mShowAction);
+//                    } else {
+//                        mAdView.setVisibility(View.VISIBLE);
+//                        navigation.setVisibility(View.VISIBLE);
+//                        navigation.startAnimation(mShowAction);
+//                    }
+//                    lastVisibleItemPosition = firstVisibleItem;
+//                }
+//            }
+//        });
+//        listV.setLayoutAnimation(getListAnim());
     }
 
 
@@ -411,17 +423,17 @@ public class MainActivity extends AppCompatActivity {
         //readFav();
     }
 
-    public void initView(View v) {
-        VolNm = v.findViewById(R.id.VolNm);
-        longchiNm = v.findViewById(R.id.longchiNm);
-        toshinNm = v.findViewById(R.id.toshinNm);
-        longchiUseNm = v.findViewById(R.id.longchiUseNm);
-        wichiNm = v.findViewById(R.id.wichiNm);
-        longChunNm = v.findViewById(R.id.longChunNm);
-        threebigNm = v.findViewById(R.id.threebigNm);
-        longChunUseNm = v.findViewById(R.id.longChunUseNm);
-        selfemployNm = v.findViewById(R.id.selfemployNm);
-    }
+//    public void initView(View v) {
+//        VolNm = v.findViewById(R.id.VolNm);
+//        longchiNm = v.findViewById(R.id.longchiNm);
+//        toshinNm = v.findViewById(R.id.toshinNm);
+//        longchiUseNm = v.findViewById(R.id.longchiUseNm);
+//        wichiNm = v.findViewById(R.id.wichiNm);
+//        longChunNm = v.findViewById(R.id.longChunNm);
+//        threebigNm = v.findViewById(R.id.threebigNm);
+//        longChunUseNm = v.findViewById(R.id.longChunUseNm);
+//        selfemployNm = v.findViewById(R.id.selfemployNm);
+//    }
 
     public void changeValue(String value, TextView v) {
         if (Integer.parseInt(value) >= 0) {
@@ -432,35 +444,35 @@ public class MainActivity extends AppCompatActivity {
         v.setText(value);
     }
 
-    public void show(final View v, int height, String stockNm) {
-        if (stockChoMa.get(stockNm) != null) {
-            v.setVisibility(View.VISIBLE);
-            String choMa[] = stockChoMa.get(stockNm).split(":");
-            VolNm.setText(choMa[0]);
-            changeValue(choMa[1], toshinNm);
-            changeValue(choMa[2], wichiNm);
-            changeValue(choMa[3], selfemployNm);
-            changeValue(choMa[4], threebigNm);
-            changeValue(choMa[5], longchiNm);
-            changeValue(choMa[7], longChunNm);
-            longchiUseNm.setText(choMa[6]);
-            longChunUseNm.setText(choMa[8]);
-            ValueAnimator animator = ValueAnimator.ofInt(0, height);
-            animator.setDuration(200);
-            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    int value = (Integer) animation.getAnimatedValue();
-                    v.setVisibility(View.VISIBLE);
-                    v.getLayoutParams().height = value;
-                    v.setLayoutParams(v.getLayoutParams());
-                }
-            });
-            animator.start();
-        } else {
-            Toast.makeText(MainActivity.this, "此檔無籌碼資訊", Toast.LENGTH_LONG).show();
-        }
-    }
+//    public void show(final View v, int height, String stockNm) {
+//        if (stockChoMa.get(stockNm) != null) {
+//            v.setVisibility(View.VISIBLE);
+//            String choMa[] = stockChoMa.get(stockNm).split(":");
+//            VolNm.setText(choMa[0]);
+//            changeValue(choMa[1], toshinNm);
+//            changeValue(choMa[2], wichiNm);
+//            changeValue(choMa[3], selfemployNm);
+//            changeValue(choMa[4], threebigNm);
+//            changeValue(choMa[5], longchiNm);
+//            changeValue(choMa[7], longChunNm);
+//            longchiUseNm.setText(choMa[6]);
+//            longChunUseNm.setText(choMa[8]);
+//            ValueAnimator animator = ValueAnimator.ofInt(0, height);
+//            animator.setDuration(200);
+//            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+//                @Override
+//                public void onAnimationUpdate(ValueAnimator animation) {
+//                    int value = (Integer) animation.getAnimatedValue();
+//                    v.setVisibility(View.VISIBLE);
+//                    v.getLayoutParams().height = value;
+//                    v.setLayoutParams(v.getLayoutParams());
+//                }
+//            });
+//            animator.start();
+//        } else {
+//            Toast.makeText(MainActivity.this, "此檔無籌碼資訊", Toast.LENGTH_LONG).show();
+//        }
+//    }
 
     public void dismiss(final View v, int height) {
         ValueAnimator animator = ValueAnimator.ofInt(height, 0);
@@ -1406,7 +1418,11 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                     }
-                    listAdaperr(myDataset, true, selectAll);
+
+                    mAdapter = new RecycleViewAdapter(MainActivity.this, myDataset, stockChoMa, true, selectAll);
+                    mRecyclerView.addItemDecoration(new DividerItemDecoration(MainActivity.this, DividerItemDecoration.VERTICAL));
+                    mRecyclerView.setAdapter(mAdapter);
+                    //listAdaperr(myDataset, true, selectAll);
                     try {
                         if (mProgressDialog != null) {
                             mProgressDialog.dismiss();
@@ -1431,6 +1447,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
+            Log.e(TAG,"Run onPostExecute ...");
         }
 
         @Override

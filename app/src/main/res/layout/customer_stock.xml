@@ -1,0 +1,668 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/recycle_selector"
+    android:orientation="vertical"
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp">
+
+    <LinearLayout
+        android:id="@+id/infoSection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/relative_layout_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:layout_below="@+id/infoSection"
+            android:orientation="vertical"
+            android:paddingRight="10dp"
+            >
+
+            <TextView
+                android:id="@+id/stock_Number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:text="2318"
+                android:textColor="@android:color/holo_red_light"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/stock_Name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/stock_Number"
+                android:text="HonHan"
+                android:textColor="@android:color/holo_blue_dark"
+                android:textSize="20dp" />
+
+
+            <TextView
+                android:id="@+id/stock_good"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginEnd="10dp"
+                android:layout_toStartOf="@+id/RatingBar01"
+                android:text="填息機率"
+                android:textColor="@android:color/holo_purple"
+                android:textSize="20dp" />
+
+            <RatingBar
+                android:id="@+id/RatingBar01"
+                style="?android:attr/ratingBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:numStars="5"
+                android:progressBackgroundTint="@android:color/darker_gray"
+                android:progressTint="@android:color/holo_orange_light"
+                android:rating="3.5">
+            </RatingBar>
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/hotClick"
+            android:layout_width="match_parent"
+            android:visibility="visible"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/nowUpdateValue"
+            android:orientation="vertical"
+            android:paddingRight="10dp"
+            >
+
+
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/relative_layout_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:textColor="@android:color/background_dark"
+            android:orientation="vertical"
+            android:paddingStart="10dp">
+
+            <TextView
+                android:id="@+id/release"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/thisyear"
+                android:layout_below="@+id/gu_value"
+                android:layout_alignStart="@+id/loc_ref_Icon2"
+                android:layout_alignBaseline="@+id/tianxiCount"
+                android:text="發放次數 : "
+                android:textColor="@android:color/background_dark"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/releaseName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/release"
+                android:layout_below="@+id/loc_ref_Icon2"
+                android:layout_alignBaseline="@+id/release"
+                android:text="15"
+                android:textColor="@android:color/background_dark"
+                android:textSize="15dp" />
+
+
+            <com.ant.liao.GifView
+                android:id="@+id/hot"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:background="@drawable/click" />
+
+            <com.ant.liao.GifView
+                android:id="@+id/loc_ref_Icon"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignTop="@+id/loc_ref_Icon2"
+                android:background="@drawable/now40" />
+
+            <TextView
+                android:id="@+id/dividend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/peRatio"
+                android:layout_alignBottom="@+id/peRatio"
+                android:layout_toEndOf="@+id/loc_ref_Icon"
+                android:text="即時殖利率 : "
+                android:textColor="@color/colorOrange"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/now_dividend_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/dividend"
+                android:layout_toEndOf="@+id/dividend"
+                android:text="50"
+                android:textColor="@color/colorOrange"
+                android:textSize="15dp" />
+            <com.ant.liao.GifView
+                android:id="@+id/paygu"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_alignBottom="@+id/gu_value"
+                android:layout_toStartOf="@+id/gu_value"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/gu" />
+            <com.ant.liao.GifView
+                android:id="@+id/loc_ref_Icon2"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_below="@+id/paygu"
+                android:layout_marginTop="5dp"
+                android:layout_alignStart="@+id/paygu"
+                android:background="@drawable/now40" />
+
+            <TextView
+                android:id="@+id/tianxiCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/tianxiCountName"
+                android:layout_alignBottom="@+id/tianxiCountName"
+                android:text="填息次數 : "
+                android:textColor="@android:color/background_dark"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/tianxiCountName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/tianxiCount"
+                android:layout_below="@+id/loc_ref_Icon"
+                android:layout_marginTop="10dp"
+                android:text="10"
+                android:textColor="@android:color/background_dark"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/taixiaverage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tianxiCount"
+                android:layout_alignStart="@+id/tianxiCount"
+                android:text="填息平均日 : "
+                android:textColor="@android:color/background_dark"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/taixiaverageName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/taixiaverage"
+                android:layout_below="@+id/tianxiCount"
+                android:layout_alignBottom="@+id/taixiaverage"
+                android:layout_marginStart="5dp"
+                android:text="5"
+                android:textColor="@android:color/background_dark"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/thisyear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/release"
+                android:layout_below="@+id/tianxiCount"
+                android:layout_alignBaseline="@+id/taixiaverage"
+                android:text="除息日 : "
+                android:textColor="@android:color/background_dark"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/thisyearName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/release"
+                android:layout_toEndOf="@+id/thisyear"
+                android:layout_alignBaseline="@+id/thisyear"
+                android:text="2017/06/27"
+                android:textColor="@android:color/background_dark"
+                android:textSize="15dp" />
+            <ImageView
+                android:id="@+id/right_select"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:visibility="gone"
+                android:src="@mipmap/right_arrow">
+            </ImageView>
+
+
+            <CheckBox
+                android:id="@+id/checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="10dp"
+                android:button="@drawable/checkbox_favorite"
+                android:visibility="visible">
+            </CheckBox>
+            <CheckBox
+                android:id="@+id/checkbox_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:button="@drawable/checkbox_delete"
+                android:visibility="gone">
+            </CheckBox>
+
+            <TextView
+                android:id="@+id/peRatio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/loc_ref_Icon2"
+                android:layout_toEndOf="@+id/loc_ref_Icon2"
+                android:text="即時本益比 : "
+                android:textColor="@color/colorOrange"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/peRatio_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/peRatio"
+                android:layout_alignBottom="@+id/peRatio"
+                android:layout_toEndOf="@+id/payshi"
+                android:layout_marginLeft="10dp"
+                android:text="昂貴"
+                android:textColor="@color/colorOrange"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/hotValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/hot"
+                android:paddingLeft="5dp"
+                android:text="點閱率 : "
+                android:textColor="@color/colorLightpink"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/hotValue_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/hotValue"
+                android:text="50"
+                android:textColor="@color/colorLightpink"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/gu_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignBottom="@+id/payshi"
+                android:layout_below="@+id/hotValue"
+                android:layout_toStartOf="@+id/payshi"
+                android:layout_marginEnd="30dp"
+                android:text="2.0"
+                android:textColor="@color/colorLightpink"
+                android:textSize="15dp" />
+
+            <com.ant.liao.GifView
+                android:id="@+id/payshi"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_alignBottom="@+id/shi_value"
+                android:layout_toStartOf="@+id/shi_value"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/shi" />
+
+            <TextView
+                android:id="@+id/shi_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="70dp"
+                android:text="2.0"
+                android:textColor="@color/colorLightpink"
+                android:textSize="15dp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/relative_layout_all"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingEnd="20dp"
+            android:paddingStart="20dp"
+            android:layout_marginTop="5dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:background="@drawable/bg_shape"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/wichiNm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/wichi"
+                android:layout_marginStart="80dp"
+                android:textColor="@color/colorGrayDark"
+                android:text="----"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/wichi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/toshin"
+                android:layout_alignParentStart="true"
+                android:textColor="@color/colorGrayDark"
+                android:layout_marginTop="2dp"
+                android:layout_marginStart="5dp"
+                android:text="外資 :"
+                android:textSize="15dp" />
+            <View
+                android:id="@+id/viewsoshin"
+                android:layout_width="2dp"
+                android:layout_height="12dp"
+                android:layout_below="@+id/viewstoshin"
+                android:layout_marginTop="10dp"
+                android:background="@color/lightBlue" />
+            <View
+                android:id="@+id/viewwichi"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/wichi"
+                android:layout_margin="1dp"
+                android:background="@color/lightgray" />
+            <TextView
+                android:id="@+id/VolNm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/Vol"
+                android:layout_marginStart="80dp"
+                android:textColor="@color/colorGrayDark"
+                android:text="----"
+                android:textSize="15dp" />
+            <View
+                android:id="@+id/views"
+                android:layout_width="2dp"
+                android:layout_height="12dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignLeft="@+id/Vol"
+                android:layout_marginTop="5dp"
+                android:background="@color/lightBlue" />
+            <TextView
+                android:id="@+id/Vol"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:textColor="@color/colorGrayDark"
+                android:layout_marginStart="5dp"
+                android:text="成交量 :"
+                android:textSize="15dp" />
+            <View
+                android:id="@+id/viewVol"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/Vol"
+                android:layout_margin="1dp"
+                android:background="@color/lightgray" />
+            <TextView
+                android:id="@+id/threebig"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/selfemploy"
+                android:layout_alignParentStart="true"
+                android:textColor="@color/colorGrayDark"
+                android:layout_marginTop="2dp"
+                android:layout_marginStart="5dp"
+                android:text="三大法人 :"
+                android:textSize="15dp" />
+
+            <View
+                android:id="@+id/viewthreebigTitle"
+                android:layout_width="2dp"
+                android:layout_height="12dp"
+                android:layout_below="@+id/viewsoshin"
+                android:layout_marginTop="10dp"
+                android:background="@color/lightBlue" />
+            <View
+                android:id="@+id/viewthreebig"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/threebig"
+                android:layout_margin="1dp"
+                android:background="@color/lightgray" />
+
+            <View
+                android:id="@+id/viewstoshin"
+                android:layout_width="2dp"
+                android:layout_height="12dp"
+                android:layout_below="@+id/viewVol"
+                android:layout_marginTop="5dp"
+                android:background="@color/lightBlue" />
+            <TextView
+                android:id="@+id/toshin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/Vol"
+                android:layout_alignParentStart="true"
+                android:textColor="@color/colorGrayDark"
+                android:layout_marginTop="2dp"
+                android:layout_marginStart="5dp"
+                android:text="投信 :"
+                android:textSize="15dp" />
+            <View
+                android:id="@+id/view1"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/toshin"
+                android:layout_margin="1dp"
+                android:background="@color/lightgray" />
+
+            <TextView
+                android:id="@+id/threebigNm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/threebig"
+                android:layout_marginStart="80dp"
+                android:textColor="@color/colorGrayDark"
+                android:text="----"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/selfemploy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/wichi"
+                android:layout_alignParentStart="true"
+                android:textColor="@color/colorGrayDark"
+                android:layout_marginTop="2dp"
+                android:layout_marginStart="5dp"
+                android:text="自營商 :"
+                android:textSize="15dp" />
+
+            <View
+                android:id="@+id/viewwichititle1"
+                android:layout_width="2dp"
+                android:layout_height="12dp"
+                android:layout_below="@+id/viewthreebigTitle"
+                android:layout_marginTop="10dp"
+                android:background="@color/lightBlue" />
+            <View
+                android:id="@+id/view"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/selfemploy"
+                android:layout_margin="1dp"
+                android:background="@color/lightgray" />
+
+            <TextView
+                android:id="@+id/toshinNm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/toshin"
+                android:layout_marginStart="80dp"
+                android:textColor="@color/colorGrayDark"
+                android:text="----"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/selfemployNm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/selfemploy"
+                android:layout_marginStart="80dp"
+                android:textColor="@color/colorGrayDark"
+                android:text="----"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/longchiUse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/longchi"
+                android:layout_below="@+id/longchi"
+                android:text="融資使用 :"
+                android:textColor="@color/colorGrayDark"
+                android:layout_marginTop="2dp"
+                android:textSize="15dp" />
+
+            <View
+                android:id="@+id/viewlongchiUseTitle"
+                android:layout_width="2dp"
+                android:layout_height="12dp"
+                android:layout_below="@+id/viewlongchiTitle"
+                android:layout_alignTop="@+id/longchiUse"
+                android:layout_marginEnd="3dp"
+                android:layout_toLeftOf="@+id/longchiUse"
+                android:layout_marginTop="5dp"
+                android:background="@color/lightBlue" />
+
+            <TextView
+                android:id="@+id/longChun"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/longchiUse"
+                android:layout_alignStart="@+id/longchiUse"
+                android:textColor="@color/colorGrayDark"
+                android:layout_marginTop="2dp"
+                android:text="昨日融券 :"
+                android:textSize="15dp" />
+
+            <View
+                android:id="@+id/viewlongChunTitle"
+                android:layout_width="2dp"
+                android:layout_height="12dp"
+                android:layout_below="@+id/viewlongchiTitle"
+                android:layout_alignTop="@+id/longChun"
+                android:layout_marginEnd="3dp"
+                android:layout_marginTop="5dp"
+                android:layout_toStartOf="@+id/longChun"
+                android:background="@color/lightBlue" />
+
+            <TextView
+                android:id="@+id/longChunNm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/longChun"
+                android:layout_alignBottom="@+id/longChun"
+                android:layout_toEndOf="@+id/longChun"
+                android:layout_marginStart="10dp"
+                android:textColor="@color/colorGrayDark"
+                android:text="----"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/longChunUse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/longChun"
+                android:layout_alignStart="@+id/longChun"
+                android:textColor="@color/colorGrayDark"
+                android:layout_marginTop="2dp"
+                android:text="融券使用 :"
+                android:textSize="15dp" />
+
+            <View
+                android:id="@+id/viewlongChunUseTitle"
+                android:layout_width="2dp"
+                android:layout_height="12dp"
+                android:layout_below="@+id/viewlongchiTitle"
+                android:layout_alignTop="@+id/longChunUse"
+                android:layout_marginEnd="3dp"
+                android:layout_marginTop="5dp"
+                android:layout_toStartOf="@+id/longChunUse"
+                android:background="@color/lightBlue" />
+
+            <TextView
+                android:id="@+id/longChunUseNm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/longChunUse"
+                android:layout_alignBottom="@+id/longChunUse"
+                android:layout_toEndOf="@+id/longChunUse"
+                android:layout_marginStart="10dp"
+                android:textColor="@color/colorGrayDark"
+                android:text="----"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/longchi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/VolNm"
+                android:layout_marginStart="60dp"
+                android:layout_toEndOf="@+id/VolNm"
+                android:textColor="@color/colorGrayDark"
+                android:text="昨日融資 :"
+                android:textSize="15dp" />
+            <View
+                android:id="@+id/viewlongchiTitle"
+                android:layout_width="2dp"
+                android:layout_height="12dp"
+                android:layout_alignTop="@+id/VolNm"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="3dp"
+                android:layout_toLeftOf="@+id/longchiUse"
+                android:background="@color/lightBlue" />
+
+
+            <TextView
+                android:id="@+id/longchiUseNm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/longchiUse"
+                android:layout_alignBottom="@+id/longchiUse"
+                android:layout_toEndOf="@+id/longchiUse"
+                android:layout_marginStart="10dp"
+                android:textColor="@color/colorGrayDark"
+                android:text="----"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/longchiNm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/longchi"
+                android:layout_alignBottom="@+id/longchi"
+                android:layout_toEndOf="@+id/longchi"
+                android:layout_marginStart="10dp"
+                android:textColor="@color/colorGrayDark"
+                android:text="----"
+                android:textSize="15dp" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+</RelativeLayout>
