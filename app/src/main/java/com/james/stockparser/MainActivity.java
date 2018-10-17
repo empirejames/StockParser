@@ -562,6 +562,7 @@ public class MainActivity extends AppCompatActivity {
         mAdapter = new RecycleViewAdapter(MainActivity.this, item, stockChoMa, isVistor, selectAll);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(MainActivity.this, DividerItemDecoration.VERTICAL));
         mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutAnimation(getListAnim());
         mAdapter.notifyDataSetChanged();
     }
 
