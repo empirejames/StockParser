@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
@@ -24,7 +26,7 @@ import java.util.Map;
  * Created by 101716 on 2018/10/16.
  */
 
-public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.MyViewHolder> {
+public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.MyViewHolder> implements Filterable {
     private ArrayList<StockItem> itemList;
     private Context mContext;
     String TAG = RecycleViewAdapter.class.getSimpleName();
@@ -33,6 +35,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     ArrayList<String> toDelete = new ArrayList<String>();
     TinyDB tinydb;
     private LayoutInflater inflater;
+    private ViewGroup mParent;
     boolean page2, isVistor;
     public RecycleViewAdapter(Context mContext, ArrayList<StockItem> itemList,Map<String, String> stockChoMa , boolean isVistor, boolean page2){
         this.itemList = itemList;
@@ -43,6 +46,11 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
         inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         tinydb = new TinyDB(mContext);
+    }
+
+    @Override
+    public Filter getFilter() {
+        return null;
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder{
@@ -64,6 +72,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         private CheckBox cbDel;
         public MyViewHolder(View v) {
             super(v);
+
             img_right = (ImageView) v.findViewById(R.id.right_select);
             cb = (CheckBox) v.findViewById(R.id.checkbox);
             cbDel = (CheckBox) v.findViewById(R.id.checkbox_delete);
@@ -99,12 +108,17 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.customer_stock, parent, false);
         MyViewHolder vh = new MyViewHolder(v);
+        mParent = parent;
         return vh;
     }
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         float transTianx = 0;
+
+        holder.cb.setVisibility(View.GONE);
+        holder.cbDel.setVisibility(View.GONE);
+        holder.img_right.setVisibility(View.VISIBLE);
         holder.guValue.setText(itemList.get(position).getPayGu());
         holder.shiValue.setText(itemList.get(position).getPayShi());
         holder.stockNumber.setText(itemList.get(position).getStockNumber());
@@ -137,6 +151,12 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                 } else {
                     dismiss(relativeLy, height);
                 }
+            }
+        });
+        holder.img_right.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainActivity) mParent.getContext()).addSome(position);
             }
         });
     }
@@ -191,7 +211,9 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         });
         animator.start();
     }
-
+    public ArrayList<String> getFavorite() {
+        return myFavorite;
+    }
     public void changeValue(String value, TextView v) {
         if (Integer.parseInt(value) >= 0) {
             v.setTextColor(mContext.getResources().getColor(R.color.colorRed));

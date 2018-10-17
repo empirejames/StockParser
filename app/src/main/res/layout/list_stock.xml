@@ -235,7 +235,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:src="@mipmap/right_arrow">
             </ImageView>
 
@@ -248,7 +248,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="10dp"
                 android:button="@drawable/checkbox_favorite"
-                android:visibility="visible">
+                android:visibility="gone">
             </CheckBox>
             <CheckBox
                 android:id="@+id/checkbox_delete"

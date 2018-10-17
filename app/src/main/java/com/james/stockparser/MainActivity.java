@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
     private ListView listV;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
+    private RecycleViewAdapter recycleViewAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     public MyAdapter adapter;
     public String returnString;
@@ -202,13 +203,12 @@ public class MainActivity extends AppCompatActivity {
         searchEditText.setHintTextColor(getResources().getColor(R.color.colorGray));
 
         searchView.setOnQueryTextFocusChangeListener(new SearchView.OnFocusChangeListener() {
-
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                Log.e(TAG, "adapter.getFavorite()" + adapter.getFavorite());
-                if (adapter.getFavorite().size() > 0) {
-                    saveUserData(compareNewData(favList, adapter.getFavorite(), true));
-                }
+//                Log.e(TAG, "adapter.getFavorite()" + recycleViewAdapter.getFavorite());
+//                if (recycleViewAdapter.getFavorite().size() > 0) {
+//                    saveUserData(compareNewData(favList, recycleViewAdapter.getFavorite(), true));
+//                }
             }
         });
 
@@ -551,11 +551,18 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
+
+
     public void listAdaperr(ArrayList<StockItem> item, boolean isVistor, boolean selectAll) {
-        adapter = new MyAdapter(getApplicationContext(), item, isVistor, selectAll);
-        listV.setAdapter(adapter);
-        listV.invalidateViews();
-        listV.setLayoutAnimation(getListAnim());
+//        adapter = new MyAdapter(getApplicationContext(), item, isVistor, selectAll);
+//        listV.setAdapter(adapter);
+//        listV.invalidateViews();
+//        listV.setLayoutAnimation(getListAnim());
+
+        mAdapter = new RecycleViewAdapter(MainActivity.this, item, stockChoMa, isVistor, selectAll);
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(MainActivity.this, DividerItemDecoration.VERTICAL));
+        mRecyclerView.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -591,8 +598,7 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         invalidateOptionsMenu();//update toolbar
                         userStatus = "favorite";
-                        myFavorite = myFavovResult(compareNewData(favList, adapter.getFavorite(), true)); //summary main item
-
+                        myFavorite = myFavovResult(compareNewData(favList, myFavorite, true)); //summary main item
                         listAdaperr(myFavorite, isVistor, true);
                     }
                     return true;
@@ -1418,11 +1424,7 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                     }
-
-                    mAdapter = new RecycleViewAdapter(MainActivity.this, myDataset, stockChoMa, true, selectAll);
-                    mRecyclerView.addItemDecoration(new DividerItemDecoration(MainActivity.this, DividerItemDecoration.VERTICAL));
-                    mRecyclerView.setAdapter(mAdapter);
-                    //listAdaperr(myDataset, true, selectAll);
+                    listAdaperr(myDataset, true, selectAll);
                     try {
                         if (mProgressDialog != null) {
                             mProgressDialog.dismiss();
