@@ -65,7 +65,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         private TextView thisYear;
         private TextView guValue;
         private TextView shiValue;
-        private TextView VolNm, longchiNm, toshinNm, longchiUseNm, wichiNm, longChunNm, threebigNm, longChunUseNm, selfemployNm;
+        private TextView VolNm, longchiNm, toshinNm, longchiUseNm, wichiNm, longChunNm, threebigNm, longChunUseNm, selfemployNm, yestoday;
         TextView stockNumber = null;
         private ImageView img_right ;
         private CheckBox cb;
@@ -100,6 +100,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             threebigNm = v.findViewById(R.id.threebigNm);
             longChunUseNm = v.findViewById(R.id.longChunUseNm);
             selfemployNm = v.findViewById(R.id.selfemployNm);
+            yestoday = v.findViewById(R.id.yestoday);
             ////
         }
     }
@@ -115,7 +116,6 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         float transTianx = 0;
-
         holder.cb.setVisibility(View.GONE);
         holder.cbDel.setVisibility(View.GONE);
         holder.img_right.setVisibility(View.VISIBLE);
@@ -169,7 +169,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         if (stockChoMa.get(stockNm) != null) {
             v.setVisibility(View.VISIBLE);
             String choMa[] = stockChoMa.get(stockNm).split(":");
-
+            holder.yestoday.setText(((BaseActivity) mParent.getContext()).getYearORDate("yesterday"));
             holder.VolNm.setText(choMa[0]);
             changeValue(choMa[1], holder.toshinNm);
             changeValue(choMa[2], holder.wichiNm);

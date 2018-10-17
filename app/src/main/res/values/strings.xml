@@ -28,4 +28,5 @@
         7. 本軟體所取得所有資訊為電磁紀錄用途，不會洩漏出其他資訊以及做為其他用途。\n\n
         8. 本軟體所使用資料來源為網路之數據統計結果，僅供參考不代表實際狀況。\n
     </string>
+    <string name="title_activity_base">BaseActivity</string>
 </resources>

@@ -83,7 +83,7 @@ import java.util.Map;
 import java.util.Set;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity{
     String TAG = MainActivity.class.getSimpleName();
     private ListView listV;
     private RecyclerView mRecyclerView;
@@ -276,10 +276,8 @@ public class MainActivity extends AppCompatActivity {
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         BottomNavigationViewHelper.disableShiftMode(navigation);
-        //listV = (ListView) findViewById(R.id.list_view);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        //mToolbar.setNavigationIcon(R.drawable.ic_keyboard_arrow_left_white_48dp);
         mToolbar.setOnMenuItemClickListener(onMenuItemClick);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -287,108 +285,8 @@ public class MainActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-
         new GetData().execute();
-//        listV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//
-//                RelativeLayout relativeLy;
-//                relativeLy = (RelativeLayout) view.findViewById(R.id.relative_layout_all);
-//                relativeLy.measure(0, 0);
-//                initView(view);
-//                final int height = relativeLy.getMeasuredHeight();
-//                if (relativeLy.getVisibility() == View.GONE) {
-//                    String stockNumber;
-//                    Log.e(TAG, "userStatus : " + userStatus);
-//                    if (userStatus.equals("filting")) {
-//                        stockNumber = myDataFilter.get(position).getStockNumber();
-//                    } else if (userStatus.equals("home")) {
-//                        stockNumber = myDataset.get(position).getStockNumber();
-//                    } else if (userStatus.equals("nearly")) {
-//                        stockNumber = nearlyStock.get(position).getStockNumber();
-//                    } else if (userStatus.equals("favorite")) {
-//                        stockNumber = myFavorite.get(position).getStockNumber();
-//                    } else if (userStatus.equals("history")) {
-//                        stockNumber = myHistory.get(position).getStockNumber();
-//                    } else {
-//                        stockNumber = myFilterResult.get(position).getStockNumber();
-//                    }
-//                    show(relativeLy, height, stockNumber);
-//                } else {
-//                    dismiss(relativeLy, height);
-//                }
-//            }
-//        });
 
-//        listV.setOnScrollListener(new AbsListView.OnScrollListener() {
-//            private int lastVisibleItemPosition = 0;
-//
-//            @Override
-//            public void onScrollStateChanged(AbsListView view, int scrollState) {
-//                Log.e(TAG,"onScrollStateChanged : " + scrollFlag);
-////                if (scrollFlag) {
-////                    navigation.setVisibility(View.GONE);
-////                    navigation.startAnimation(mHiddenAction);
-////                    mToolbar.setVisibility(View.GONE);
-////                    mToolbar.startAnimation(mHiddenToolbar);
-////                    mFab.setVisibility(View.GONE);
-////                    mFab.startAnimation(mHiddenToolbar);
-////                } else {
-////                    navigation.setVisibility(View.VISIBLE);
-////                    navigation.startAnimation(mShowAction);
-////                    mToolbar.setVisibility(View.VISIBLE);
-////                    mToolbar.startAnimation(mShowToolbar);
-////                    mFab.setVisibility(View.VISIBLE);
-////                    mFab.startAnimation(mShowToolbar);
-////                    scrollFlag = false;
-////                }
-//
-//
-//                switch (scrollState) {
-//                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:// rolling stop
-//                        break;
-//                    case AbsListView.OnScrollListener.SCROLL_STATE_FLING: //stating rolling
-//                        break;
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-//                if (view.getId() == listV.getId()) {
-//                    final int currentFirstVisibleItem = listV.getFirstVisiblePosition();
-//                    if (currentFirstVisibleItem > lastVisibleItemPosition) {
-//                        //getSupportActionBar().hide();
-//                    } else if (currentFirstVisibleItem < lastVisibleItemPosition) {
-//
-//                        //getSupportActionBar().show();
-//                    }
-//
-//                    lastVisibleItemPosition = currentFirstVisibleItem;
-//                }
-//
-//                if (listV != null && listV.getChildCount() > 0) {
-//                    boolean isAtBottom = listV.getScrollY() == listV.getChildAt(listV.getChildCount() - 1).getBottom() + listV.getPaddingBottom() - listV.getHeight();
-//                    if (firstVisibleItem > lastVisibleItemPosition) {
-//                        scrollFlag = true;
-//                    } else if (firstVisibleItem < lastVisibleItemPosition) {
-//                        scrollFlag = false;
-//                    }
-//                    if (isAtBottom) {
-//                        mAdView.setVisibility(View.GONE);
-//                        navigation.setVisibility(View.GONE);
-//                        navigation.startAnimation(mShowAction);
-//                    } else {
-//                        mAdView.setVisibility(View.VISIBLE);
-//                        navigation.setVisibility(View.VISIBLE);
-//                        navigation.startAnimation(mShowAction);
-//                    }
-//                    lastVisibleItemPosition = firstVisibleItem;
-//                }
-//            }
-//        });
-//        listV.setLayoutAnimation(getListAnim());
     }
 
 
@@ -421,74 +319,6 @@ public class MainActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         //readFav();
-    }
-
-//    public void initView(View v) {
-//        VolNm = v.findViewById(R.id.VolNm);
-//        longchiNm = v.findViewById(R.id.longchiNm);
-//        toshinNm = v.findViewById(R.id.toshinNm);
-//        longchiUseNm = v.findViewById(R.id.longchiUseNm);
-//        wichiNm = v.findViewById(R.id.wichiNm);
-//        longChunNm = v.findViewById(R.id.longChunNm);
-//        threebigNm = v.findViewById(R.id.threebigNm);
-//        longChunUseNm = v.findViewById(R.id.longChunUseNm);
-//        selfemployNm = v.findViewById(R.id.selfemployNm);
-//    }
-
-    public void changeValue(String value, TextView v) {
-        if (Integer.parseInt(value) >= 0) {
-            v.setTextColor(getResources().getColor(R.color.colorRed));
-        } else {
-            v.setTextColor(getResources().getColor(R.color.colorGreen));
-        }
-        v.setText(value);
-    }
-
-//    public void show(final View v, int height, String stockNm) {
-//        if (stockChoMa.get(stockNm) != null) {
-//            v.setVisibility(View.VISIBLE);
-//            String choMa[] = stockChoMa.get(stockNm).split(":");
-//            VolNm.setText(choMa[0]);
-//            changeValue(choMa[1], toshinNm);
-//            changeValue(choMa[2], wichiNm);
-//            changeValue(choMa[3], selfemployNm);
-//            changeValue(choMa[4], threebigNm);
-//            changeValue(choMa[5], longchiNm);
-//            changeValue(choMa[7], longChunNm);
-//            longchiUseNm.setText(choMa[6]);
-//            longChunUseNm.setText(choMa[8]);
-//            ValueAnimator animator = ValueAnimator.ofInt(0, height);
-//            animator.setDuration(200);
-//            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-//                @Override
-//                public void onAnimationUpdate(ValueAnimator animation) {
-//                    int value = (Integer) animation.getAnimatedValue();
-//                    v.setVisibility(View.VISIBLE);
-//                    v.getLayoutParams().height = value;
-//                    v.setLayoutParams(v.getLayoutParams());
-//                }
-//            });
-//            animator.start();
-//        } else {
-//            Toast.makeText(MainActivity.this, "此檔無籌碼資訊", Toast.LENGTH_LONG).show();
-//        }
-//    }
-
-    public void dismiss(final View v, int height) {
-        ValueAnimator animator = ValueAnimator.ofInt(height, 0);
-        animator.setDuration(200);
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                int value = (Integer) animation.getAnimatedValue();
-                if (value == 0) {
-                    v.setVisibility(View.GONE);
-                }
-                v.getLayoutParams().height = value;
-                v.setLayoutParams(v.getLayoutParams());
-            }
-        });
-        animator.start();
     }
 
 //    @Override
@@ -554,11 +384,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void listAdaperr(ArrayList<StockItem> item, boolean isVistor, boolean selectAll) {
-//        adapter = new MyAdapter(getApplicationContext(), item, isVistor, selectAll);
-//        listV.setAdapter(adapter);
-//        listV.invalidateViews();
-//        listV.setLayoutAnimation(getListAnim());
-
         mAdapter = new RecycleViewAdapter(MainActivity.this, item, stockChoMa, isVistor, selectAll);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(MainActivity.this, DividerItemDecoration.VERTICAL));
         mRecyclerView.setAdapter(mAdapter);
@@ -828,7 +653,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 if (!myDataset.get(i).getThisYear().toString().equals("")) {
                     //Log.e(TAG, "today" + getDate() + " - stockDay : " + myDataset.get(i).getThisYear().toString());
-                    Date beginDate = format.parse(getDate());
+                    Date beginDate = format.parse(getYearORDate(""));
                     Date endDate = format.parse(myDataset.get(i).getThisYear().toString());
                     long day = (endDate.getTime() - beginDate.getTime()) / (24 * 60 * 60 * 1000);
                     //Log.e(TAG, "day: " + day);
@@ -1044,11 +869,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public String getDate() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        String date = sdf.format(new java.util.Date());
-        return date;
-    }
+
 
     public String getYesterDate() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -1098,12 +919,6 @@ public class MainActivity extends AppCompatActivity {
                         usersRef.child("count").setValue(a);
 
                     }
-//                    dataSnapshot.getChildren();
-//                    String count;
-//                    count = usersRef.getValue().toString();
-//                    int a = Integer.parseInt(count) + 1;
-//                    usersRef.child(sex).setValue(a);
-//                    usersRef.setValue("1");
                 }
             }
 
