@@ -37,6 +37,10 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     private LayoutInflater inflater;
     private ViewGroup mParent;
     boolean page2, isVistor;
+
+    public RecycleViewAdapter(){
+
+    }
     public RecycleViewAdapter(Context mContext, ArrayList<StockItem> itemList,Map<String, String> stockChoMa , boolean isVistor, boolean page2){
         this.itemList = itemList;
         this.stockChoMa = stockChoMa;
