@@ -89,10 +89,10 @@ public class MainActivity extends BaseActivity{
     private ListView listV;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
-    private RecycleViewAdapter recycleViewAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     public MyAdapter adapter;
     public String returnString;
+
 
     Map<String, String> stockMap = new HashMap<String, String>();
     Map<String, String> stockChoMa = new HashMap<String, String>();
@@ -262,9 +262,12 @@ public class MainActivity extends BaseActivity{
 
         mRecyclerView = (RecyclerView)findViewById(R.id.my_recycler_view);
 
-        SwipeController swipeController = new SwipeController();
-        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
-        itemTouchhelper.attachToRecyclerView(mRecyclerView);
+
+        enableSwipe();
+
+
+
+
         mLayoutManager = new LinearLayoutManager(MainActivity.this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         bundle = getIntent().getExtras();
@@ -277,7 +280,6 @@ public class MainActivity extends BaseActivity{
         } else {
             alertDialog("目前會員數已達8000人，為持續服務優質會員，一萬人後將關閉訪客註冊及登入，趕快搶先註冊會員唷!");
         }
-
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         BottomNavigationViewHelper.disableShiftMode(navigation);
@@ -294,6 +296,14 @@ public class MainActivity extends BaseActivity{
 
     }
 
+
+    private void enableSwipe(){
+
+
+        //ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
+        //itemTouchhelper.attachToRecyclerView(mRecyclerView);
+
+    }
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -389,7 +399,7 @@ public class MainActivity extends BaseActivity{
 
 
     public void listAdaperr(ArrayList<StockItem> item, boolean isVistor, boolean selectAll) {
-        mAdapter = new RecycleViewAdapter(MainActivity.this, item, stockChoMa, isVistor, selectAll);
+        mAdapter = new RecycleViewAdapter(MainActivity.this, item, stockChoMa, favList, userId , isVistor, selectAll);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(MainActivity.this, DividerItemDecoration.VERTICAL));
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutAnimation(getListAnim());

@@ -16,11 +16,18 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.james.stockparser.dataBase.TinyDB;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+
 
 /**
  * Created by 101716 on 2018/10/16.
@@ -29,22 +36,27 @@ import java.util.Map;
 public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.MyViewHolder> implements Filterable {
     private ArrayList<StockItem> itemList;
     private Context mContext;
+    private String userId;
     String TAG = RecycleViewAdapter.class.getSimpleName();
     Map<String, String> stockChoMa = new HashMap<String, String>();
     ArrayList<String> myFavorite = new ArrayList<String>();
-    ArrayList<String> toDelete = new ArrayList<String>();
+    ArrayList<String> toAdd= new ArrayList<String>();
     TinyDB tinydb;
     private LayoutInflater inflater;
     private ViewGroup mParent;
     boolean page2, isVistor;
 
+
+
     public RecycleViewAdapter(){
 
     }
-    public RecycleViewAdapter(Context mContext, ArrayList<StockItem> itemList,Map<String, String> stockChoMa , boolean isVistor, boolean page2){
+    public RecycleViewAdapter(Context mContext, ArrayList<StockItem> itemList,Map<String, String> stockChoMa, ArrayList<String> myFavorite ,String userId, boolean isVistor, boolean page2){
         this.itemList = itemList;
         this.stockChoMa = stockChoMa;
         this.mContext = mContext;
+        this.userId = userId;
+        this.myFavorite = myFavorite;
         this.isVistor = isVistor;
         this.page2 = page2;
 
@@ -74,8 +86,15 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         private ImageView img_right ;
         private CheckBox cb;
         private CheckBox cbDel;
+        private View frontLayout;
+        private View addLayout;
+        private TextView add_text;
+
+
         public MyViewHolder(View v) {
             super(v);
+            frontLayout = (View) v.findViewById(R.id.front_layout);
+            addLayout = (View) v.findViewById(R.id.add_layout);
 
             img_right = (ImageView) v.findViewById(R.id.right_select);
             cb = (CheckBox) v.findViewById(R.id.checkbox);
@@ -106,6 +125,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             selfemployNm = v.findViewById(R.id.selfemployNm);
             yestoday = v.findViewById(R.id.yestoday);
             ////
+
         }
     }
 
@@ -119,6 +139,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
+
         float transTianx = 0;
         holder.cb.setVisibility(View.GONE);
         holder.cbDel.setVisibility(View.GONE);
@@ -140,12 +161,41 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         } else {
             holder.thisYear.setText(itemList.get(position).getThisYear());
         }
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+
+        holder.addLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RelativeLayout relativeLy = null;
+                toAdd.add(holder.stockNumber.getText().toString());
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+                final DatabaseReference usersRef = ref.child("users").child(userId).child("favorite");
+                usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists() && toAdd.size() != 0) {
+
+                            for (DataSnapshot dsp : dataSnapshot.getChildren()) {
+                                    toAdd.add(dsp.getValue().toString());
+                                    if(!dsp.getValue().equals(toAdd.get(0).toString())){
+                                        usersRef.setValue(toAdd);
+                                    }
+                            }
+
+                        }
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        });
+
+        holder.frontLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                View relativeLy = null;
                 final int height;
-                relativeLy = (RelativeLayout) v.findViewById(R.id.relative_layout_all);
+                relativeLy = (View) v.findViewById(R.id.relative_layout_all);
                 relativeLy.measure(0, 0);
                 height = relativeLy.getMeasuredHeight();
                 if (relativeLy.getVisibility() == View.GONE) {
@@ -157,6 +207,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                 }
             }
         });
+
         holder.img_right.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
