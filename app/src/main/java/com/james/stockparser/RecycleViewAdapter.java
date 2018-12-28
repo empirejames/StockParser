@@ -192,8 +192,11 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                                         HashSet<String> set = new HashSet<String>(toAdd);
                                         ArrayList<String> listWithoutDuplicateElements = new ArrayList<String>(set);
                                         usersRef.setValue(listWithoutDuplicateElements);
+                                        Toast.makeText(mContext, "已加入我的最愛", Toast.LENGTH_LONG).show();
                                     }
                                 }
+                            }else{
+                                usersRef.child("users").child(userId).setValue("favorite");
                             }
                         }
                         @Override

@@ -10,24 +10,7 @@
         android:title="搜尋"
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="ifRoom|collapseActionView" />
-    <item
-        android:id="@+id/action_favorite"
-        android:icon="@mipmap/ic_action_heart"
-        android:orderInCategory="200"
-        android:title="我的最愛"
-        app:showAsAction="ifRoom|collapseActionView" />
-    <item
-        android:id="@+id/action_update"
-        android:icon="@mipmap/ic_action_save"
-        android:orderInCategory="300"
-        android:title="上傳"
-        app:showAsAction="ifRoom|collapseActionView" />
-    <item
-        android:id="@+id/action_trash"
-        android:icon="@mipmap/ic_action_trash"
-        android:orderInCategory="400"
-        android:title="刪除"
-        app:showAsAction="ifRoom|collapseActionView" />
+
     <item
         android:id="@+id/action_filter"
         android:icon="@mipmap/ic_action_filter"

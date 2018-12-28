@@ -176,24 +176,7 @@ public class MainActivity extends BaseActivity{
         inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
         this.menuItem = menu;
-        if (isVistor()) {
-            menu.getItem(1).setVisible(false);
-            menu.getItem(2).setVisible(false);
-        }
-        if (PageNumber == 0) {
-            menu.getItem(2).setVisible(false);
-            menu.getItem(3).setVisible(false);
-        } else if (PageNumber == 1) {
-            menu.getItem(0).setVisible(false);
-            menu.getItem(1).setVisible(false);
-            menu.getItem(4).setVisible(false);
-        } else if (PageNumber == 2) {
-            menu.getItem(0).setVisible(false); //搜尋
-            menu.getItem(1).setVisible(false); //我的最愛
-            menu.getItem(2).setVisible(false); //上傳
-            menu.getItem(3).setVisible(false); //刪除
-            menu.getItem(4).setVisible(false); //篩選
-        }
+
         SearchManager searchManager = (SearchManager) getSystemService(getApplicationContext().SEARCH_SERVICE);
         searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
 
@@ -349,9 +332,7 @@ public class MainActivity extends BaseActivity{
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (!isVistor() && adapter.getToDelete() != null) {
-            saveUserData(compareNewData(favList, adapter.getToDelete(), false));
-        }
+
     }
 
     public void displayInterstitial() {
@@ -443,12 +424,6 @@ public class MainActivity extends BaseActivity{
                         userStatus = "favorite";
                         getFav();
                         //myFavorite = myFavovResult(compareNewData(favList, myFavorite, true)); //summary main item
-
-                        Log.e(TAG, "AddT Size :" + addT.size() );
-                        Log.e(TAG, "AddT " + addT);
-
-
-
                     }
                     return true;
                 case R.id.navigation_history:
@@ -621,34 +596,9 @@ public class MainActivity extends BaseActivity{
             String msg = "";
             switch (menuItem.getItemId()) {
                 case R.id.action_search:
-                    navigation.setVisibility(View.GONE);
+                    //navigation.setVisibility(View.GONE);
                     break;
-                case R.id.action_update:
-                    Log.e(TAG, "action_update");
-                    Toast.makeText(MainActivity.this, "已儲存", Toast.LENGTH_SHORT).show();
-                    saveUserData(compareNewData(favList, adapter.getToDelete(), false));
-                    myFavovResult(compareNewData(favList, adapter.getToDelete(), false)); // reset List View
-                    break;
-                case R.id.action_trash:
-                    Log.e(TAG, "action_trash");
-                    multipleDelete(mDisPlayFav);
-                    break;
-                case R.id.action_favorite:
-                    Log.e(TAG, compareNewData(favList, adapter.getToDelete(), false) + " click fav");
-                    saveUserData(compareNewData(favList, adapter.getFavorite(), true));
-                    Toast.makeText(MainActivity.this, "已儲存至我的最愛", Toast.LENGTH_LONG).show();
-                    if (mDisPlayFav) {
-                        menuItem.setIcon(getResources().getDrawable(R.mipmap.ic_action_heart));
-                    } else {
-                        menuItem.setIcon(getResources().getDrawable(R.mipmap.ic_action_save));
-                    }
 
-                    if (PageNumber == 0) {
-                        multipleDelete(mDisPlayFav);
-                    } else {
-                        Log.e(TAG, "PAGE 11 ");
-                    }
-                    break;
                 case R.id.action_filter:
                     showDialog();
                     break;
