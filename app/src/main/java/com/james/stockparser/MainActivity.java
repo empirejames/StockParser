@@ -111,6 +111,8 @@ public class MainActivity extends BaseActivity{
 
 
     ArrayList a = new ArrayList();
+    ArrayList<String> addT = new ArrayList<String>();
+
     ArrayList<String> hstEPS = new ArrayList<String>();
     ArrayList<String> hstGuLi = new ArrayList<String>();
     ArrayList<String> hstGuShi = new ArrayList<String>();
@@ -399,7 +401,7 @@ public class MainActivity extends BaseActivity{
 
 
     public void listAdaperr(ArrayList<StockItem> item, boolean isVistor, boolean selectAll) {
-        mAdapter = new RecycleViewAdapter(MainActivity.this, item, stockChoMa, favList, userId , isVistor, selectAll);
+        mAdapter = new RecycleViewAdapter(MainActivity.this, item, stockChoMa, favList, userId , isVistor, selectAll, userStatus);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(MainActivity.this, DividerItemDecoration.VERTICAL));
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutAnimation(getListAnim());
@@ -439,8 +441,14 @@ public class MainActivity extends BaseActivity{
                     } else {
                         invalidateOptionsMenu();//update toolbar
                         userStatus = "favorite";
-                        myFavorite = myFavovResult(compareNewData(favList, myFavorite, true)); //summary main item
-                        listAdaperr(myFavorite, isVistor, true);
+                        getFav();
+                        //myFavorite = myFavovResult(compareNewData(favList, myFavorite, true)); //summary main item
+
+                        Log.e(TAG, "AddT Size :" + addT.size() );
+                        Log.e(TAG, "AddT " + addT);
+
+
+
                     }
                     return true;
                 case R.id.navigation_history:
@@ -458,6 +466,28 @@ public class MainActivity extends BaseActivity{
         }
 
     };
+
+
+    private void getFav(){
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+        final DatabaseReference usersRef = ref.child("users").child(userId).child("favorite");
+        addT.clear();
+        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot dsp : dataSnapshot.getChildren()) {
+                    Log.e(TAG,dsp.getValue() +"");
+                    addT.add(dsp.getValue()+"");
+                }
+                myFavorite = myFavovResult(addT);
+                listAdaperr(myFavorite, isVistor, true);
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
 
     private LayoutAnimationController getListAnim() {
         AnimationSet set = new AnimationSet(true);

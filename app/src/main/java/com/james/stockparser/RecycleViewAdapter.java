@@ -2,6 +2,7 @@ package com.james.stockparser;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,6 +26,8 @@ import com.james.stockparser.dataBase.TinyDB;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 
 
@@ -45,13 +48,13 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     private LayoutInflater inflater;
     private ViewGroup mParent;
     boolean page2, isVistor;
-
+    private String userStatus;
 
 
     public RecycleViewAdapter(){
 
     }
-    public RecycleViewAdapter(Context mContext, ArrayList<StockItem> itemList,Map<String, String> stockChoMa, ArrayList<String> myFavorite ,String userId, boolean isVistor, boolean page2){
+    public RecycleViewAdapter(Context mContext, ArrayList<StockItem> itemList,Map<String, String> stockChoMa, ArrayList<String> myFavorite ,String userId, boolean isVistor, boolean page2, String userStatus){
         this.itemList = itemList;
         this.stockChoMa = stockChoMa;
         this.mContext = mContext;
@@ -59,6 +62,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         this.myFavorite = myFavorite;
         this.isVistor = isVistor;
         this.page2 = page2;
+        this.userStatus = userStatus;
 
         inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         tinydb = new TinyDB(mContext);
@@ -88,14 +92,14 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         private CheckBox cbDel;
         private View frontLayout;
         private View addLayout;
-        private TextView add_text;
+        private TextView addorDelete_text;
 
 
         public MyViewHolder(View v) {
             super(v);
             frontLayout = (View) v.findViewById(R.id.front_layout);
             addLayout = (View) v.findViewById(R.id.add_layout);
-
+            addorDelete_text = (TextView)v.findViewById(R.id.txt_myfavorate);
             img_right = (ImageView) v.findViewById(R.id.right_select);
             cb = (CheckBox) v.findViewById(R.id.checkbox);
             cbDel = (CheckBox) v.findViewById(R.id.checkbox_delete);
@@ -162,31 +166,63 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             holder.thisYear.setText(itemList.get(position).getThisYear());
         }
 
+        if(userStatus.equals("favorite")){
+            holder.addLayout.setBackgroundColor(Color.parseColor("#8FB996"));
+            holder.addorDelete_text.setText(" 刪除最愛 ");
+        }
+
         holder.addLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                toAdd.add(holder.stockNumber.getText().toString());
+
+                final String cl_sotckNM = itemList.get(position).getStockNumber();
+
                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
                 final DatabaseReference usersRef = ref.child("users").child(userId).child("favorite");
-                usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.exists() && toAdd.size() != 0) {
-
-                            for (DataSnapshot dsp : dataSnapshot.getChildren()) {
-                                    toAdd.add(dsp.getValue().toString());
-                                    if(!dsp.getValue().equals(toAdd.get(0).toString())){
-                                        usersRef.setValue(toAdd);
+                toAdd.clear();
+                if(!userStatus.equals("favorite")){
+                    toAdd.add(cl_sotckNM);
+                    usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists() && toAdd.size() != 0) {
+                                for (DataSnapshot dsp : dataSnapshot.getChildren()) {
+                                    toAdd.add(dsp.getValue()+"");
+                                    if(!dsp.getValue().equals(toAdd.get(0)+"")){
+                                        HashSet<String> set = new HashSet<String>(toAdd);
+                                        ArrayList<String> listWithoutDuplicateElements = new ArrayList<String>(set);
+                                        usersRef.setValue(listWithoutDuplicateElements);
                                     }
+                                }
                             }
+                        }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
 
                         }
-                    }
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                    });
+                }else{
+                    Log.e(TAG, "Favorite");
+                    usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                for (DataSnapshot dsp : dataSnapshot.getChildren()) {
+                                    if(!dsp.getValue().equals(cl_sotckNM)){
+                                        toAdd.add(dsp.getValue()+"");
+                                    }
+                                }
+                            itemList.remove(position);
+                            Log.e(TAG, "Set toAdd" + toAdd);
+                            usersRef.setValue(toAdd);
+                            notifyDataSetChanged();
+                        }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
 
-                    }
-                });
+                        }
+                    });
+                }
+
             }
         });
 
