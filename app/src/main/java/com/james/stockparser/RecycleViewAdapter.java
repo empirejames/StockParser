@@ -177,7 +177,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
             @Override
             public void onSlide(SwipeRevealLayout view, float slideOffset) {
-                Log.e(TAG, " onSlide ");
+                //Log.e(TAG, " onSlide ");
             }
         });
 
@@ -215,6 +215,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                                         ArrayList<String> listWithoutDuplicateElements = new ArrayList<String>(set);
                                         usersRef.setValue(listWithoutDuplicateElements);
                                         Toast.makeText(mContext, "已加入我的最愛", Toast.LENGTH_LONG).show();
+                                        holder.swipeLayout.close(true);
                                     }
                                 }
                             }else{
@@ -238,6 +239,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                                 }
                             itemList.remove(position);
                             Log.e(TAG, "Set toAdd" + toAdd);
+                            holder.swipeLayout.close(true);
                             usersRef.setValue(toAdd);
                             notifyDataSetChanged();
                         }
