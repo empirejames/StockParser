@@ -6,8 +6,8 @@ android {
         applicationId "com.james.stockparser"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 63
-        versionName "6.3"
+        versionCode 70
+        versionName "7.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }

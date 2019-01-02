@@ -251,6 +251,7 @@ public class MainActivity extends BaseActivity{
 
         bundle = getIntent().getExtras();
         isVistor = isVistor();
+        Log.e(TAG, "isVistor : "  + isVistor);
         initFab();
         if (!isVistor) {
             String refreshedToken = FirebaseInstanceId.getInstance().getToken();
@@ -264,6 +265,15 @@ public class MainActivity extends BaseActivity{
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                int lastVisibleItem = manager.findLastCompletelyVisibleItemPosition();
+                int totalItemCount = manager.getItemCount();
+                Log.e(TAG,"lastVisibleItem :" + lastVisibleItem );
+                if (lastVisibleItem == (totalItemCount - 1) ) {
+                    navigation.setVisibility(View.VISIBLE);
+                    navigation.startAnimation(mShowAction);
+                }
+
                 if (dy > 0 && navigation.isShown()) {
                     navigation.setVisibility(View.GONE);
                     navigation.startAnimation(mHiddenAction);
@@ -304,7 +314,7 @@ public class MainActivity extends BaseActivity{
     @Override
     public void onBackPressed() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("確定要離開「權息大師」嗎?")
+        builder.setMessage("要離開「權息大師」嗎?")
                 .setCancelable(false)
                 .setPositiveButton("是", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -1241,7 +1251,7 @@ public class MainActivity extends BaseActivity{
                         }
 
                     }
-                    listAdaperr(myDataset, true, selectAll);
+                    listAdaperr(myDataset, isVistor, selectAll);
                     try {
                         if (mProgressDialog != null) {
                             mProgressDialog.dismiss();

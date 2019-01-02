@@ -2,12 +2,12 @@
     <string name="app_name">權息大師</string>
     <string name="app_value">權息小學堂</string>
     <string name="edit">Edit</string>
-    <string name="app_ver">APP Version 6.3</string>
+    <string name="app_ver">APP Version 7.0</string>
     <string name="channel_name">James name</string>
     <string name="channel_description">Channel description</string>
     <string name="taixiday">填息平均日小於 :</string>
     <string name="taixipercent">填息機率大於 :</string>
-    <string name="copy_right">Copyright © 2018 StockMaster.</string>
+    <string name="copy_right">Copyright © 2019 StockMaster.</string>
     <string name="copy_right1">All rights reserved</string>
     <string name="hintPercent">0 ~ 5 (星星數)</string>
     <string name="hintDay">0 ~ 100 (天數)</string>

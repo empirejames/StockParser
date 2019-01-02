@@ -32,7 +32,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 
-
 /**
  * Created by 101716 on 2018/10/16.
  */
@@ -44,7 +43,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     String TAG = RecycleViewAdapter.class.getSimpleName();
     Map<String, String> stockChoMa = new HashMap<String, String>();
     ArrayList<String> myFavorite = new ArrayList<String>();
-    ArrayList<String> toAdd= new ArrayList<String>();
+    ArrayList<String> toAdd = new ArrayList<String>();
     TinyDB tinydb;
     private LayoutInflater inflater;
     private ViewGroup mParent;
@@ -52,10 +51,11 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     private String userStatus;
 
 
-    public RecycleViewAdapter(){
+    public RecycleViewAdapter() {
 
     }
-    public RecycleViewAdapter(Context mContext, ArrayList<StockItem> itemList,Map<String, String> stockChoMa, ArrayList<String> myFavorite ,String userId, boolean isVistor, boolean page2, String userStatus){
+
+    public RecycleViewAdapter(Context mContext, ArrayList<StockItem> itemList, Map<String, String> stockChoMa, ArrayList<String> myFavorite, String userId, boolean isVistor, boolean page2, String userStatus) {
         this.itemList = itemList;
         this.stockChoMa = stockChoMa;
         this.mContext = mContext;
@@ -74,7 +74,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         return null;
     }
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder{
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
         private TextView hotCount;
         private TextView peRatio;
         private TextView dividend;
@@ -88,7 +88,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         private TextView shiValue;
         private TextView VolNm, longchiNm, toshinNm, longchiUseNm, wichiNm, longChunNm, threebigNm, longChunUseNm, selfemployNm, yestoday;
         TextView stockNumber = null;
-        private ImageView img_right ;
+        private ImageView img_right;
         private CheckBox cb;
         private CheckBox cbDel;
         private View frontLayout;
@@ -102,8 +102,8 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             super(v);
             frontLayout = (View) v.findViewById(R.id.front_layout);
             addLayout = (View) v.findViewById(R.id.add_layout);
-            swipeLayout = (SwipeRevealLayout)v.findViewById(R.id.swipe_layout);
-            addorDelete_text = (TextView)v.findViewById(R.id.txt_myfavorate);
+            swipeLayout = (SwipeRevealLayout) v.findViewById(R.id.swipe_layout);
+            addorDelete_text = (TextView) v.findViewById(R.id.txt_myfavorate);
             img_right = (ImageView) v.findViewById(R.id.right_select);
             cb = (CheckBox) v.findViewById(R.id.checkbox);
             cbDel = (CheckBox) v.findViewById(R.id.checkbox_delete);
@@ -118,7 +118,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             releaseCount = (TextView) v.findViewById(R.id.releaseName);
             tianxiDay = (TextView) v.findViewById(R.id.taixiaverageName);
             thisYear = (TextView) v.findViewById(R.id.thisyearName);
-            hotCount =  (TextView) v.findViewById(R.id.hotValue_data);
+            hotCount = (TextView) v.findViewById(R.id.hotValue_data);
             rb1 = (RatingBar) v.findViewById(R.id.RatingBar01);
 
             /// Hide relaytive layout using
@@ -172,6 +172,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
             @Override
             public void onOpened(SwipeRevealLayout view) {
+
                 Log.e(TAG, " onOpened ");
             }
 
@@ -188,7 +189,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             holder.thisYear.setText(itemList.get(position).getThisYear());
         }
 
-        if(userStatus.equals("favorite")){
+        if (userStatus.equals("favorite")) {
             holder.addLayout.setBackgroundColor(Color.parseColor("#8FB996"));
             holder.addorDelete_text.setText(" 刪除最愛 ");
         }
@@ -196,60 +197,64 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         holder.addLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                final String cl_sotckNM = itemList.get(position).getStockNumber();
-
-                DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-                final DatabaseReference usersRef = ref.child("users").child(userId).child("favorite");
-                toAdd.clear();
-                if(!userStatus.equals("favorite")){
-                    toAdd.add(cl_sotckNM);
-                    usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.exists() && toAdd.size() != 0) {
-                                for (DataSnapshot dsp : dataSnapshot.getChildren()) {
-                                    toAdd.add(dsp.getValue()+"");
-                                    if(!dsp.getValue().equals(toAdd.get(0)+"")){
-                                        HashSet<String> set = new HashSet<String>(toAdd);
-                                        ArrayList<String> listWithoutDuplicateElements = new ArrayList<String>(set);
-                                        usersRef.setValue(listWithoutDuplicateElements);
-                                        Toast.makeText(mContext, "已加入我的最愛", Toast.LENGTH_LONG).show();
-                                        holder.swipeLayout.close(true);
+                if (isVistor) {
+                    Toast.makeText(mContext, "訪客身分無法使用我的最愛功能", Toast.LENGTH_LONG).show();
+                    holder.swipeLayout.close(true);
+                } else {
+                    final String cl_sotckNM = itemList.get(position).getStockNumber();
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+                    final DatabaseReference usersRef = ref.child("users").child(userId).child("favorite");
+                    toAdd.clear();
+                    if (!userStatus.equals("favorite")) {
+                        toAdd.add(cl_sotckNM);
+                        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.exists() && toAdd.size() != 0) {
+                                    for (DataSnapshot dsp : dataSnapshot.getChildren()) {
+                                        toAdd.add(dsp.getValue() + "");
+                                        if (!dsp.getValue().equals(toAdd.get(0) + "")) {
+                                            HashSet<String> set = new HashSet<String>(toAdd);
+                                            ArrayList<String> listWithoutDuplicateElements = new ArrayList<String>(set);
+                                            usersRef.setValue(listWithoutDuplicateElements);
+                                            Toast.makeText(mContext, "已加入我的最愛", Toast.LENGTH_LONG).show();
+                                            holder.swipeLayout.close(true);
+                                        }
                                     }
+                                } else {
+                                    usersRef.child("users").child(userId).setValue("favorite");
                                 }
-                            }else{
-                                usersRef.child("users").child(userId).setValue("favorite");
                             }
-                        }
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
 
-                        }
-                    });
-                }else{
-                    Log.e(TAG, "Favorite");
-                    usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                    } else {
+                        Log.e(TAG, "Favorite");
+                        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
                                 for (DataSnapshot dsp : dataSnapshot.getChildren()) {
-                                    if(!dsp.getValue().equals(cl_sotckNM)){
-                                        toAdd.add(dsp.getValue()+"");
+                                    if (!dsp.getValue().equals(cl_sotckNM)) {
+                                        toAdd.add(dsp.getValue() + "");
                                     }
                                 }
-                            itemList.remove(position);
-                            Log.e(TAG, "Set toAdd" + toAdd);
-                            holder.swipeLayout.close(true);
-                            usersRef.setValue(toAdd);
-                            notifyDataSetChanged();
-                        }
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                                itemList.remove(position);
+                                Log.e(TAG, "Set toAdd" + toAdd);
+                                holder.swipeLayout.close(true);
+                                usersRef.setValue(toAdd);
+                                notifyDataSetChanged();
+                            }
 
-                        }
-                    });
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
                 }
-
             }
         });
 
@@ -283,6 +288,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     public int getItemCount() {
         return itemList.size();
     }
+
     public void show(final View v, int height, String stockNm, MyViewHolder holder) {
         if (stockChoMa.get(stockNm) != null) {
             v.setVisibility(View.VISIBLE);
@@ -313,6 +319,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             Toast.makeText(mContext, "此檔無籌碼資訊", Toast.LENGTH_LONG).show();
         }
     }
+
     public void dismiss(final View v, int height) {
         ValueAnimator animator = ValueAnimator.ofInt(height, 0);
         animator.setDuration(200);
@@ -329,9 +336,11 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         });
         animator.start();
     }
+
     public ArrayList<String> getFavorite() {
         return myFavorite;
     }
+
     public void changeValue(String value, TextView v) {
         if (Integer.parseInt(value) >= 0) {
             v.setTextColor(mContext.getResources().getColor(R.color.colorRed));
