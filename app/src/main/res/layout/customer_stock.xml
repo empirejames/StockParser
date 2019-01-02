@@ -432,8 +432,8 @@
                         android:id="@+id/views"
                         android:layout_width="2dp"
                         android:layout_height="12dp"
-                        android:layout_alignLeft="@+id/Vol"
-                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignStart="@+id/Vol"
                         android:layout_below="@+id/yestoday"
                         android:layout_marginTop="5dp"
                         android:background="@color/lightBlue" />
@@ -586,9 +586,11 @@
                         android:id="@+id/longchiUse"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/toshinNm"
                         android:layout_alignStart="@+id/longchi"
                         android:layout_below="@+id/longchi"
                         android:layout_marginTop="2dp"
+                        android:layout_toEndOf="@+id/toshinNm"
                         android:text="融資使用 :"
                         android:textColor="@color/colorGrayDark"
                         android:textSize="15dp" />
@@ -597,20 +599,24 @@
                         android:id="@+id/viewlongchiUseTitle"
                         android:layout_width="2dp"
                         android:layout_height="12dp"
-                        android:layout_alignTop="@+id/longchiUse"
+
+                        android:layout_alignStart="@+id/longchiUse"
                         android:layout_below="@+id/viewlongchiTitle"
+
                         android:layout_marginEnd="3dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_toLeftOf="@+id/longchiUse"
+                        android:layout_marginStart="-5dp"
+                        android:layout_marginTop="10dp"
                         android:background="@color/lightBlue" />
 
                     <TextView
                         android:id="@+id/longChun"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/wichiNm"
                         android:layout_alignStart="@+id/longchiUse"
                         android:layout_below="@+id/longchiUse"
                         android:layout_marginTop="2dp"
+                        android:layout_toEndOf="@+id/wichiNm"
                         android:text="昨日融券 :"
                         android:textColor="@color/colorGrayDark"
                         android:textSize="15dp" />
@@ -619,11 +625,13 @@
                         android:id="@+id/viewlongChunTitle"
                         android:layout_width="2dp"
                         android:layout_height="12dp"
-                        android:layout_alignTop="@+id/longChun"
-                        android:layout_below="@+id/viewlongchiTitle"
+
+                        android:layout_alignStart="@+id/longchiUse"
+                        android:layout_below="@+id/viewlongchiUseTitle"
+
                         android:layout_marginEnd="3dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_toStartOf="@+id/longChun"
+                        android:layout_marginStart="-5dp"
+                        android:layout_marginTop="10dp"
                         android:background="@color/lightBlue" />
 
                     <TextView
@@ -642,9 +650,11 @@
                         android:id="@+id/longChunUse"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/selfemployNm"
                         android:layout_alignStart="@+id/longChun"
                         android:layout_below="@+id/longChun"
                         android:layout_marginTop="2dp"
+                        android:layout_toEndOf="@+id/selfemployNm"
                         android:text="融券使用 :"
                         android:textColor="@color/colorGrayDark"
                         android:textSize="15dp" />
@@ -653,11 +663,13 @@
                         android:id="@+id/viewlongChunUseTitle"
                         android:layout_width="2dp"
                         android:layout_height="12dp"
-                        android:layout_alignTop="@+id/longChunUse"
-                        android:layout_below="@+id/viewlongchiTitle"
+
+                        android:layout_alignStart="@+id/longChunUse"
+                        android:layout_below="@+id/viewlongChunTitle"
                         android:layout_marginEnd="3dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_toStartOf="@+id/longChunUse"
+
+                        android:layout_marginStart="-5dp"
+                        android:layout_marginTop="10dp"
                         android:background="@color/lightBlue" />
 
                     <TextView
@@ -687,10 +699,10 @@
                         android:id="@+id/viewlongchiTitle"
                         android:layout_width="2dp"
                         android:layout_height="12dp"
-                        android:layout_alignTop="@+id/VolNm"
-                        android:layout_marginEnd="3dp"
+                        android:layout_alignStart="@+id/longchi"
+                        android:layout_below="@+id/yestoday"
+                        android:layout_marginStart="-5dp"
                         android:layout_marginTop="5dp"
-                        android:layout_toLeftOf="@+id/longchiUse"
                         android:background="@color/lightBlue" />
 
 

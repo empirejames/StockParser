@@ -84,7 +84,7 @@ import java.util.Map;
 import java.util.Set;
 
 
-public class MainActivity extends BaseActivity{
+public class MainActivity extends BaseActivity {
     String TAG = MainActivity.class.getSimpleName();
     private ListView listV;
     private RecyclerView mRecyclerView;
@@ -245,13 +245,13 @@ public class MainActivity extends BaseActivity{
         alreadyGj = tinydb.getString("GJ");
 
 
-        mRecyclerView = (RecyclerView)findViewById(R.id.my_recycler_view);
+        mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
         mLayoutManager = new LinearLayoutManager(MainActivity.this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         bundle = getIntent().getExtras();
         isVistor = isVistor();
-        Log.e(TAG, "isVistor : "  + isVistor);
+        Log.e(TAG, "isVistor : " + isVistor);
         initFab();
         if (!isVistor) {
             String refreshedToken = FirebaseInstanceId.getInstance().getToken();
@@ -268,8 +268,8 @@ public class MainActivity extends BaseActivity{
                 LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
                 int lastVisibleItem = manager.findLastCompletelyVisibleItemPosition();
                 int totalItemCount = manager.getItemCount();
-                Log.e(TAG,"lastVisibleItem :" + lastVisibleItem );
-                if (lastVisibleItem == (totalItemCount - 1) ) {
+                Log.e(TAG, "lastVisibleItem :" + lastVisibleItem);
+                if (lastVisibleItem == (totalItemCount - 1)) {
                     navigation.setVisibility(View.VISIBLE);
                     navigation.startAnimation(mShowAction);
                 }
@@ -278,18 +278,18 @@ public class MainActivity extends BaseActivity{
                     navigation.setVisibility(View.GONE);
                     navigation.startAnimation(mHiddenAction);
                     mAdView.setVisibility(View.GONE);
-                } else if (dy < 0 ) {
+                } else if (dy < 0) {
                     navigation.setVisibility(View.VISIBLE);
                     navigation.startAnimation(mShowAction);
                     mAdView.setVisibility(View.VISIBLE);
                 }
             }
+
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
             }
         });
-
 
 
         BottomNavigationViewHelper.disableShiftMode(navigation);
@@ -393,9 +393,8 @@ public class MainActivity extends BaseActivity{
     }
 
 
-
     public void listAdaperr(ArrayList<StockItem> item, boolean isVistor, boolean selectAll) {
-        mAdapter = new RecycleViewAdapter(MainActivity.this, item, stockChoMa, favList, userId , isVistor, selectAll, userStatus);
+        mAdapter = new RecycleViewAdapter(MainActivity.this, item, stockChoMa, favList, userId, isVistor, selectAll, userStatus);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(MainActivity.this, DividerItemDecoration.VERTICAL));
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutAnimation(getListAnim());
@@ -456,7 +455,7 @@ public class MainActivity extends BaseActivity{
     };
 
 
-    private void getFav(){
+    private void getFav() {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         final DatabaseReference usersRef = ref.child("users").child(userId).child("favorite");
         addT.clear();
@@ -464,12 +463,13 @@ public class MainActivity extends BaseActivity{
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot dsp : dataSnapshot.getChildren()) {
-                    Log.e(TAG,dsp.getValue() +"");
-                    addT.add(dsp.getValue()+"");
+                    Log.e(TAG, dsp.getValue() + "");
+                    addT.add(dsp.getValue() + "");
                 }
                 myFavorite = myFavovResult(addT);
                 listAdaperr(myFavorite, isVistor, true);
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
@@ -878,7 +878,6 @@ public class MainActivity extends BaseActivity{
     }
 
 
-
     public String getYesterDate() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         Calendar c = Calendar.getInstance();
@@ -1273,7 +1272,7 @@ public class MainActivity extends BaseActivity{
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            Log.e(TAG,"Run onPostExecute ...");
+            Log.e(TAG, "Run onPostExecute ...");
         }
 
         @Override
