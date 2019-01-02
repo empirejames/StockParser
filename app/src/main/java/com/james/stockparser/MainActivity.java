@@ -257,7 +257,7 @@ public class MainActivity extends BaseActivity{
             Log.e("FCN TOKEN GET", "Refreshed token: " + refreshedToken);
             writeNewUserIfNeeded();
         } else {
-            alertDialog("目前會員數已達8000人，為持續服務優質會員，一萬人後將關閉訪客註冊及登入，趕快搶先註冊會員唷!");
+            alertDialog("目前會員數約7300人，為持續服務優質會員，一萬人後將關閉訪客註冊及登入，趕快搶先註冊會員唷 !");
         }
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -266,9 +266,11 @@ public class MainActivity extends BaseActivity{
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 if (dy > 0 && navigation.isShown()) {
                     navigation.setVisibility(View.GONE);
+                    navigation.startAnimation(mHiddenAction);
                     mAdView.setVisibility(View.GONE);
                 } else if (dy < 0 ) {
                     navigation.setVisibility(View.VISIBLE);
+                    navigation.startAnimation(mShowAction);
                     mAdView.setVisibility(View.VISIBLE);
                 }
             }
