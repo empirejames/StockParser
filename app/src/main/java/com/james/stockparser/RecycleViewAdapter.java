@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -94,11 +95,14 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         private View addLayout;
         private TextView addorDelete_text;
 
+        private SwipeRevealLayout swipeLayout;
+
 
         public MyViewHolder(View v) {
             super(v);
             frontLayout = (View) v.findViewById(R.id.front_layout);
             addLayout = (View) v.findViewById(R.id.add_layout);
+            swipeLayout = (SwipeRevealLayout)v.findViewById(R.id.swipe_layout);
             addorDelete_text = (TextView)v.findViewById(R.id.txt_myfavorate);
             img_right = (ImageView) v.findViewById(R.id.right_select);
             cb = (CheckBox) v.findViewById(R.id.checkbox);
@@ -160,6 +164,24 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         holder.hotCount.setText(itemList.get(position).getHotclickCount());
         transTianx = Float.parseFloat(itemList.get(position).getTianxiPercent()) * 100 / 20;
         holder.rb1.setRating(transTianx);
+        holder.swipeLayout.setSwipeListener(new SwipeRevealLayout.SwipeListener() {
+            @Override
+            public void onClosed(SwipeRevealLayout view) {
+                Log.e(TAG, " onClosed ");
+            }
+
+            @Override
+            public void onOpened(SwipeRevealLayout view) {
+                Log.e(TAG, " onOpened ");
+            }
+
+            @Override
+            public void onSlide(SwipeRevealLayout view, float slideOffset) {
+                Log.e(TAG, " onSlide ");
+            }
+        });
+
+
         if (itemList.get(position).getThisYear().equals("")) {
             holder.thisYear.setText("未公告");
         } else {
