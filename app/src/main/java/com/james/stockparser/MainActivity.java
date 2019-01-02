@@ -213,9 +213,9 @@ public class MainActivity extends BaseActivity{
                     Log.e(TAG, "onQueryTextChange : " + s);
                     myDataFilter = filterResult(s, true, 0);
                     myFilterResult = filterResult(s, true, 0);
-                    listAdaperr(myDataFilter, true, selectAll);
+                    listAdaperr(myDataFilter, isVistor, selectAll);
                 } else {
-                    listAdaperr(myDataset, true, selectAll);
+                    listAdaperr(myDataset, isVistor, selectAll);
                 }
                 return false;
             }
@@ -354,10 +354,8 @@ public class MainActivity extends BaseActivity{
     public void displayInterstitial() {
         if (interstitial.isLoaded()) {
             interstitial.show();
-            Log.e(TAG, "interstitial.show();");
         } else {
             interstitial.loadAd(adRequestAA);
-            Log.e(TAG, "interstitial.loadAd(adRequestAA)");
         }
     }
 
@@ -374,7 +372,6 @@ public class MainActivity extends BaseActivity{
                 Intent i = new Intent(MainActivity.this, InstructionActivity.class);
                 startActivity(i);
                 //Toast.makeText(MainActivity.this, "FAB Clicked", Toast.LENGTH_SHORT).show();
-
             }
         });
     }
@@ -423,13 +420,13 @@ public class MainActivity extends BaseActivity{
                         displayInterstitial();
                         countAD = 0;
                     }
-                    listAdaperr(nearlyStock, true, selectAll);
+                    listAdaperr(nearlyStock, isVistor, selectAll);
                     return true;
                 case R.id.navigation_home:
                     PageNumber = 0;
                     invalidateOptionsMenu(); //update toolbar
                     userStatus = "home";
-                    listAdaperr(myDataset, true, selectAll);
+                    listAdaperr(myDataset, isVistor, selectAll);
                     return true;
                 case R.id.navigation_dashboard:
                     PageNumber = 1;
