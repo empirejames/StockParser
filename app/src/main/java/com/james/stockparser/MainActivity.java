@@ -246,15 +246,9 @@ public class MainActivity extends BaseActivity{
 
 
         mRecyclerView = (RecyclerView)findViewById(R.id.my_recycler_view);
-
-
-        enableSwipe();
-
-
-
-
         mLayoutManager = new LinearLayoutManager(MainActivity.this);
         mRecyclerView.setLayoutManager(mLayoutManager);
+
         bundle = getIntent().getExtras();
         isVistor = isVistor();
         initFab();
@@ -267,6 +261,25 @@ public class MainActivity extends BaseActivity{
         }
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0 && navigation.isShown()) {
+                    navigation.setVisibility(View.GONE);
+                    mAdView.setVisibility(View.GONE);
+                } else if (dy < 0 ) {
+                    navigation.setVisibility(View.VISIBLE);
+                    mAdView.setVisibility(View.VISIBLE);
+                }
+            }
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+        });
+
+
+
         BottomNavigationViewHelper.disableShiftMode(navigation);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
@@ -278,15 +291,6 @@ public class MainActivity extends BaseActivity{
             }
         });
         new GetData().execute();
-
-    }
-
-
-    private void enableSwipe(){
-
-
-        //ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
-        //itemTouchhelper.attachToRecyclerView(mRecyclerView);
 
     }
 
