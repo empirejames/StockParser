@@ -342,10 +342,12 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     }
 
     public void changeValue(String value, TextView v) {
-        if (Integer.parseInt(value) >= 0) {
+        if (Integer.parseInt(value) > 0) {
             v.setTextColor(mContext.getResources().getColor(R.color.colorRed));
-        } else {
+        } else if (Integer.parseInt(value) < 0) {
             v.setTextColor(mContext.getResources().getColor(R.color.colorGreen));
+        } else{
+            v.setTextColor(mContext.getResources().getColor(R.color.colorGrayDark));
         }
         v.setText(value);
     }
