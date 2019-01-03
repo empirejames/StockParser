@@ -1,5 +1,8 @@
 package com.james.stockparser;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.res.AssetManager;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
@@ -23,7 +26,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -32,6 +37,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class StockInfoParser {
+    Context mContext;
     String TAG = StockInfoParser.class.getSimpleName();
     String url = "http://goodinfo.tw/StockInfo/StockDividendScheduleList.asp?MARKET_CAT=%E5%85%A8%E9%83%A8&YEAR=%E5%8D%B3%E5%B0%87%E9%99%A4%E6%AC%8A%E6%81%AF&INDUSTRY_CAT=%E5%85%A8%E9%83%A8";
     String urlForGuHi = "http://stock.wespai.com/p/5625";
@@ -50,7 +56,8 @@ public class StockInfoParser {
     ArrayList<String> historyGuli = new ArrayList<String>();
     ArrayList<String> choMaValue = new ArrayList<String>();
 
-    public void start() {
+    public void start(final Context mContext) {
+        Log.e(TAG, " Thread . start ... ");
         mThread = new HandlerThread("jsoup");
         mThread.start();
         mThreadHandler = new Handler(mThread.getLooper());
@@ -60,14 +67,14 @@ public class StockInfoParser {
 
 //                getDividend();
 //                getValue();
-//                historyGuHi = getUrlInfo(urlForGuHi);
-//                updateHistoryData("guShi");
-//                Log.e(TAG,"updateHistoryData");
-//                historyEPS = getUrlInfo(urlForEPS);
-//                updateHistoryData("eps");
+                //historyGuHi = getUrlInfo(urlForGuHi, mContext);
+                //updateHistoryData("guShi");
+                //Log.e(TAG, "updateHistoryData :: guShi");
+                //historyEPS = getUrlInfo(urlForEPS , mContext);
+                //updateHistoryData("eps");
 //                Log.e(TAG,"updateHistoryData :: EPS");
-//                historyPresent = getUrlInfo(urlForPresent);
-//                updateHistoryData("present");
+//               historyPresent = getUrlInfo(urlForPresent, mContext);
+                //               updateHistoryData("present");
 //                Log.e(TAG,"updateHistoryData :: present");
 //                historyGuli = getUrlInfo(urlForGuli);
 //                updateHistoryData("guli");
@@ -116,6 +123,7 @@ public class StockInfoParser {
                     for (int i = 0; i < historyGuHi.size(); i++) {
                         for (int j = 0; j < historyGuHi.get(i).split(" ").length; j++) {
                             ref.child("history").child(historyGuHi.get(i).split(" ")[0]).child(stuff).child(j + "").setValue(historyGuHi.get(i).split(" ")[j]);
+                            Log.e(TAG, "Set Gu hi : " + historyGuHi.get(i).split(" ")[j]);
                             //ref.child("history").child(i+"").child(stuff).child(j + "").setValue(historyGuHi.get(0).split(" ")[j]);
                         }
                     }
@@ -125,16 +133,14 @@ public class StockInfoParser {
                             for (DataSnapshot stockNm : dsp.getChildren()) {
                                 for (int i = 0; i < historyEPS.size(); i++) {
                                     if (historyEPS.get(i).split(" ")[0].equals(stockNm.getKey().toString())) {
-                                        //Log.e(TAG, historyEPS.get(i).split(" ")[0] +" :: " + stockNm.getKey());
+
                                         for (int j = 0; j < historyEPS.get(i).split(" ").length; j++) {
-                                            if (historyEPS.get(i).split(" ")[j].equals("")) {
-                                                ref.child("history").child(historyEPS.get(i).split(" ")[0]).child(stuff).child(j + "").setValue(historyEPS.get(i).split(" ")[j]);
-                                            }
+                                            ref.child("history").child(historyEPS.get(i).split(" ")[0]).child(stuff).child(j + "").setValue(historyEPS.get(i).split(" ")[j]);
+                                            Log.e(TAG, " set Value : " + historyEPS.get(i).split(" ")[j]);
+
                                         }
                                     }
                                 }
-
-
                             }
                         }
                     }
@@ -288,7 +294,6 @@ public class StockInfoParser {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Log.e(TAG, "End....");
         return stockChoMa;
     }
 
@@ -340,20 +345,27 @@ public class StockInfoParser {
     }
 
 
-    public ArrayList<String> getUrlInfo(String url) {
+    public ArrayList<String> getUrlInfo(String url, Context mContext) {
         ArrayList<String> temp = new ArrayList<>();
         try {
+
+            //2019 01 03 if could not get real data from internet , could using local in asset
+//            InputStream is=null;
+//            is = mContext.getAssets().open("stockEPS.html");
+//            Document doc = Jsoup.parse(is, "UTF-8", "");
+
             Document doc = Jsoup.connect(url).get();
             Element table = doc.select("table[id=example]").first();
             Elements rows = table.select("tr");
             Elements td;
+
+            Log.e(TAG, "Start to run");
             for (int i = 0; i < rows.size(); i++) {
                 td = rows.get(i).children();
-
                 for (int j = 0; j < td.size(); j++) {
                     if (j % 22 == 0) {
                         if (isNumeric(td.get(j).text())) {
-                            Log.e(TAG, td.text() + " :: " + td.size());
+                            Log.e(TAG, td.text() + " :: " + td.size() + " :: " + rows.size());
                             temp.add(td.text());
                         }
                     }

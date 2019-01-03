@@ -17,33 +17,33 @@
         <item>(季-1)每股稅後淨利 EPS(元)</item>
         <item>(季)每股稅後淨利 EPS(元)</item>
         <item>(4季)每股稅後淨利 EPS(元)</item>
-        <item>(年)每股稅後淨利 EPS(元)</item>
-        <item>(年-1)每股稅後淨利 EPS(元)</item>
-        <item>(年-2)每股稅後淨利 EPS(元)</item>
-        <item>(年-3)每股稅後淨利 EPS(元)</item>
+        <item>(107年)每股稅後淨利 EPS(元)</item>
+        <item>(106年)每股稅後淨利 EPS(元)</item>
+        <item>(105年)每股稅後淨利 EPS(元)</item>
+        <item>(104年)每股稅後淨利 EPS(元)</item>
     </string-array>
     <string-array name="hisGuLi">
         <item>1</item>
         <item>2</item>
         <item>3</item>
-        <item>(年-1)配息</item>
-        <item>(年-1)配股</item>
-        <item>(年-2)配息</item>
-        <item>(年-2)配股</item>
-        <item>(年-3)配息</item>
-        <item>(年-3)配股</item>
-        <item>(年-4)配息</item>
-        <item>(年-4)配股</item>
-        <item>(年-5)配息</item>
-        <item>(年-5)配股</item>
-        <item>(年-6)配息</item>
-        <item>(年-6)配股</item>
-        <item>(年-7)配息</item>
-        <item>(年-7)配股</item>
-        <item>(年-8)配息</item>
-        <item>(年-8)配股</item>
-        <item>(年-9)配息</item>
-        <item>(年-9)配股</item>
+        <item>(106年)配息</item>
+        <item>(106年)配股</item>
+        <item>(105年)配息</item>
+        <item>(105年)配股</item>
+        <item>(104年)配息</item>
+        <item>(104年)配股</item>
+        <item>(103年)配息</item>
+        <item>(103年)配股</item>
+        <item>(102年)配息</item>
+        <item>(102年)配股</item>
+        <item>(101年)配息</item>
+        <item>(101年)配股</item>
+        <item>(100年)配息</item>
+        <item>(100年)配股</item>
+        <item>(99年)配息</item>
+        <item>(99年)配股</item>
+        <item>(98年)配息</item>
+        <item>(98年)配股</item>
     </string-array>
     <string-array name="hisGuShi">
         <item>代號</item>
@@ -73,11 +73,11 @@
         <item>代號</item>
         <item>公司</item>
         <item>股價</item>
-        <item>(年-1)紀念品</item>
-        <item>(年-2)紀念品</item>
-        <item>(年-3)紀念品</item>
-        <item>(年-4)紀念品</item>
-        <item>(年-5)紀念品</item>
-        <item>(年-6)紀念品</item>
+        <item>(107年)紀念品</item>
+        <item>(106年)紀念品</item>
+        <item>(105年)紀念品</item>
+        <item>(104年)紀念品</item>
+        <item>(103年)紀念品</item>
+        <item>(102年)紀念品</item>
     </string-array>
 </resources>

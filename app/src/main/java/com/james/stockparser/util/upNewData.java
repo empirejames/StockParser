@@ -1,5 +1,6 @@
 package com.james.stockparser.util;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -23,11 +24,13 @@ import java.util.ArrayList;
 public class upNewData extends AppCompatActivity {
     String TAG = upNewData.class.getSimpleName();
     StockInfoParser stockinfo;
+    Context mContext;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mContext = getApplicationContext();
         setContentView(R.layout.about_main);
         stockinfo = new StockInfoParser();
-        stockinfo.start();
+        stockinfo.start(mContext);
         //Toast.makeText(upNewData.this, "....", Toast.LENGTH_SHORT).show();
     }
 }
