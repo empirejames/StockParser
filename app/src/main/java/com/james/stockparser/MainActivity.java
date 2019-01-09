@@ -395,7 +395,10 @@ public class MainActivity extends BaseActivity {
 
     public void listAdaperr(ArrayList<StockItem> item, boolean isVistor, boolean selectAll) {
         mAdapter = new RecycleViewAdapter(MainActivity.this, item, stockChoMa, favList, userId, isVistor, selectAll, userStatus);
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(MainActivity.this, DividerItemDecoration.VERTICAL));
+        RecyclerView.ItemDecoration itemDecoration = mRecyclerView.getItemDecorationAt(0);
+        if (itemDecoration == null) {
+            mRecyclerView.addItemDecoration(new DividerItemDecoration(MainActivity.this, DividerItemDecoration.VERTICAL));
+        }
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutAnimation(getListAnim());
         mAdapter.notifyDataSetChanged();
