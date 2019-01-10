@@ -103,7 +103,6 @@ public class DummyFragment extends Fragment {
                     if (titleGuShi.length == guliResult.length) {
                         for (int j = 3; j < guliResult.length; j++) {
                             arrayList.add(titleGuShi[j] + " : " + guliResult[j]);
-
                         }
                     } else {
                         arrayList.add("無該股票資料");
@@ -145,6 +144,18 @@ public class DummyFragment extends Fragment {
         }
 
         RecyclerView_Adapter adapter = new RecyclerView_Adapter(getActivity(), arrayList);
-        recyclerView.setAdapter(adapter);
+        RecyclerView_paygushi_Adapter adapter_hisguli = new RecyclerView_paygushi_Adapter(getActivity(), arrayList);
+
+        if(classcal.equals("eps")) {
+            recyclerView.setAdapter(adapter);
+        }else if (classcal.equals("guli")){
+            recyclerView.setAdapter(adapter);
+            Log.e(TAG," @@" +  arrayList);
+        }else if (classcal.equals("present")){
+            recyclerView.setAdapter(adapter);
+        }else if (classcal.equals("gushi")){
+            recyclerView.setAdapter(adapter_hisguli);
+        }
+
     }
 }
