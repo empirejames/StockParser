@@ -146,6 +146,7 @@ public class DummyFragment extends Fragment {
         RecyclerView_Adapter adapter = new RecyclerView_Adapter(getActivity(), arrayList);
         RecyclerView_paygushi_Adapter adapter_hisguli = new RecyclerView_paygushi_Adapter(getActivity(), arrayList);
         RecyclerView_eps_Adapter adapter_eps = new RecyclerView_eps_Adapter(getActivity(), arrayList);
+        RecyclerView_avg_guli_Adapter adapter_guli = new RecyclerView_avg_guli_Adapter(getActivity(), arrayList);
 
 
         if(classcal.equals("eps")) {
@@ -153,7 +154,7 @@ public class DummyFragment extends Fragment {
             recyclerView.setAdapter(adapter_eps);
         }else if (classcal.equals("guli")){
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-            recyclerView.setAdapter(adapter);
+            recyclerView.setAdapter(adapter_guli);
         }else if (classcal.equals("present")){
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
             recyclerView.setAdapter(adapter);

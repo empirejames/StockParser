@@ -144,9 +144,6 @@ public class RecyclerView_eps_Adapter extends RecyclerView.Adapter<RecyclerView_
         holder.his_first_est_value8.setText(his_first_est_value_text8);
         holder.his_first_est_value9.setText(his_first_est_value_text9);
 
-        Log.e(TAG, "GG .... " + arrayList.get(position+8));
-        Log.e(TAG, "GG .... " + arrayList.get(position+13));
-
     }
 
 
