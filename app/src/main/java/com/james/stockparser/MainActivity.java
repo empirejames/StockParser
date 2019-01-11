@@ -210,7 +210,7 @@ public class MainActivity extends BaseActivity {
                 myDataFilter.clear();
                 if (!s.equals("")) {
                     userStatus = "";
-                    Log.e(TAG, "onQueryTextChange : " + s);
+                    //Log.e(TAG, "onQueryTextChange : " + s);
                     myDataFilter = filterResult(s, true, 0);
                     myFilterResult = filterResult(s, true, 0);
                     listAdaperr(myDataFilter, isVistor, selectAll);

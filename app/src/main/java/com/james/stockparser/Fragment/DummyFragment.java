@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -67,7 +68,6 @@ public class DummyFragment extends Fragment {
     public void setRecyclerView() {
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));//Linear Items
         res = getResources();
         String[] titleEPS = res.getStringArray(R.array.hisEPS);
         String[] titleGuli = res.getStringArray(R.array.hisGuLi);
@@ -145,15 +145,20 @@ public class DummyFragment extends Fragment {
 
         RecyclerView_Adapter adapter = new RecyclerView_Adapter(getActivity(), arrayList);
         RecyclerView_paygushi_Adapter adapter_hisguli = new RecyclerView_paygushi_Adapter(getActivity(), arrayList);
+        RecyclerView_eps_Adapter adapter_eps = new RecyclerView_eps_Adapter(getActivity(), arrayList);
+
 
         if(classcal.equals("eps")) {
-            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            recyclerView.setAdapter(adapter_eps);
         }else if (classcal.equals("guli")){
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
             recyclerView.setAdapter(adapter);
-            Log.e(TAG," @@" +  arrayList);
         }else if (classcal.equals("present")){
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
             recyclerView.setAdapter(adapter);
         }else if (classcal.equals("gushi")){
+            recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));
             recyclerView.setAdapter(adapter_hisguli);
         }
 

@@ -26,24 +26,24 @@
         <item>1</item>
         <item>2</item>
         <item>3</item>
-        <item>(106年)配息</item>
-        <item>(106年)配股</item>
-        <item>(105年)配息</item>
-        <item>(105年)配股</item>
-        <item>(104年)配息</item>
-        <item>(104年)配股</item>
-        <item>(103年)配息</item>
-        <item>(103年)配股</item>
-        <item>(102年)配息</item>
-        <item>(102年)配股</item>
-        <item>(101年)配息</item>
-        <item>(101年)配股</item>
-        <item>(100年)配息</item>
-        <item>(100年)配股</item>
-        <item>(99年)配息</item>
-        <item>(99年)配股</item>
-        <item>(98年)配息</item>
-        <item>(98年)配股</item>
+        <item>(106年)息</item>
+        <item>(106年)股</item>
+        <item>(105年)息</item>
+        <item>(105年)股</item>
+        <item>(104年)息</item>
+        <item>(104年)股</item>
+        <item>(103年)息</item>
+        <item>(103年)股</item>
+        <item>(102年)息</item>
+        <item>(102年)股</item>
+        <item>(101年)息</item>
+        <item>(101年)股</item>
+        <item>(100年)息</item>
+        <item>(100年)股</item>
+        <item>(99年)息</item>
+        <item>(99年)股</item>
+        <item>(98年)息</item>
+        <item>(98年)股</item>
     </string-array>
     <string-array name="hisGuShi">
         <item>代號</item>
