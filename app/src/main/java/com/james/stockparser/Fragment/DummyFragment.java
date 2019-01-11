@@ -159,7 +159,7 @@ public class DummyFragment extends Fragment {
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
             recyclerView.setAdapter(adapter);
         }else if (classcal.equals("gushi")){
-            recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
             recyclerView.setAdapter(adapter_hisguli);
         }
 
