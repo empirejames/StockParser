@@ -14,30 +14,40 @@ import java.util.Calendar;
 
 public class BaseActivity extends AppCompatActivity {
     String TAG = BaseActivity.class.getSimpleName();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
     }
+
     public String getDate() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         String date = sdf.format(new java.util.Date());
         return date;
     }
-    public String getYearORDate(String item){
+
+    public String getYearORDate(String item) {
 
         String result = "";
         Calendar c = Calendar.getInstance();
         String year = c.get(Calendar.YEAR) + "";
-        String month = c.get(Calendar.MONTH)+1 + "";
+        String month = c.get(Calendar.MONTH) + 1 + "";
         String today = c.get(Calendar.DAY_OF_MONTH) + "";
-        String yestoday = c.get(Calendar.DAY_OF_MONTH)-1 + "";
+        String yestoday = c.get(Calendar.DAY_OF_MONTH) - 1 + "";
 
-        if(item.equals("year")){
+        if (month.length() == 1) {
+            month = "0" + month;
+        }
+        if (today.length() == 1) {
+            today = "0" + today;
+        }
+
+        if (item.equals("year")) {
             result = year;
-        }else if(item.equals("yesterday")){
+        } else if (item.equals("yesterday")) {
             result = month + " / " + yestoday;
-        }else{
+        } else {
             result = year + month + today;
         }
         return result;
