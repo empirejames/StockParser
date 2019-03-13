@@ -43,6 +43,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.james.stockparser.NetWork.VersionChecker;
 import com.james.stockparser.dataBase.TinyDB;
 
@@ -78,6 +79,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_main);
+        FirebaseMessaging.getInstance().subscribeToTopic("allDevices"); //訂閱項目
         VersionChecker versionChecker = new VersionChecker();
         try{
             String latestVersion = versionChecker.execute("com.james.stockparser").get();
@@ -426,6 +428,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     @Override
     public void onClick(View v) {
+        String token = FirebaseInstanceId.getInstance().getToken();
+        Log.e(TAG, "token: " + token);
         int i = v.getId();
         relativeLy = (RelativeLayout) findViewById(R.id.relative_layout_GoogleFacebook);
         if (!isFastDoubleClick()) {
