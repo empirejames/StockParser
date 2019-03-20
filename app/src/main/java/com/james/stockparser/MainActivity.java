@@ -92,6 +92,7 @@ public class MainActivity extends BaseActivity {
     private RecyclerView.LayoutManager mLayoutManager;
     public MyAdapter adapter;
     public String returnString;
+    static boolean callAlready = false;
 
 
     Map<String, String> stockMap = new HashMap<String, String>();
@@ -156,6 +157,7 @@ public class MainActivity extends BaseActivity {
     BottomNavigationView navigation;
     Animation mShowAction, mShowToolbar;
     Animation mHiddenAction, mHiddenToolbar;
+    Animation mShowFabBtn, mHiddenFabBtn;
     FloatingActionButton mFab;
     String userStatus = "home";
     AdView mAdView;
@@ -228,11 +230,16 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        if(!callAlready){
+            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+            callAlready = true;
+        }
         mShowAction = AnimationUtils.loadAnimation(this, R.anim.alpha_in);
         mShowToolbar = AnimationUtils.loadAnimation(this, R.anim.alpha_in_toolbar);
+        mShowFabBtn = AnimationUtils.loadAnimation(this, R.anim.alpha_fab_in);
         mHiddenAction = AnimationUtils.loadAnimation(this, R.anim.alpha_out);
         mHiddenToolbar = AnimationUtils.loadAnimation(this, R.anim.alpha_out_toolbar);
+        mHiddenFabBtn = AnimationUtils.loadAnimation(this, R.anim.alpha_fab_out);
         mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().addTestDevice("F618803C89E1614E3394A55D5E7A756B").build(); //Nexus 5
         mAdView.loadAd(adRequest);
@@ -258,7 +265,7 @@ public class MainActivity extends BaseActivity {
             Log.e("FCN TOKEN GET", "Refreshed token: " + refreshedToken);
             writeNewUserIfNeeded();
         } else {
-            alertDialog("目前會員數約7300人，為持續服務優質會員，一萬人後將關閉訪客註冊及登入，趕快搶先註冊會員唷 !");
+            alertDialog("目前會員數約8000人，為持續服務優質會員，一萬人後將關閉訪客註冊及登入，趕快搶先註冊會員唷 !");
         }
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -277,10 +284,14 @@ public class MainActivity extends BaseActivity {
                 if (dy > 0 && navigation.isShown()) {
                     navigation.setVisibility(View.GONE);
                     navigation.startAnimation(mHiddenAction);
+                    mFab.setVisibility(View.GONE);
+                    mFab.startAnimation(mHiddenFabBtn);
                     mAdView.setVisibility(View.GONE);
                 } else if (dy < 0) {
                     navigation.setVisibility(View.VISIBLE);
                     navigation.startAnimation(mShowAction);
+                    mFab.setVisibility(View.VISIBLE);
+                    mFab.startAnimation(mShowFabBtn);
                     mAdView.setVisibility(View.VISIBLE);
                 }
             }
@@ -303,7 +314,6 @@ public class MainActivity extends BaseActivity {
             }
         });
         new GetData().execute();
-
     }
 
     @Override
@@ -990,6 +1000,7 @@ public class MainActivity extends BaseActivity {
             hstGuLi.clear();
             hstPresent.clear();
             ref = FirebaseDatabase.getInstance().getReference();
+
             ref.keepSynced(true);
             ref.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -1138,7 +1149,7 @@ public class MainActivity extends BaseActivity {
             super.onPreExecute();
             runOnUiThread(new Runnable() {
                 public void run() {
-                    mProgressDialog = ProgressDialog.show(MainActivity.this, "連線至伺服器", "取得資料中...請稍候", true);
+                    mProgressDialog = ProgressDialog.show(MainActivity.this, "更新資料", "取得資料中...請稍候", true);
                 }
             });
         }
