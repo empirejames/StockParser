@@ -93,6 +93,10 @@ public class MainActivity extends BaseActivity {
     public MyAdapter adapter;
     public String returnString;
     static boolean callAlready = false;
+    static boolean needFresh = false;
+    stockDividend sd;
+    stockHotCount sh;
+    stockPayGushi stp;
 
 
     Map<String, String> stockMap = new HashMap<String, String>();
@@ -230,6 +234,7 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.e(TAG, "OnCreate ....");
         if(!callAlready){
             FirebaseDatabase.getInstance().setPersistenceEnabled(true);
             callAlready = true;
@@ -249,6 +254,9 @@ public class MainActivity extends BaseActivity {
         interstitial.loadAd(adRequestAA);
         displayInterstitial();
         tinydb = new TinyDB(MainActivity.this);
+        sd = new stockDividend();
+        sh = new stockHotCount();
+        stp = new stockPayGushi();
         alreadyGj = tinydb.getString("GJ");
 
 
@@ -314,6 +322,7 @@ public class MainActivity extends BaseActivity {
             }
         });
         new GetData().execute();
+
     }
 
     @Override
@@ -1157,9 +1166,7 @@ public class MainActivity extends BaseActivity {
         @Override
         protected String doInBackground(String... params) {
             publishProgress(0);
-            stockDividend sd = new stockDividend();
-            stockHotCount sh = new stockHotCount();
-            stockPayGushi stp = new stockPayGushi();
+
             getPaygushi = stp.getNowGuShi();
             publishProgress(20);
             hotClick = sh.getHotCount();
