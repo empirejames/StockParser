@@ -1,6 +1,7 @@
 package com.james.stockparser;
 
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
@@ -10,6 +11,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
@@ -73,6 +75,7 @@ import com.james.stockparser.NetWork.stockPayGushi;
 import com.james.stockparser.Unit.User;
 import com.james.stockparser.dataBase.TinyDB;
 
+import java.lang.ref.WeakReference;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -85,34 +88,36 @@ import java.util.Set;
 
 
 public class MainActivity extends BaseActivity {
-    String TAG = MainActivity.class.getSimpleName();
+    static String TAG = MainActivity.class.getSimpleName();
+    static Context mContext;
     private ListView listV;
-    private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private static RecyclerView mRecyclerView;
+    private static RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     public MyAdapter adapter;
     public String returnString;
     static boolean callAlready = false;
     static boolean needFresh = false;
-    stockDividend sd;
-    stockHotCount sh;
-    stockPayGushi stp;
+    static stockDividend sd;
+    static stockHotCount sh;
+    static stockPayGushi stp;
 
 
-    Map<String, String> stockMap = new HashMap<String, String>();
-    Map<String, String> stockChoMa = new HashMap<String, String>();
-    Map<String, String> stockPEMap = new HashMap<String, String>();
-    Map<String, String> hotClick = new HashMap<String, String>();
-    Map<String, String> getPaygushi = new HashMap<String, String>();
-    ArrayList<StockItem> myDataset = new ArrayList<StockItem>();
-    ArrayList<StockEPS> myEPS = new ArrayList<StockEPS>();
-    ArrayList<HistoryItem> myHisEPS = new ArrayList<HistoryItem>();
-    ArrayList<String> stockNumbers = new ArrayList<String>();
-    ArrayList<StockItem> myDataFilter = new ArrayList<StockItem>();
-    ArrayList<StockItem> nearlyStock = new ArrayList<StockItem>();
-    ArrayList<StockItem> myFavorite = new ArrayList<StockItem>();
-    ArrayList<StockItem> myHistory = new ArrayList<StockItem>();
-    ArrayList<StockItem> myFilterResult = new ArrayList<StockItem>();
+    static Map<String, String> stockMap = new HashMap<String, String>();
+    static Map<String, String> stockChoMa = new HashMap<String, String>();
+    static Map<String, String> stockPEMap = new HashMap<String, String>();
+    static Map<String, String> hotClick = new HashMap<String, String>();
+    static Map<String, String> getPaygushi = new HashMap<String, String>();
+
+    static ArrayList<StockItem> myDataset = new ArrayList<StockItem>();
+    static ArrayList<StockEPS> myEPS = new ArrayList<StockEPS>();
+    static ArrayList<HistoryItem> myHisEPS = new ArrayList<HistoryItem>();
+    static ArrayList<String> stockNumbers = new ArrayList<String>();
+    static ArrayList<StockItem> myDataFilter = new ArrayList<StockItem>();
+    static ArrayList<StockItem> nearlyStock = new ArrayList<StockItem>();
+    static ArrayList<StockItem> myFavorite = new ArrayList<StockItem>();
+    static ArrayList<StockItem> myHistory = new ArrayList<StockItem>();
+    static ArrayList<StockItem> myFilterResult = new ArrayList<StockItem>();
 
 
     ArrayList a = new ArrayList();
@@ -123,7 +128,7 @@ public class MainActivity extends BaseActivity {
     ArrayList<String> hstGuShi = new ArrayList<String>();
     ArrayList<String> hstPresent = new ArrayList<String>();
 
-    ArrayList<String> favList = new ArrayList<String>();
+    static ArrayList<String> favList = new ArrayList<String>();
     ArrayAdapter<String> countNumAdapter;
     ArrayAdapter<String> avgNumAdapter;
     ArrayAdapter<String> epsNumberAdapter;
@@ -133,22 +138,22 @@ public class MainActivity extends BaseActivity {
     private String[] nextLine;
     private Toolbar mToolbar;
     SearchView searchView;
-    String dividend, peRatio, hotclickCount, payGu, payShi;
-    String releaseCount, stockName, stockNumber, thisYear, tianxiCount, tianxiDay, tianxiPercent;
-    String hisName, hisNumber, hisProduct, hisEPS;
-    String stockInfoName, stockInfoNumber, stockInfoEPS;
-    DatabaseReference ref;
-    ProgressDialog mProgressDialog;
-    Bundle bundle;
+    static String dividend, peRatio, hotclickCount, payGu, payShi;
+    static String releaseCount, stockName, stockNumber, thisYear, tianxiCount, tianxiDay, tianxiPercent;
+    static String hisName, hisNumber, hisProduct, hisEPS;
+    static String stockInfoName, stockInfoNumber, stockInfoEPS;
+    static DatabaseReference ref;
+    static ProgressDialog mProgressDialog;
+    static Bundle bundle;
     TinyDB tinydb;
     SharedPreferences prefs;
     RatingBar ratingbarStart;
     Button btnDiglog;
     Spinner countNumber, avgNumber, epsNumber;
-    String userId;
-    boolean isVistor;
+    static String userId;
+    static boolean isVistor;
     boolean mDisPlayFav = false;
-    boolean selectAll = false;
+    static boolean selectAll = false;
     boolean containStock = false;
     int PageNumber = 0;
     private Menu menuItem;
@@ -163,7 +168,7 @@ public class MainActivity extends BaseActivity {
     Animation mHiddenAction, mHiddenToolbar;
     Animation mShowFabBtn, mHiddenFabBtn;
     FloatingActionButton mFab;
-    String userStatus = "home";
+    static String userStatus = "home";
     AdView mAdView;
     int CountNum = 0;
     String alreadyGj = "false";
@@ -219,9 +224,9 @@ public class MainActivity extends BaseActivity {
                     //Log.e(TAG, "onQueryTextChange : " + s);
                     myDataFilter = filterResult(s, true, 0);
                     myFilterResult = filterResult(s, true, 0);
-                    listAdaperr(myDataFilter, isVistor, selectAll);
+                    listAdaperr(mContext, myDataFilter, isVistor, selectAll);
                 } else {
-                    listAdaperr(myDataset, isVistor, selectAll);
+                    listAdaperr(mContext, myDataset, isVistor, selectAll);
                 }
                 return false;
             }
@@ -234,11 +239,9 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.e(TAG, "OnCreate ....");
-        if(!callAlready){
-            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-            callAlready = true;
-        }
+
+        this.mContext = MainActivity.this;
+
         mShowAction = AnimationUtils.loadAnimation(this, R.anim.alpha_in);
         mShowToolbar = AnimationUtils.loadAnimation(this, R.anim.alpha_in_toolbar);
         mShowFabBtn = AnimationUtils.loadAnimation(this, R.anim.alpha_fab_in);
@@ -277,6 +280,7 @@ public class MainActivity extends BaseActivity {
         }
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -321,8 +325,6 @@ public class MainActivity extends BaseActivity {
                 onBackPressed();
             }
         });
-        new GetData().execute();
-
     }
 
     @Override
@@ -364,6 +366,19 @@ public class MainActivity extends BaseActivity {
 //        }
 //    }
 
+        @Override
+    public void onStart() {
+        super.onStart();
+            if (!callAlready) {
+                Log.e(TAG, "Save in disk ...");
+                FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+                new GetData(this).execute();
+                callAlready = true;
+            }else{
+                listAdaperr(mContext, myDataset, isVistor, selectAll);
+            }
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -395,7 +410,7 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    public boolean isVistor() {
+    public static boolean isVistor() {
         if (bundle != null) {
             if (bundle.getString("isVistor") != null) {
                 String vistor = bundle.getString("isVistor");
@@ -412,11 +427,11 @@ public class MainActivity extends BaseActivity {
     }
 
 
-    public void listAdaperr(ArrayList<StockItem> item, boolean isVistor, boolean selectAll) {
-        mAdapter = new RecycleViewAdapter(MainActivity.this, item, stockChoMa, favList, userId, isVistor, selectAll, userStatus);
+    public static void listAdaperr(Context context , ArrayList<StockItem> item, boolean isVistor, boolean selectAll) {
+        mAdapter = new RecycleViewAdapter(context, item, stockChoMa, favList, userId, isVistor, selectAll, userStatus);
         RecyclerView.ItemDecoration itemDecoration = mRecyclerView.getItemDecorationAt(0);
         if (itemDecoration == null) {
-            mRecyclerView.addItemDecoration(new DividerItemDecoration(MainActivity.this, DividerItemDecoration.VERTICAL));
+            mRecyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
         }
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutAnimation(getListAnim());
@@ -441,13 +456,13 @@ public class MainActivity extends BaseActivity {
                         displayInterstitial();
                         countAD = 0;
                     }
-                    listAdaperr(nearlyStock, isVistor, selectAll);
+                    listAdaperr(mContext, nearlyStock, isVistor, selectAll);
                     return true;
                 case R.id.navigation_home:
                     PageNumber = 0;
                     invalidateOptionsMenu(); //update toolbar
                     userStatus = "home";
-                    listAdaperr(myDataset, isVistor, selectAll);
+                    listAdaperr(mContext, myDataset, isVistor, selectAll);
                     return true;
                 case R.id.navigation_dashboard:
                     PageNumber = 1;
@@ -464,7 +479,7 @@ public class MainActivity extends BaseActivity {
                     PageNumber = 2;
                     invalidateOptionsMenu();//update toolbar
                     userStatus = "history";
-                    listAdaperr(myHistory, isVistor, true);
+                    listAdaperr(mContext, myHistory, isVistor, true);
                     return true;
                 case R.id.navigation_notifications:
                     Intent i = new Intent(MainActivity.this, FragmentAbout.class);
@@ -489,7 +504,7 @@ public class MainActivity extends BaseActivity {
                     addT.add(dsp.getValue() + "");
                 }
                 myFavorite = myFavovResult(addT);
-                listAdaperr(myFavorite, isVistor, true);
+                listAdaperr(mContext, myFavorite, isVistor, true);
             }
 
             @Override
@@ -499,7 +514,7 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    private LayoutAnimationController getListAnim() {
+    private static LayoutAnimationController getListAnim() {
         AnimationSet set = new AnimationSet(true);
         Animation animation = new AlphaAnimation(0.0f, 1.0f);
         animation.setDuration(300);
@@ -803,7 +818,7 @@ public class MainActivity extends BaseActivity {
                     }
                 }
             }
-            listAdaperr(item, isVistor, selectAll);
+            listAdaperr(mContext, item, isVistor, selectAll);
             avgLow = false;
             countHigh = false;
             avgEPS = false;
@@ -900,7 +915,7 @@ public class MainActivity extends BaseActivity {
     }
 
 
-    public String getYesterDate() {
+    public static String getYesterDate() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         Calendar c = Calendar.getInstance();
         int day = c.get(Calendar.DATE);
@@ -1150,23 +1165,45 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    private class GetData extends AsyncTask<String, Integer, String> {
+    private static class GetData extends AsyncTask<String, Integer, String> {
         private ProgressDialog progressBar;
+        WeakReference<MainActivity> weakActivity;
+        public  GetData getData;
+
+        GetData(MainActivity Activity) {
+            this.weakActivity = new WeakReference<>(Activity);
+        }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            runOnUiThread(new Runnable() {
-                public void run() {
-                    mProgressDialog = ProgressDialog.show(MainActivity.this, "更新資料", "取得資料中...請稍候", true);
+            getData = this;
+            final MainActivity activity = weakActivity.get();
+            new CountDownTimer(50000, 50000) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    if (activity == null || activity.isFinishing() || activity.isDestroyed()) {
+                        // activity none
+                        return;
+                    } else {
+                        mProgressDialog = ProgressDialog.show(activity, "更新資料", "取得資料中...請稍候", true);
+                    }
                 }
-            });
+
+                @Override
+                public void onFinish() {
+                    if (getData.getStatus() == AsyncTask.Status.RUNNING) {
+                        mProgressDialog = ProgressDialog.show(activity, "伺服器過載", "我們本月流量已用盡，故本月無法提供服務，請多包涵", true);
+                    }
+                }
+            }.start();
         }
 
         @Override
         protected String doInBackground(String... params) {
+            Log.e(TAG, "doInBackground ... ");
             publishProgress(0);
-
+            MainActivity activity = weakActivity.get();
             getPaygushi = stp.getNowGuShi();
             publishProgress(20);
             hotClick = sh.getHotCount();
@@ -1174,7 +1211,7 @@ public class MainActivity extends BaseActivity {
             stockPERatio sdPE = new stockPERatio();
             publishProgress(40);
             stockPEMap = sdPE.getPERatio(getYesterDate());
-            getRemoteConfig grc = new getRemoteConfig(MainActivity.this);
+            getRemoteConfig grc = new getRemoteConfig(activity.getApplicationContext());
             grc.getRemotePara();
             StockInfoParser spinfo = new StockInfoParser();
             stockChoMa = spinfo.getChoma();
@@ -1268,7 +1305,7 @@ public class MainActivity extends BaseActivity {
                         }
 
                     }
-                    listAdaperr(myDataset, isVistor, selectAll);
+                    listAdaperr(mContext, myDataset, isVistor, selectAll);
                     try {
                         if (mProgressDialog != null) {
                             mProgressDialog.dismiss();
@@ -1299,21 +1336,15 @@ public class MainActivity extends BaseActivity {
         @Override
         protected void onProgressUpdate(final Integer... values) {
             super.onProgressUpdate(values);
-            runOnUiThread(new Runnable() {
-                public void run() {
-                    if (Integer.toString(values[0]).equals("0")) {
-                        mProgressDialog.setMessage("取得資料中... 請稍候");
-                    } else if (Integer.toString(values[0]).equals("20")) {
-                        mProgressDialog.setMessage("下載伺服器數據中...");
-                    } else if (Integer.toString(values[0]).equals("40")) {
-                        mProgressDialog.setMessage("正在更新手機端資料... 請稍後");
-                    } else {
-                        mProgressDialog.setMessage("下載更新完畢");
-                    }
-
-                }
-            });
-
+            if (Integer.toString(values[0]).equals("0")) {
+                mProgressDialog.setMessage("取得資料中... 請稍候");
+            } else if (Integer.toString(values[0]).equals("20")) {
+                mProgressDialog.setMessage("下載伺服器數據中...");
+            } else if (Integer.toString(values[0]).equals("40")) {
+                mProgressDialog.setMessage("正在更新手機端資料... 請稍後");
+            } else {
+                mProgressDialog.setMessage("下載更新完畢");
+            }
         }
     }
 }
