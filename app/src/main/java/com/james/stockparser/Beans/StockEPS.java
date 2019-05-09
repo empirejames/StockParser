@@ -1,4 +1,4 @@
-package com.james.stockparser;
+package com.james.stockparser.Beans;
 
 import android.content.Context;
 

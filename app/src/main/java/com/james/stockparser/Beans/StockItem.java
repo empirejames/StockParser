@@ -1,7 +1,4 @@
-package com.james.stockparser;
-
-import android.content.Context;
-import android.util.Log;
+package com.james.stockparser.Beans;
 
 /**
  * Created by 101716 on 2017/6/27.

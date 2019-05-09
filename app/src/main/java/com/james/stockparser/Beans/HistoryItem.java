@@ -1,8 +1,6 @@
-package com.james.stockparser;
+package com.james.stockparser.Beans;
 
 import android.content.Context;
-
-import java.util.ArrayList;
 
 /**
  * Created by 101716 on 2017/6/27.

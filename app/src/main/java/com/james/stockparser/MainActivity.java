@@ -23,6 +23,7 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -55,6 +56,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.james.stockparser.Beans.HistoryItem;
+import com.james.stockparser.Beans.StockEPS;
+import com.james.stockparser.Beans.StockItem;
 import com.james.stockparser.Fragment.FragmentAbout;
 import com.james.stockparser.Fragment.FragmentMain;
 import com.james.stockparser.NetWork.getRemoteConfig;
@@ -66,12 +70,14 @@ import com.james.stockparser.NetWork.stockPayGushi;
 import com.james.stockparser.Unit.User;
 import com.james.stockparser.dataBase.TinyDB;
 import com.james.stockparser.util.UtilFirebaseDatabase;
-
 import java.lang.ref.WeakReference;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -178,7 +184,48 @@ public class MainActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
+        MenuItem item = menu.findItem(R.id.spinner);
         this.menuItem = menu;
+        Spinner spinner = (Spinner) item.getActionView();
+        spinner.setGravity(Gravity.END);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.spinner_list_item_array, R.layout.spinner);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ArrayList<String> string_array = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.spinner_list_item_array)));
+                Log.e(TAG, "Get Select : " + string_array.get(position) );
+                switch (position){
+                    case 0 :
+                        collectionSort();
+                        break;
+                    case 1 :
+                        collectionSort();
+                        break;
+                    case 2 :
+                        collectionSort();
+                        break;
+                    case 3 :
+                        collectionSort();
+                        break;
+                    case 4 :
+                        collectionSort();
+                        break;
+                    default:
+                        collectionSort();
+                        break;
+                }
+                listAdaperr(mContext,myDataset,isVistor,selectAll);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
 
         SearchManager searchManager = (SearchManager) getSystemService(getApplicationContext().SEARCH_SERVICE);
         searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
@@ -226,6 +273,43 @@ public class MainActivity extends BaseActivity {
         return true;
     }
 
+    private void collectionSort(){
+        Collections.sort(myDataset, new Comparator<StockItem>() {
+            @Override
+            public int compare(StockItem o1, StockItem o2) {
+                Double result = 0.0;
+                String getO1 = o1.getNowDividend().split(" ")[0];
+                String getO2 = o2.getNowDividend().split(" ")[0];
+                Log.e(TAG,"O1 & o2 : " +getO1 + " -- "+ getO2);
+                if (o2.getNowDividend() != null && o1.getNowDividend() != null && o2.getNowDividend().compareTo(o1.getNowDividend()) > 0) {
+                    return 1;
+                } else if(null == o1.getNowDividend()){
+                    return -1;
+                }else if(null == o2.getNowDividend()){
+                    return 1;
+                }
+                if(getO1.equals("無")){
+                    getO1 = "0.0";
+                }
+                if(getO2.equals("無")){
+                    getO2 = "0.0";
+                }
+                if(Double.parseDouble(getO1) > Double.parseDouble(getO2)) {
+                    return 1;
+                }
+                if(Double.parseDouble(getO2) > Double.parseDouble(getO1)) {
+                    return 1;
+                }
+                result = Double.parseDouble(getO1) - Double.parseDouble(getO2);
+                int i = result.intValue();
+                if(i == 0){
+                    return result.intValue();
+                }
+                return i;
+            }
+        });
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -268,7 +352,7 @@ public class MainActivity extends BaseActivity {
             Log.e("FCN TOKEN GET", "Refreshed token: " + refreshedToken);
             writeNewUserIfNeeded();
         } else {
-            alertDialog("目前會員數約8000人，為持續服務優質會員，一萬人後將關閉訪客註冊及登入，趕快搶先註冊會員唷 !");
+            //alertDialog("目前會員數約9000人，為持續服務優質會員，一萬人後將關閉訪客註冊及登入，趕快搶先註冊會員唷 !");
         }
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);

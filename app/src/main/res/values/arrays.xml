@@ -82,4 +82,12 @@
         <item>(101年)紀念品</item>
         <item>(100年)紀念品</item>
     </string-array>
+
+    <string-array name="spinner_list_item_array">
+        <item>填息機率</item>
+        <item>殖利率</item>
+        <item>點閱率</item>
+        <item>填息平均日</item>
+        <item>本益比</item>
+    </string-array>
 </resources>
