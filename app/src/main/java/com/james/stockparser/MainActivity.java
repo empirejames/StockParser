@@ -1,7 +1,5 @@
 package com.james.stockparser;
 
-import android.animation.ValueAnimator;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
@@ -12,13 +10,11 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.CountDownTimer;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,7 +22,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -39,7 +34,6 @@ import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.view.animation.TranslateAnimation;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -47,12 +41,9 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RatingBar;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
@@ -74,6 +65,7 @@ import com.james.stockparser.NetWork.stockPERatio;
 import com.james.stockparser.NetWork.stockPayGushi;
 import com.james.stockparser.Unit.User;
 import com.james.stockparser.dataBase.TinyDB;
+import com.james.stockparser.util.UtilFirebaseDatabase;
 
 import java.lang.ref.WeakReference;
 import java.text.ParseException;
@@ -241,7 +233,7 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
 
         this.mContext = MainActivity.this;
-
+        UtilFirebaseDatabase.getDataBase();
         mShowAction = AnimationUtils.loadAnimation(this, R.anim.alpha_in);
         mShowToolbar = AnimationUtils.loadAnimation(this, R.anim.alpha_in_toolbar);
         mShowFabBtn = AnimationUtils.loadAnimation(this, R.anim.alpha_fab_in);
@@ -371,7 +363,7 @@ public class MainActivity extends BaseActivity {
         super.onStart();
             if (!callAlready) {
                 Log.e(TAG, "Save in disk ...");
-                FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+                UtilFirebaseDatabase.getDataBase();
                 new GetData(this).execute();
                 callAlready = true;
             }else{
