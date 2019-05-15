@@ -33,7 +33,7 @@ public class VersionChecker  extends AsyncTask<String, String, String> {
                     .userAgent("Mozilla/5.0 (Windows; U; WindowsNT 5.1; en-US; rv1.8.1.6) Gecko/20070725 Firefox/2.0.0.6")
                     .referrer("http://www.google.com")
                     .get()
-                    .select("div.PHBdkd:nth-child(2) > div:nth-child(1) > content:nth-child(1)")
+                    .select("div.PHBdkd:nth-child(2) > div:nth-child(1)")
                     .first()
                     .ownText();
             Log.e(TAG,"update_info : " + update_info);
