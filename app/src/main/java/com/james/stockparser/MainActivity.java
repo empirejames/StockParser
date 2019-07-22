@@ -70,6 +70,7 @@ import com.james.stockparser.NetWork.stockPayGushi;
 import com.james.stockparser.Unit.User;
 import com.james.stockparser.dataBase.TinyDB;
 import com.james.stockparser.util.UtilFirebaseDatabase;
+
 import java.lang.ref.WeakReference;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -186,8 +187,8 @@ public class MainActivity extends BaseActivity {
         inflater.inflate(R.menu.menu_main, menu);
         MenuItem item = menu.findItem(R.id.spinner);
         this.menuItem = menu;
-        Spinner spinner = (Spinner) item.getActionView();
-        spinner.setGravity(Gravity.END);
+/*      Spinner spinner = (Spinner) item.getActionView();
+      spinner.setGravity(Gravity.END);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.spinner_list_item_array, R.layout.spinner);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -196,28 +197,31 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 ArrayList<String> string_array = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.spinner_list_item_array)));
-                Log.e(TAG, "Get Select : " + string_array.get(position) );
-                switch (position){
-                    case 0 :
-                        collectionSort();
+                Log.e(TAG, "Get Select : " + string_array.get(position));
+                switch (position) {
+                    case 0://填息機率
+                        collectionSort("tanxi");
                         break;
-                    case 1 :
-                        collectionSort();
+                    case 1://殖利率
+                        collectionSort("dividend");
                         break;
-                    case 2 :
-                        collectionSort();
+                    case 2://點閱率
+                        collectionSort("click");
                         break;
-                    case 3 :
-                        collectionSort();
+                    case 3://填息平均日
+                        collectionSort("tanxiavg");
                         break;
-                    case 4 :
-                        collectionSort();
-                        break;
-                    default:
-                        collectionSort();
+                    case 4://本益比
+                        collectionSort("pe");
                         break;
                 }
-                listAdaperr(mContext,myDataset,isVistor,selectAll);
+                for (StockItem i : myDataset) {
+                    if (i.getHotclickCount().contains("無")) {
+
+                    }
+                }
+
+                listAdaperr(mContext, myDataset, isVistor, selectAll);
             }
 
             @Override
@@ -225,7 +229,7 @@ public class MainActivity extends BaseActivity {
 
             }
         });
-
+*/
 
         SearchManager searchManager = (SearchManager) getSystemService(getApplicationContext().SEARCH_SERVICE);
         searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
@@ -273,39 +277,37 @@ public class MainActivity extends BaseActivity {
         return true;
     }
 
-    private void collectionSort(){
+    private void collectionSort(final String type) {
         Collections.sort(myDataset, new Comparator<StockItem>() {
             @Override
             public int compare(StockItem o1, StockItem o2) {
-                Double result = 0.0;
-                String getO1 = o1.getNowDividend().split(" ")[0];
-                String getO2 = o2.getNowDividend().split(" ")[0];
-                Log.e(TAG,"O1 & o2 : " +getO1 + " -- "+ getO2);
-                if (o2.getNowDividend() != null && o1.getNowDividend() != null && o2.getNowDividend().compareTo(o1.getNowDividend()) > 0) {
-                    return 1;
-                } else if(null == o1.getNowDividend()){
-                    return -1;
-                }else if(null == o2.getNowDividend()){
-                    return 1;
+                if (type.equals("PE")) {//本益比
+                    if (o2.getPeRatio().equals("無") || o1.getPeRatio().equals("無")) {
+                        return -1;
+                    } else {
+                        return o2.getPeRatio().compareTo(o1.getPeRatio());
+                    }
+                } else if (type.equals("tanxi")) { //填息
+                    if (o2.getTianxiPercent().equals("無") || o1.getTianxiPercent().equals("無")) {
+                        return -1;
+                    } else {
+                        return o2.getTianxiPercent().compareTo(o1.getTianxiPercent());
+                    }
+
+                } else if (type.equals("dividend")) {//殖利率
+                    return o2.getNowDividend().compareTo(o1.getNowDividend());
+
+                } else if (type.equals("click")) {//點閱率
+                    return o2.getHotclickCount().compareTo(o1.getHotclickCount());
+
+                } else if (type.equals("tanxiavg")) {//填息平均日
+                    if (o2.getTianxiDay().equals("無") || o1.getTianxiDay().equals("無")) {
+                        return -1;
+                    } else {
+                        return o2.getTianxiDay().compareTo(o1.getTianxiDay());
+                    }
                 }
-                if(getO1.equals("無")){
-                    getO1 = "0.0";
-                }
-                if(getO2.equals("無")){
-                    getO2 = "0.0";
-                }
-                if(Double.parseDouble(getO1) > Double.parseDouble(getO2)) {
-                    return 1;
-                }
-                if(Double.parseDouble(getO2) > Double.parseDouble(getO1)) {
-                    return 1;
-                }
-                result = Double.parseDouble(getO1) - Double.parseDouble(getO2);
-                int i = result.intValue();
-                if(i == 0){
-                    return result.intValue();
-                }
-                return i;
+                return 0;
             }
         });
     }
@@ -442,17 +444,17 @@ public class MainActivity extends BaseActivity {
 //        }
 //    }
 
-        @Override
+    @Override
     public void onStart() {
         super.onStart();
-            if (!callAlready) {
-                Log.e(TAG, "Save in disk ...");
-                UtilFirebaseDatabase.getDataBase();
-                new GetData(this).execute();
-                callAlready = true;
-            }else{
-                listAdaperr(mContext, myDataset, isVistor, selectAll);
-            }
+        if (!callAlready) {
+            Log.e(TAG, "Save in disk ...");
+            UtilFirebaseDatabase.getDataBase();
+            new GetData(this).execute();
+            callAlready = true;
+        } else {
+            listAdaperr(mContext, myDataset, isVistor, selectAll);
+        }
     }
 
     @Override
@@ -503,7 +505,7 @@ public class MainActivity extends BaseActivity {
     }
 
 
-    public static void listAdaperr(Context context , ArrayList<StockItem> item, boolean isVistor, boolean selectAll) {
+    public static void listAdaperr(Context context, ArrayList<StockItem> item, boolean isVistor, boolean selectAll) {
         mAdapter = new RecycleViewAdapter(context, item, stockChoMa, favList, userId, isVistor, selectAll, userStatus);
         RecyclerView.ItemDecoration itemDecoration = mRecyclerView.getItemDecorationAt(0);
         if (itemDecoration == null) {
@@ -1244,7 +1246,7 @@ public class MainActivity extends BaseActivity {
     private static class GetData extends AsyncTask<String, Integer, String> {
         private ProgressDialog progressBar;
         WeakReference<MainActivity> weakActivity;
-        public  GetData getData;
+        public GetData getData;
 
         GetData(MainActivity Activity) {
             this.weakActivity = new WeakReference<>(Activity);
@@ -1255,6 +1257,7 @@ public class MainActivity extends BaseActivity {
             super.onPreExecute();
             getData = this;
             final MainActivity activity = weakActivity.get();
+            mProgressDialog = new ProgressDialog(activity);
             new CountDownTimer(50000, 50000) {
                 @Override
                 public void onTick(long millisUntilFinished) {
@@ -1262,14 +1265,14 @@ public class MainActivity extends BaseActivity {
                         // activity none
                         return;
                     } else {
-                        mProgressDialog = ProgressDialog.show(activity, "更新資料", "取得資料中...請稍候", true);
+                        //mProgressDialog.show(activity, "更新資料", "取得資料中...請稍候", true);
                     }
                 }
 
                 @Override
                 public void onFinish() {
                     if (getData.getStatus() == AsyncTask.Status.RUNNING) {
-                        mProgressDialog = ProgressDialog.show(activity, "伺服器過載", "我們本月流量已用盡，故本月無法提供服務，請多包涵", true);
+                        mProgressDialog.show(activity, "伺服器過載", "我們本月流量已用盡，故本月無法提供服務，請多包涵", true);
                     }
                 }
             }.start();
@@ -1291,6 +1294,7 @@ public class MainActivity extends BaseActivity {
             grc.getRemotePara();
             StockInfoParser spinfo = new StockInfoParser();
             stockChoMa = spinfo.getChoma();
+            publishProgress(60);
             //Log.e(TAG, "tag :: " + tinydb.getString("show_floating_button"));
             userId = bundle.getString("uid");
             ref = FirebaseDatabase.getInstance().getReference();
@@ -1379,18 +1383,9 @@ public class MainActivity extends BaseActivity {
                                 myHisEPS.add(new HistoryItem(hisNumber, hisName, hisProduct, hisEPS));
                             }
                         }
-
                     }
                     listAdaperr(mContext, myDataset, isVistor, selectAll);
-                    try {
-                        if (mProgressDialog != null) {
-                            mProgressDialog.dismiss();
-                        }
-                    } catch (Exception e) {
-                        Log.e(TAG, e.getMessage());
-                    } finally {
-                        mProgressDialog = null;
-                    }
+                    publishProgress(100);
                 }
 
                 @Override
@@ -1406,20 +1401,22 @@ public class MainActivity extends BaseActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            Log.e(TAG, "Run onPostExecute ...");
         }
 
         @Override
         protected void onProgressUpdate(final Integer... values) {
             super.onProgressUpdate(values);
+            mProgressDialog.show();
             if (Integer.toString(values[0]).equals("0")) {
                 mProgressDialog.setMessage("取得資料中... 請稍候");
             } else if (Integer.toString(values[0]).equals("20")) {
-                mProgressDialog.setMessage("下載伺服器數據中...");
+                mProgressDialog.setMessage("下載伺服器數據中... 請稍候");
             } else if (Integer.toString(values[0]).equals("40")) {
                 mProgressDialog.setMessage("正在更新手機端資料... 請稍後");
-            } else {
-                mProgressDialog.setMessage("下載更新完畢");
+            }else if (Integer.toString(values[0]).equals("80")) {
+                mProgressDialog.setMessage("努力加載資料... 請稍候");
+            }else if (Integer.toString(values[0]).equals("100")){
+                mProgressDialog.dismiss();
             }
         }
     }

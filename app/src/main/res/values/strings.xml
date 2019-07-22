@@ -2,7 +2,7 @@
     <string name="app_name">權息大師</string>
     <string name="app_value">權息小學堂</string>
     <string name="edit">Edit</string>
-    <string name="app_ver">APP Version 7.8</string>
+    <string name="app_ver">APP Version 8.0</string>
     <string name="close_action">確認</string>
     <string name="channel_name">James name</string>
     <string name="channel_description">Channel description</string>
@@ -30,4 +30,5 @@
         8. 本軟體所使用資料來源為網路之數據統計結果，僅供參考不代表實際狀況。\n
     </string>
     <string name="title_activity_base">BaseActivity</string>
+    <string name="title_activity_main2">Main2Activity</string>
 </resources>
